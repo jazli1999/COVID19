@@ -3,4 +3,13 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="cardGreen">#19B29D</color>
+    <color name="darkGreen">#128676</color>
+    <color name="cardBlue">#01B4C2</color>
+    <color name="mild">#FF931C</color>
+    <color name="severe">#FF931C</color>
+    <color name="healthy">#5C9E46</color>
+    <color name="lightGrey">#F5F5F5</color>
+    <color name="darkGrey">#AFABAB</color>
+    <color name="confirmed">#8497B0</color>
 </resources>
