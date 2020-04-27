@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 
 public class FirstFragment extends Fragment {
     private String hospitalInfo = "";
@@ -47,7 +48,11 @@ public class FirstFragment extends Fragment {
                     @Override
                     public void run() {
                         JsonArray hospitals = DBConnector.getAllHospitals();
-                        hospitalInfo = hospitals.get(0).getAsJsonObject().get("name") + "\n" + hospitals.get(1).getAsJsonObject().get("name");
+                        hospitalInfo = "";
+
+                        for(JsonElement hospital : hospitals) {
+                            hospitalInfo += "\n" + hospital.getAsJsonObject().get("name").getAsString();
+                        }
                     }
                 }
         ).start();
