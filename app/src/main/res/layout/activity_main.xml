@@ -22,6 +22,14 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/hospital_main_page" />
+<!--    <include layout="@layout/hospital_main_page" />-->
+
+    <fragment
+        android:id="@+id/hospital_main_page"
+        android:name="com.bupt.sse.group7.covid19.HospitalMainPageFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        tools:layout="@layout/hospital_main_page" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
