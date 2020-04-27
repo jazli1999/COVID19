@@ -14,9 +14,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 
 public class DBConnector {
-    private static String getAllHospitalsURL = "http://47.103.5.100/getAllHospitals.php";
+    private static String host = "http://47.103.5.100/";
 
     private static JsonArray executeGET(String url) {
         HttpURLConnection conn = null;
@@ -36,8 +37,21 @@ public class DBConnector {
         return null;
     }
 
+    private static String encapParamURL(String url, Map<String, String> args) {
+        String newURL = url + "?";
+        for (Map.Entry<String, String> entry : args.entrySet()) {
+            newURL += entry.getKey() + "=" + entry.getValue() + "&";
+        }
+        return newURL.substring(0, newURL.length()-1);
+    }
+
     public static JsonArray getAllHospitals() {
-        return executeGET(getAllHospitalsURL);
+        return executeGET(host + "getAllHospitals.php");
+    }
+
+    public static JsonArray getHospitalById(Map<String, String> args) {
+        String newURL = encapParamURL(host + "getHospitalById.php", args);
+        return executeGET(newURL);
     }
 
     private static JsonArray parseInfo(InputStream in) throws IOException {
