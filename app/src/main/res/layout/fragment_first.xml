@@ -23,4 +23,22 @@
         android:layout_marginTop="200dp"
         android:text="@string/get_hospitals"
         android:textSize="20sp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/get_first"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="300dp"
+        android:id="@+id/getFirst"
+        />
+
+    <TextView
+        android:id="@+id/firstHospital"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="400dp"
+        android:text="@string/get_first"
+        android:textSize="20sp" />
 </RelativeLayout>
