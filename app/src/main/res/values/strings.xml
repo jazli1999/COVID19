@@ -16,4 +16,7 @@
     <string name="tel">电话</string>
     <string name="address">地址</string>
     <string name="inCharge">负责人</string>
+
+    <string name="update_hosp_data">更新数据</string>
+    <string name="edit_hosp_info">编辑信息</string>
 </resources>
