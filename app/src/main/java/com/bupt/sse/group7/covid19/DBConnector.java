@@ -45,6 +45,10 @@ public class DBConnector {
         return newURL.substring(0, newURL.length()-1);
     }
 
+    public static JsonArray getHospitalList() {
+        return executeGET(host + "getHospitalList.php");
+    }
+
     public static JsonArray getAllHospitals() {
         return executeGET(host + "getAllHospitals.php");
     }
@@ -67,4 +71,5 @@ public class DBConnector {
         Log.d("Info", rows.toString());
         return rows;
     }
+
 }
