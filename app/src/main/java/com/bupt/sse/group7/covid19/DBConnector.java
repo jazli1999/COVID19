@@ -68,7 +68,7 @@ public class DBConnector {
 
         JsonObject outline = (JsonObject) JsonParser.parseString(sb.toString());
         JsonArray rows = (JsonArray) outline.get("rows");
-        Log.d("Info", rows.toString());
+        Log.d("DBData", rows.toString());
         return rows;
     }
 

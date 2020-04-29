@@ -3,21 +3,16 @@ package com.bupt.sse.group7.covid19;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.text.MessageFormat;
@@ -27,6 +22,7 @@ import java.util.Map;
 public class HospitalMainPageActivity extends AppCompatActivity {
     private JsonObject hospital;
     private HospitalContactFragment contactFragment;
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +36,10 @@ public class HospitalMainPageActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
+        Bundle bundle = this.getIntent().getExtras();
+        this.id = bundle.getInt("id");
+        Log.d("ID", String.valueOf(id));
+
         initView();
         initData();
         updateView();
@@ -49,12 +49,12 @@ public class HospitalMainPageActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_hospital_main, menu);
         return true;
     }
 
     private void initData() {
-        Thread thread = getHospitalInfo(1);
+        Thread thread = getHospitalInfo(this.id);
         try {
             thread.join();
         } catch (InterruptedException e) {
