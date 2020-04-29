@@ -45,6 +45,11 @@ public class DBConnector {
         return newURL.substring(0, newURL.length()-1);
     }
 
+    public static JsonArray getStatusNumberById(Map<String, String> args) {
+        String newURL = encapParamURL(host + "getStatusNumberById.php", args);
+        return executeGET(newURL);
+    }
+
     public static JsonArray getHospitalList() {
         return executeGET(host + "getHospitalList.php");
     }

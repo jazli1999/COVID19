@@ -21,6 +21,7 @@ import java.util.Map;
 
 public class HospitalMainPageActivity extends AppCompatActivity {
     private JsonObject hospital;
+    private JsonObject statusNumber;
     private HospitalContactFragment contactFragment;
     private int id;
 
@@ -42,10 +43,12 @@ public class HospitalMainPageActivity extends AppCompatActivity {
 
         initView();
         initData();
+
+        Log.d("AData", statusNumber.toString());
         updateView();
     }
 
-    // TODO call initView()
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -86,6 +89,7 @@ public class HospitalMainPageActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         hospital = DBConnector.getHospitalById(args).get(0).getAsJsonObject();
+                        statusNumber = DBConnector.getStatusNumberById(args).get(0).getAsJsonObject();
                     }
                 }
         );
