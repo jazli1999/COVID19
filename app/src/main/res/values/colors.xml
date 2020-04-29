@@ -7,9 +7,10 @@
     <color name="darkGreen">#128676</color>
     <color name="cardBlue">#01B4C2</color>
     <color name="mild">#FF931C</color>
-    <color name="severe">#FF931C</color>
+    <color name="severe">#E8443A</color>
     <color name="healthy">#5C9E46</color>
     <color name="lightGrey">#F5F5F5</color>
     <color name="darkGrey">#AFABAB</color>
     <color name="confirmed">#8497B0</color>
+    <color name="textGrey">#515151</color>
 </resources>

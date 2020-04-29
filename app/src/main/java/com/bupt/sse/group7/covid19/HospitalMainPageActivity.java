@@ -23,12 +23,14 @@ public class HospitalMainPageActivity extends AppCompatActivity {
     private JsonObject hospital;
     private JsonObject statusNumber;
     private HospitalContactFragment contactFragment;
+    private HospitalStatusFragment statusFragment;
     private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hospital_main_page);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
@@ -72,6 +74,14 @@ public class HospitalMainPageActivity extends AppCompatActivity {
                 hospital.get("mild_left").getAsString(),
                 hospital.get("severe_left").getAsString()));
         updateHospitalContact();
+        updateHospitalStatus();
+    }
+
+    private void updateHospitalStatus() {
+        statusFragment.setMild(statusNumber.get("mild").getAsString());
+        statusFragment.setSevere(statusNumber.get("severe").getAsString());
+        statusFragment.setCured(statusNumber.get("cured").getAsString());
+        statusFragment.setDead(statusNumber.get("dead").getAsString());
     }
 
 
@@ -99,6 +109,11 @@ public class HospitalMainPageActivity extends AppCompatActivity {
 
     private void initView() {
         FragmentManager fragmentManager = getSupportFragmentManager();
+
+        statusFragment = new HospitalStatusFragment();
+        FragmentTransaction tranStatus = fragmentManager.beginTransaction();
+        tranStatus.add(R.id.hosp_main_content, statusFragment);
+        tranStatus.commit();
 
         contactFragment = new HospitalContactFragment();
         FragmentTransaction tran = fragmentManager.beginTransaction();

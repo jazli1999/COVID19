@@ -38,7 +38,6 @@ public class HospitalContactFragment extends Fragment {
     }
 
     private void initView() {
-        Log.d("contact", tel);
         ((TextView) view.findViewById(R.id.hosp_tel)).setText(tel);
         ((TextView) view.findViewById(R.id.hosp_address)).setText(address);
         ((TextView) view.findViewById(R.id.hosp_inCharge)).setText(people);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -13,10 +13,32 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="detail_fragment">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@color/lightGrey</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="statusText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginLeft">6dp</item>
+        <item name="android:layout_marginRight">6dp</item>
+    </style>
+
+    <style name="statusTitle" parent="@style/statusText">
+        <item name="android:textAlignment">textEnd</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="statusContent" parent="@style/statusText">
+        <item name="android:textAlignment">textStart</item>
+    </style>
 
     <style name="card">
         <item name="android:layout_marginLeft">15dp</item>

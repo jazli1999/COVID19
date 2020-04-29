@@ -19,4 +19,11 @@
 
     <string name="update_hosp_data">更新数据</string>
     <string name="edit_hosp_info">编辑信息</string>
+
+    <string name="severe">重症</string>
+    <string name="mild">轻症</string>
+    <string name="cured">已治愈</string>
+    <string name="dead">死亡</string>
+
+    <string name="hospital_status">确诊情况</string>
 </resources>
