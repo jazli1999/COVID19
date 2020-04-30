@@ -1,3 +1,3 @@
 # COVID19 
 
-![Hospital List](screenshot/HospitalList.png) ![Hospital Mainpage](screenshot/HospitalMainpage.png)
+<img src="screenshot/HospitalList.png" width="45%"/> <img src="screenshot/HospitalMainpage.png" width=45%> <img src="screenshot/PatientMainpage.png" width=45%> 
