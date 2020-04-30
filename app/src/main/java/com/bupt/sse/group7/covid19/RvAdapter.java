@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonArray;
 
-import java.util.List;
-
 public class RvAdapter extends RecyclerView.Adapter<RvAdapter.Holder> {
     private JsonArray list;
     private AdapterView.OnItemClickListener onItemClickListener;

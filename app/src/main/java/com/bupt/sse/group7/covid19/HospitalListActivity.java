@@ -78,7 +78,7 @@ public class HospitalListActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        RecyclerView listView = findViewById(R.id.hosp_list);
+        listView = findViewById(R.id.hosp_list);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         adapter = new RvAdapter(hospitals);
 
