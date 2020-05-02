@@ -84,8 +84,11 @@ public class DBConnector {
     }
 
     public static void editHospitalById(JsonObject args) {
-        Log.d("arg", args.toString());
         executePost(host + "editHospitalById.php", args);
+    }
+
+    public static void addPatientTrack(JsonObject args) {
+        executePost(host + "addPatientTrack.php", args);
     }
 
     public static JsonArray getPatientTrackById(Map<String, String> args) {
