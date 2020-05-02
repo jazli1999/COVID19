@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
@@ -37,12 +38,54 @@ public class DBConnector {
         return null;
     }
 
+    private static void executePost(String url, JsonObject content) {
+        HttpURLConnection conn = null;
+        BufferedReader reader = null;
+        String response = "";
+        try {
+            conn = (HttpURLConnection) new URL(url).openConnection();
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setUseCaches(false);
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("Charset", "UTF-8");
+            conn.setRequestProperty("Content-Type","application/json; charset=UTF-8");
+            conn.setRequestProperty("accept","application/json");
+            Log.d("args", content.toString());
+
+            byte[] outBytes = content.toString().getBytes();
+
+            conn.setRequestProperty("Content-Length", String.valueOf(outBytes.length));
+            OutputStream outputStream = conn.getOutputStream();
+            outputStream.write(outBytes);
+            outputStream.flush();
+            outputStream.close();
+
+            reader = new BufferedReader(new InputStreamReader(
+                    conn.getInputStream()));
+            String lines;
+            while ((lines = reader.readLine()) != null) {
+                response += lines;
+            }
+            reader.close();
+            conn.disconnect();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private static String encapParamURL(String url, Map<String, String> args) {
         String newURL = url + "?";
         for (Map.Entry<String, String> entry : args.entrySet()) {
             newURL += entry.getKey() + "=" + entry.getValue() + "&";
         }
         return newURL.substring(0, newURL.length()-1);
+    }
+
+    public static void editHospitalById(JsonObject args) {
+        Log.d("arg", args.toString());
+        executePost(host + "editHospitalById.php", args);
     }
 
     public static JsonArray getPatientTrackById(Map<String, String> args) {

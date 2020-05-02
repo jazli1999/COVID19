@@ -53,7 +53,7 @@ public class PatientMainPageActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
-        this.id = 6;
+        this.id = 3;
         initView();
         initData();
         updateView();
@@ -101,6 +101,7 @@ public class PatientMainPageActivity extends AppCompatActivity {
                     public void run() {
                         patient = DBConnector.getPatientById(args).get(0).getAsJsonObject();
                         pStatus = DBConnector.getPStatusById(args);
+                        DBConnector.getPatientTrackById(args);
                     }
                 });
         thread.start();
