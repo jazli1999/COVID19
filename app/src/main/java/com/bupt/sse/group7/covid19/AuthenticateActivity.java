@@ -19,7 +19,7 @@ import com.google.gson.JsonObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PatientAuthActivity extends AppCompatActivity {
+public class AuthenticateActivity extends AppCompatActivity {
     private EditText patientNoView;
     private EditText patientTelView;
     private JsonObject returnedInfo;
@@ -27,7 +27,7 @@ public class PatientAuthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.patient_auth);
+        setContentView(R.layout.auth);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

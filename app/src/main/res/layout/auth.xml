@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/patient_auth"
                 android:textColor="@color/textGrey"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_gravity="center"
                 android:layout_marginBottom="30dp"
                 android:textStyle="bold"/>
@@ -64,8 +64,9 @@
 
                 <EditText
                     android:id="@+id/patient_auth_no"
-                    android:layout_width="180dp"
+                    android:layout_width="150dp"
                     android:layout_height="50dp"
+                    android:textSize="16dp"
                     android:hint="@string/inputNo" />
 
             </LinearLayout>
@@ -86,8 +87,9 @@
 
                 <EditText
                     android:id="@+id/patient_auth_tel"
-                    android:layout_width="180dp"
+                    android:layout_width="150dp"
                     android:layout_height="50dp"
+                    android:textSize="16dp"
                     android:hint="@string/inputTel"
                     android:inputType="number" />
 

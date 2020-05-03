@@ -13,5 +13,10 @@
     <color name="darkGrey">#AFABAB</color>
     <color name="confirmed">#8497B0</color>
     <color name="textGrey">#515151</color>
+    <color name="cardOrange">#E29460</color>
+    <color name="cardLightGreen">#72A668</color>
+    <color name="cardDarkGreen">#00ADA2</color>
+    <color name="cardLightBlue">#00BDBA</color>
+    <color name="cardPurple">#6C6BA8</color>
     <color name="dead">#555555</color>
 </resources>
