@@ -75,6 +75,11 @@ public class DBConnector {
         }
     }
 
+    public static JsonArray getPatientAuthInfo(Map<String, String> args) {
+        String newURL = encapParamURL(host + "getPatientAuthInfo.php", args);
+        return executeGET(newURL);
+    }
+
     private static String encapParamURL(String url, Map<String, String> args) {
         String newURL = url + "?";
         for (Map.Entry<String, String> entry : args.entrySet()) {

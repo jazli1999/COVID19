@@ -53,7 +53,9 @@ public class PatientMainPageActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
-        this.id = 3;
+        Bundle bundle = this.getIntent().getExtras();
+        this.id = bundle.getInt("id");
+
         initView();
         initData();
         updateView();

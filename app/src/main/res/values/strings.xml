@@ -26,4 +26,11 @@
     <string name="dead">死亡</string>
 
     <string name="hospital_status">确诊情况</string>
+
+    <string name="patient_auth">用户认证</string>
+    <string name="inputNo">请输入病案号</string>
+    <string name="inputTel">请输入手机</string>
+    <string name="setUsername">设置登录名</string>
+
+    <string name="submit">提交</string>
 </resources>
