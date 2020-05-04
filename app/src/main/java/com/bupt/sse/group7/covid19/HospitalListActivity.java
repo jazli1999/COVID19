@@ -32,8 +32,6 @@ public class HospitalListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hospital_list);
 
-        ActivityManager.getInstance().setHLA(this);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
@@ -43,7 +41,6 @@ public class HospitalListActivity extends AppCompatActivity {
         }
 
         initData();
-        Log.d("AData", hospitals.toString());
         initView();
     }
 
@@ -80,7 +77,7 @@ public class HospitalListActivity extends AppCompatActivity {
     private void initView() {
         listView = findViewById(R.id.hosp_list);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        adapter = new RvAdapter(hospitals);
+        adapter = new RvAdapter(hospitals, this);
 
         listView.setLayoutManager(layoutManager);
         listView.setAdapter(adapter);

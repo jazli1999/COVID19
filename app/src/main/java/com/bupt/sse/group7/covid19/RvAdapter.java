@@ -1,5 +1,6 @@
 package com.bupt.sse.group7.covid19;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +17,11 @@ import com.google.gson.JsonArray;
 public class RvAdapter extends RecyclerView.Adapter<RvAdapter.Holder> {
     private JsonArray list;
     private AdapterView.OnItemClickListener onItemClickListener;
+    private HospitalListActivity context;
 
-    public RvAdapter(JsonArray list) {
+    public RvAdapter(JsonArray list, HospitalListActivity context) {
         this.list = list;
+        this.context = context;
     }
 
     public void setOnItemClickListener(AdapterView.OnItemClickListener onItemClickListener) {
@@ -46,8 +49,7 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.Holder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((HospitalListActivity)ActivityManager.getInstance().getHLA()).
-                        intoMainPage(holder.getAdapterPosition() + 1);
+                context.intoMainPage(holder.getAdapterPosition() + 1);
             }
         });
     }
