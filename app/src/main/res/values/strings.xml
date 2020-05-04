@@ -43,4 +43,9 @@
     <string name="hospitals_desc">查看全部医院列表</string>
     <string name="auth_desc">患者用户进行身份认证</string>
     <string name="track_desc">查看附近确诊患者轨迹</string>
+
+    <array name="user_types">
+        <item>医院认证</item>
+        <item>患者认证</item>
+    </array>
 </resources>
