@@ -1,5 +1,6 @@
 package com.bupt.sse.group7.covid19;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,7 +77,7 @@ public class HospitalAuthFragment extends Fragment {
                 CurrentUser.setId(returnedInfo.get("h_id").getAsInt());
                 CurrentUser.setLabel("hospital");
 
-                //TODO 跳转页面
+                intoHomePage();
             } else {
                 Toast.makeText(getActivity(), "登录名或密码错误", Toast.LENGTH_SHORT).show();
             }
@@ -95,5 +96,10 @@ public class HospitalAuthFragment extends Fragment {
                 });
         thread.start();
         return thread;
+    }
+
+    private void intoHomePage() {
+        Intent intent = new Intent(getActivity(), HomeActivity.class);
+        startActivity(intent);
     }
 }

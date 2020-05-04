@@ -1,10 +1,12 @@
 package com.bupt.sse.group7.covid19;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,6 +54,29 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, AuthenticateActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        pageCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (CurrentUser.getLabel().equals("visitor")) {
+                    Intent auth = new Intent(HomeActivity.this, AuthenticateActivity.class);
+                    startActivity(auth);
+                    Toast.makeText(HomeActivity.this, "请先认证", Toast.LENGTH_LONG).show();
+                } else {
+                    Class context;
+                    if (CurrentUser.getLabel().equals("patient")) {
+                        context = PatientMainPageActivity.class;
+                    } else {
+                        context = HospitalMainPageActivity.class;
+                    }
+                    Intent intent = new Intent(HomeActivity.this, context);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("id", CurrentUser.getId());
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
             }
         });
     }
