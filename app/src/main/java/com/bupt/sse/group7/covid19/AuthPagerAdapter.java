@@ -18,7 +18,12 @@ public class AuthPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         //TODO 根据position创建不同的fragment
-        Fragment fragment = new PatientAuthFragment();
+        Fragment fragment;
+        if (position == 0) {
+            fragment = new PatientAuthFragment();
+        } else {
+            fragment = new HospitalAuthFragment();
+        }
         return fragment;
     }
 

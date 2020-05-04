@@ -13,9 +13,13 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AuthPageCollection extends Fragment {
     private AuthPagerAdapter authPageAdapter;
     private ViewPager2 viewPager;
+    private List<String> authTabLabels;
 
     @Nullable
     @Override
@@ -30,8 +34,12 @@ public class AuthPageCollection extends Fragment {
         viewPager = view.findViewById(R.id.auth_content);
         viewPager.setAdapter(authPageAdapter);
 
+        authTabLabels = new ArrayList<>();
+        authTabLabels.add("患者认证");
+        authTabLabels.add("医院认证");
+
         TabLayout tabs = view.findViewById(R.id.auth_tabs);
-        new TabLayoutMediator(tabs, viewPager, (tab, position) -> tab.setText("OBJECT " + (position + 1))).attach();
+        new TabLayoutMediator(tabs, viewPager, (tab, position) -> tab.setText(authTabLabels.get(position))).attach();
     }
 
     @Override

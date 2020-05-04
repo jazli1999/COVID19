@@ -32,6 +32,11 @@
     <string name="inputTel">请输入手机</string>
     <string name="setUsername">设置登录名</string>
 
+    <string name="hospital_auth">医院认证</string>
+    <string name="inputUsername">请输入登录名</string>
+    <string name="inputPassword">请输入密码</string>
+
+
     <string name="submit">提交</string>
 
     <string name="hospitals">医院列表</string>
@@ -44,8 +49,4 @@
     <string name="auth_desc">患者用户进行身份认证</string>
     <string name="track_desc">查看附近确诊患者轨迹</string>
 
-    <array name="user_types">
-        <item>医院认证</item>
-        <item>患者认证</item>
-    </array>
 </resources>

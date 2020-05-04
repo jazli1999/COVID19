@@ -80,6 +80,11 @@ public class DBConnector {
         return executeGET(newURL);
     }
 
+    public static JsonArray getHospitalAuthInfo(Map<String, String> args) {
+        String newURL = encapParamURL(host + "getHospitalAuthInfo.php", args);
+        return executeGET(newURL);
+    }
+
     private static String encapParamURL(String url, Map<String, String> args) {
         String newURL = url + "?";
         for (Map.Entry<String, String> entry : args.entrySet()) {

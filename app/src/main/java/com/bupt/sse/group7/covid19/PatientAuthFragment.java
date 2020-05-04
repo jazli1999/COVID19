@@ -2,6 +2,7 @@ package com.bupt.sse.group7.covid19;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,12 +35,13 @@ public class PatientAuthFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        this.view = view;
+        initView();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        this.view = getView();
     }
 
     private void initView() {
