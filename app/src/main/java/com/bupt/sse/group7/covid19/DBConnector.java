@@ -52,7 +52,7 @@ public class DBConnector {
             conn.setRequestProperty("Charset", "UTF-8");
             conn.setRequestProperty("Content-Type","application/json; charset=UTF-8");
             conn.setRequestProperty("accept","application/json");
-            Log.d("args", content.toString());
+            Log.d("lyjDBArgs", content.toString());
 
             byte[] outBytes = content.toString().getBytes();
 
@@ -144,7 +144,7 @@ public class DBConnector {
 
         JsonObject outline = (JsonObject) JsonParser.parseString(sb.toString());
         JsonArray rows = (JsonArray) outline.get("rows");
-        Log.d("DBData", rows.toString());
+        Log.d("lyjDBData", rows.toString());
         return rows;
     }
 
