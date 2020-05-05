@@ -40,13 +40,13 @@
     <string name="submit">提交</string>
 
     <string name="hospitals">医院列表</string>
-    <string name="authentication">个人认证</string>
+    <string name="authentication">用户认证</string>
     <string name="my_page">我的主页</string>
     <string name="track">轨迹查看</string>
 
     <string name="my_page_desc">进入认证用户主页</string>
     <string name="hospitals_desc">查看全部医院列表</string>
-    <string name="auth_desc">个人/医院用户进行身份认证</string>
+    <string name="auth_desc">用户进行身份认证登录</string>
     <string name="track_desc">查看附近确诊患者轨迹</string>
 
 </resources>
