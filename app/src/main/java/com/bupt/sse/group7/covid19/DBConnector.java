@@ -85,6 +85,15 @@ public class DBConnector {
         return executeGET(newURL);
     }
 
+    public static JsonArray getTrackById(Map<String, String> args) {
+        String newURL = encapParamURL(host + "getTrackById.php", args);
+        return executeGET(newURL);
+    }
+
+    public static JsonArray getTrackIds() {
+        return executeGET(host + "getTrackIds.php");
+    }
+
     private static String encapParamURL(String url, Map<String, String> args) {
         String newURL = url + "?";
         for (Map.Entry<String, String> entry : args.entrySet()) {
