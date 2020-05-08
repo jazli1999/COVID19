@@ -97,6 +97,10 @@ public class DBConnector {
         return newURL.substring(0, newURL.length()-1);
     }
 
+    public static JsonArray getAllTrackStarts() {
+        return executeGET(host + "getAllTrackStarts.php");
+    }
+
     public static void editHospitalById(JsonObject args) {
         executePost(host + "editHospitalById.php", args);
     }
