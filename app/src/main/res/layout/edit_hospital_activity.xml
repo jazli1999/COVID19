@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lightGrey"
+    tools:context=".HospitalMainPageActivity"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_edit"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:outlineAmbientShadowColor="@color/darkGrey"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            tools:targetApi="p" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/hosp_edit_card"
+            style="@style/card"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:cardBackgroundColor="@color/cardGreen"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="10dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/cardAvatar"
+                    android:src="@drawable/hospital_avatar" />
+
+                <LinearLayout
+                    style="@style/cardText"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/hospital_name_edit"
+                        style="@style/CardTitle"
+                        android:text="" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:paddingVertical="20dp"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            style="@style/detail_card_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bed_capacity"
+            android:layout_marginStart="30dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                style="@style/detail_card"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/mild"
+                android:textColor="#000"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="30dp" />
+
+            <EditText
+                android:id="@+id/set_mild"
+                android:layout_width="64dp"
+                android:layout_height="25dp"
+                android:textSize="14sp"
+                android:paddingStart="5dp"
+                android:background="@drawable/rec_tangle"
+                android:paddingBottom="0dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginStart="12dp"/>
+
+            <TextView
+                style="@style/detail_card"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/severe"
+                android:textColor="#000"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="50dp" />
+
+            <EditText
+                android:id="@+id/set_severe"
+                android:layout_width="64dp"
+                android:layout_height="25dp"
+                android:paddingStart="5dp"
+                android:textSize="14sp"
+                android:background="@drawable/rec_tangle"
+                android:paddingBottom="0dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginStart="12dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:paddingVertical="20dp"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            style="@style/detail_card_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hospital_info"
+            android:layout_marginStart="30dp"/>
+
+        <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            style="@style/detail_card"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/inCharge"
+            android:textColor="#000"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="30dp" />
+
+        <EditText
+            android:id="@+id/set_inCharge"
+            android:layout_width="140dp"
+            android:layout_height="25dp"
+            android:background="@drawable/rec_tangle"
+            android:paddingBottom="0dp"
+            android:paddingStart="5dp"
+            android:textSize="14sp"
+            android:layout_marginTop="7dp"
+            android:layout_marginStart="12dp"/>
+
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                style="@style/detail_card"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/tel"
+                android:textColor="#000"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="30dp" />
+
+            <EditText
+                android:id="@+id/set_tel"
+                android:paddingStart="5dp"
+                android:layout_width="280dp"
+                android:layout_height="25dp"
+                android:textSize="14sp"
+                android:background="@drawable/rec_tangle"
+                android:paddingBottom="0dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginStart="27dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                style="@style/detail_card"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/address"
+                android:textColor="#000"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="30dp" />
+
+            <EditText
+                android:id="@+id/set_address"
+                android:layout_width="280dp"
+                android:layout_height="55dp"
+                android:background="@drawable/rec_tangle"
+                android:paddingBottom="0dp"
+                android:paddingStart="5dp"
+                android:textSize="14sp"
+                android:gravity="top"
+                android:layout_marginTop="7dp"
+                android:layout_marginStart="27dp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

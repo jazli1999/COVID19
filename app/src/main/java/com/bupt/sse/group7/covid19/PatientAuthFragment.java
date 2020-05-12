@@ -91,7 +91,7 @@ public class PatientAuthFragment extends Fragment {
                 CurrentUser.setId(returnedInfo.get("p_id").getAsInt());
                 CurrentUser.setLabel("patient");
 
-                intoHomePage();
+                getActivity().finish();
             } else {
                 Toast.makeText(getActivity(), "病案号或手机错误", Toast.LENGTH_SHORT).show();
             }
@@ -100,8 +100,4 @@ public class PatientAuthFragment extends Fragment {
         }
     }
 
-    private void intoHomePage() {
-        Intent intent = new Intent(getActivity(), HomeActivity.class);
-        startActivity(intent);
-    }
 }

@@ -49,4 +49,9 @@
     <string name="auth_desc">用户进行身份认证登录</string>
     <string name="track_desc">查看附近确诊患者轨迹</string>
 
+    <string name="bed_capacity">床位容量</string>
+
+    <string name="hospital_info">医院信息</string>
+    <string name="done">完成</string>
+
 </resources>

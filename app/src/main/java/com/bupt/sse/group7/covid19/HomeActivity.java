@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
+import com.baidu.mapapi.SDKInitializer;
+
 public class HomeActivity extends AppCompatActivity {
     private CardView hospitalCard;
     private CardView authCard;
@@ -57,6 +59,15 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        trackCard.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, MapActivity.class);
+                startActivity(intent);
+            }
+        });
+
         pageCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,7 +90,8 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
-    }
+
+}
 
 
     public void intoHospitalList(View view) {

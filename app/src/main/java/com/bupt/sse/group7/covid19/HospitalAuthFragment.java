@@ -77,7 +77,7 @@ public class HospitalAuthFragment extends Fragment {
                 CurrentUser.setId(returnedInfo.get("h_id").getAsInt());
                 CurrentUser.setLabel("hospital");
 
-                intoHomePage();
+                getActivity().finish();
             } else {
                 Toast.makeText(getActivity(), "登录名或密码错误", Toast.LENGTH_SHORT).show();
             }
@@ -98,8 +98,5 @@ public class HospitalAuthFragment extends Fragment {
         return thread;
     }
 
-    private void intoHomePage() {
-        Intent intent = new Intent(getActivity(), HomeActivity.class);
-        startActivity(intent);
-    }
+
 }

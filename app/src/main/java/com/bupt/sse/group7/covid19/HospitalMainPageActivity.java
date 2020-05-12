@@ -1,12 +1,15 @@
 package com.bupt.sse.group7.covid19;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -25,6 +28,12 @@ public class HospitalMainPageActivity extends AppCompatActivity {
     private HospitalContactFragment contactFragment;
     private HospitalStatusFragment statusFragment;
     private int id;
+    private String name;
+    private String people;
+    private String address;
+    private String tel;
+    private int mild;
+    private int severe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +50,10 @@ public class HospitalMainPageActivity extends AppCompatActivity {
 
         Bundle bundle = this.getIntent().getExtras();
         this.id = bundle.getInt("id");
-        Log.d("ID", String.valueOf(id));
 
         initView();
         initData();
 
-        Log.d("AData", statusNumber.toString());
         updateView();
     }
 
@@ -56,6 +63,13 @@ public class HospitalMainPageActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_hospital_main, menu);
         return true;
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        initData();
+        updateView();
     }
 
     private void initData() {
@@ -69,10 +83,16 @@ public class HospitalMainPageActivity extends AppCompatActivity {
     }
 
     private void updateView() {
-        ((TextView)this.findViewById(R.id.hospital_name)).setText(hospital.get("name").getAsString());
+        this.name = hospital.get("name").getAsString();
+        this.address = hospital.get("address").getAsString();
+        this.people = hospital.get("contact").getAsString();
+        this.tel = hospital.get("tel").getAsString();
+        this.mild = hospital.get("mild_left").getAsInt();
+        this.severe = hospital.get("severe_left").getAsInt();
+
+        ((TextView)this.findViewById(R.id.hospital_name)).setText(name);
         ((TextView)this.findViewById(R.id.hospital_desc)).setText(MessageFormat.format("剩余床位  轻症 {0} | 重症 {1}",
-                hospital.get("mild_left").getAsString(),
-                hospital.get("severe_left").getAsString()));
+                this.mild, this.severe));
         updateHospitalContact();
         updateHospitalStatus();
     }
@@ -86,9 +106,9 @@ public class HospitalMainPageActivity extends AppCompatActivity {
 
 
     private void updateHospitalContact() {
-        contactFragment.setTel(hospital.get("tel").getAsString());
-        contactFragment.setAddress(hospital.get("address").getAsString());
-        contactFragment.setPeople(hospital.get("contact").getAsString());
+        contactFragment.setTel(this.tel);
+        contactFragment.setAddress(this.address);
+        contactFragment.setPeople(this.people);
     }
 
     private Thread getHospitalInfo(int h_id) {
@@ -110,15 +130,48 @@ public class HospitalMainPageActivity extends AppCompatActivity {
     private void initView() {
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        statusFragment = new HospitalStatusFragment();
-        FragmentTransaction tranStatus = fragmentManager.beginTransaction();
-        tranStatus.add(R.id.hosp_main_content, statusFragment);
-        tranStatus.commit();
+        if (this.statusFragment == null) {
+            statusFragment = new HospitalStatusFragment();
+            FragmentTransaction tranStatus = fragmentManager.beginTransaction();
+            tranStatus.add(R.id.hosp_main_content, statusFragment);
+            tranStatus.commit();
+        }
 
-        contactFragment = new HospitalContactFragment();
-        FragmentTransaction tran = fragmentManager.beginTransaction();
-        tran.add(R.id.hosp_main_content, contactFragment);
-        tran.commit();
+        if (this.contactFragment == null) {
+            contactFragment = new HospitalContactFragment();
+            FragmentTransaction tran = fragmentManager.beginTransaction();
+            tran.add(R.id.hosp_main_content, contactFragment);
+            tran.commit();
+        }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_edit:
+                if(CurrentUser.getLabel().equals("hospital") && CurrentUser.getId() == this.id) {
+                    Intent intent = new Intent(this, EditHospitalActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("id", this.id);
+                    bundle.putString("name", this.name);
+                    bundle.putString("address", this.address);
+                    bundle.putString("people", this.people);
+                    bundle.putString("tel", this.tel);
+                    bundle.putInt("mild", this.mild);
+                    bundle.putInt("severe", this.severe);
+
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, "请先认证本医院账号", Toast.LENGTH_SHORT).show();
+                }
+
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }
