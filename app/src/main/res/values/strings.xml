@@ -53,5 +53,6 @@
 
     <string name="hospital_info">医院信息</string>
     <string name="done">完成</string>
+    <string name="patient_track">ta的轨迹</string>
 
 </resources>

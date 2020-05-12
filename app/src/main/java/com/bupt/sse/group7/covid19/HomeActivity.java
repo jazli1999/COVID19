@@ -1,6 +1,5 @@
 package com.bupt.sse.group7.covid19;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -12,8 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
-
-import com.baidu.mapapi.SDKInitializer;
 
 public class HomeActivity extends AppCompatActivity {
     private CardView hospitalCard;
@@ -63,7 +60,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, MapActivity.class);
+                Intent intent = new Intent(HomeActivity.this, ShowMapActivity.class);
                 startActivity(intent);
             }
         });

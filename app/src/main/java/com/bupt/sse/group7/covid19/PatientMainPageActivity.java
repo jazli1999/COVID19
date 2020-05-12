@@ -43,6 +43,7 @@ public class PatientMainPageActivity extends AppCompatActivity {
     private JsonObject patient;
     private JsonArray pStatus;
     private StatusLineFragment statusLineFragment;
+    private PatientTrackFragment patientTrackFragment;
 
     public static Map<Integer, String> statuses;
     static {
@@ -65,9 +66,12 @@ public class PatientMainPageActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+
         Bundle bundle = this.getIntent().getExtras();
         this.id = bundle.getInt("id");
-
 
         initView();
         initData();
@@ -81,6 +85,13 @@ public class PatientMainPageActivity extends AppCompatActivity {
         FragmentTransaction tranStatus = fragmentManager.beginTransaction();
         tranStatus.add(R.id.patient_content, statusLineFragment);
         tranStatus.commit();
+
+        patientTrackFragment = new PatientTrackFragment();
+        patientTrackFragment.setMp_id(this.id);
+        FragmentTransaction trackTranStatus = fragmentManager.beginTransaction();
+        trackTranStatus.add(R.id.patient_content, patientTrackFragment);
+        trackTranStatus.commit();
+
     }
 
     private void updateView() {
