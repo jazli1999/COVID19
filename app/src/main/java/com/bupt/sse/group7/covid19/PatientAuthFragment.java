@@ -1,5 +1,9 @@
 package com.bupt.sse.group7.covid19;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PatientAuthFragment extends Fragment {
+    private AlertDialog.Builder builder;
     private EditText patientNoView;
     private EditText patientTelView;
     private JsonObject returnedInfo;
@@ -85,7 +90,8 @@ public class PatientAuthFragment extends Fragment {
     }
 
     private void checkAuth(String tel) {
-        if (returnedInfo.get("status").getAsInt() == 1) {
+        int status = returnedInfo.get("status").getAsInt();
+        if (status == 1) {
             if (returnedInfo.get("tel").getAsString().equals(tel)) {
                 Toast.makeText(getActivity(), "认证成功", Toast.LENGTH_SHORT).show();
                 CurrentUser.setId(returnedInfo.get("p_id").getAsInt());
@@ -95,8 +101,15 @@ public class PatientAuthFragment extends Fragment {
             } else {
                 Toast.makeText(getActivity(), "病案号或手机错误", Toast.LENGTH_SHORT).show();
             }
-        } else {
+        } else if (status == 0) {
             Toast.makeText(getActivity(), "用户不存在", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(this.getActivity(), SetUsernameActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("id", returnedInfo.get("p_id").getAsInt());
+            intent.putExtras(bundle);
+            startActivity(intent);
+            this.getActivity().finish();
         }
     }
 

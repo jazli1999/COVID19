@@ -55,4 +55,8 @@
     <string name="done">完成</string>
     <string name="patient_track">ta的轨迹</string>
 
+    <string name="set_username">设置用户名</string>
+    <string name="set_name_hint1">首次登录，请填写昵称</string>
+
+
 </resources>

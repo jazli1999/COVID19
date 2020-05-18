@@ -45,10 +45,6 @@ public class AuthenticateActivity extends AppCompatActivity {
         }
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        initView();
-    }
-
-    private void initView() {
     }
 
 }

@@ -97,6 +97,10 @@ public class DBConnector {
         return newURL.substring(0, newURL.length()-1);
     }
 
+    public static void setUsername(JsonObject args) {
+        executePost(host + "setPatientUsername.php", args);
+    }
+
     public static JsonArray getAllTrackStarts() {
         return executeGET(host + "getAllTrackStarts.php");
     }
