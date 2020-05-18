@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -52,8 +53,8 @@ public class PatientAuthFragment extends Fragment {
     private void initView() {
         patientNoView = view.findViewById(R.id.patient_auth_no);
         patientTelView = view.findViewById(R.id.patient_auth_tel);
-        Button button = (Button) view.findViewById(R.id.patient_submit_auth);
-        button.setOnClickListener(new View.OnClickListener() {
+        CardView submit = (CardView) view.findViewById(R.id.patient_auth_submit);
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submitAuth();

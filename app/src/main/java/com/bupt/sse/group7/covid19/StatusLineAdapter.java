@@ -45,26 +45,6 @@ public class StatusLineAdapter extends RecyclerView.Adapter<StatusLineAdapter.St
         int status = list.get(position).getAsJsonObject().get("status").getAsInt();
         GradientDrawable drawable = (GradientDrawable) holder.dotView.getBackground();
 
-        //TODO 动态调整未生效
-//        switch(list.size()) {
-//            case 1:
-//                holder.lineAfter.setWidth((int) context.getResources().getDimension(R.dimen.status_1));
-//                holder.lineBefore.setWidth((int) context.getResources().getDimension(R.dimen.status_1));
-//                break;
-//            case 2:
-//                holder.lineAfter.setWidth((int) context.getResources().getDimension(R.dimen.status_2));
-//                holder.lineBefore.setWidth((int) context.getResources().getDimension(R.dimen.status_2));
-//                break;
-//            case 3:
-//                holder.lineAfter.setWidth((int) context.getResources().getDimension(R.dimen.status_3));
-//                holder.lineBefore.setWidth((int) context.getResources().getDimension(R.dimen.status_3));
-//                break;
-//            case 4:
-//                holder.lineAfter.setWidth((int) context.getResources().getDimension(R.dimen.status_4));
-//                holder.lineBefore.setWidth((int) context.getResources().getDimension(R.dimen.status_4));
-//                break;
-//        }
-
         holder.dateView.setText(day);
         holder.infoView.setText(PatientMainPageActivity.statuses.get(status));
         switch(status) {

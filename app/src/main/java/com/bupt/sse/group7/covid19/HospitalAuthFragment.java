@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.google.gson.JsonObject;
@@ -45,8 +46,8 @@ public class HospitalAuthFragment extends Fragment {
     private void initView() {
         userView = view.findViewById(R.id.hospital_auth_username);
         passView = view.findViewById(R.id.hospital_auth_password);
-        Button button = (Button) view.findViewById(R.id.hospital_submit_auth);
-        button.setOnClickListener(new View.OnClickListener() {
+        CardView submit = (CardView) view.findViewById(R.id.hospital_submit_auth);
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submitHospitalAuth();

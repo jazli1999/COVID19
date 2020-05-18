@@ -44,6 +44,8 @@ public class PatientMainPageActivity extends AppCompatActivity {
     private JsonArray pStatus;
     private StatusLineFragment statusLineFragment;
     private PatientTrackFragment patientTrackFragment;
+    private TrackLineFragment trackLineFragment;
+    private JsonArray tracks;
 
     public static Map<Integer, String> statuses;
     static {
@@ -73,8 +75,8 @@ public class PatientMainPageActivity extends AppCompatActivity {
         Bundle bundle = this.getIntent().getExtras();
         this.id = bundle.getInt("id");
 
-        initView();
         initData();
+        initView();
         updateView();
     }
 
@@ -89,9 +91,14 @@ public class PatientMainPageActivity extends AppCompatActivity {
         patientTrackFragment = new PatientTrackFragment();
         patientTrackFragment.setMp_id(this.id);
         FragmentTransaction trackTranStatus = fragmentManager.beginTransaction();
-        trackTranStatus.add(R.id.patient_content, patientTrackFragment);
+        trackTranStatus.add(R.id.track_block, patientTrackFragment);
         trackTranStatus.commit();
 
+        trackLineFragment = new TrackLineFragment();
+        trackLineFragment.setTracks(this.tracks);
+        FragmentTransaction trackLineTran = fragmentManager.beginTransaction();
+        trackLineTran.add(R.id.track_block, trackLineFragment);
+        trackLineTran.commit();
     }
 
     private void updateView() {
@@ -127,6 +134,7 @@ public class PatientMainPageActivity extends AppCompatActivity {
                     public void run() {
                         patient = DBConnector.getPatientById(args).get(0).getAsJsonObject();
                         pStatus = DBConnector.getPStatusById(args);
+                        tracks = DBConnector.getPatientTrackById(args);
                     }
                 });
         thread.start();

@@ -78,8 +78,26 @@
             android:id="@+id/patient_content"
             android:orientation="vertical">
 
-
         </LinearLayout>
+
+        <LinearLayout
+            style="@style/detail_fragment"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                style="@style/detail_card_title"
+                android:text="@string/patient_track" />
+
+            <LinearLayout
+                style="@style/detail_card"
+                android:orientation="vertical"
+                android:background="@drawable/border"
+                android:padding="12dp"
+                android:id="@+id/track_block">
+
+            </LinearLayout>
+        </LinearLayout>
+
 
     </LinearLayout>
 
