@@ -45,6 +45,7 @@ public class PatientMainPageActivity extends AppCompatActivity {
     private StatusLineFragment statusLineFragment;
     private PatientTrackFragment patientTrackFragment;
     private TrackLineFragment trackLineFragment;
+    private NotAvailable notAvailable;
     private JsonArray tracks;
 
     public static Map<Integer, String> statuses;
@@ -88,17 +89,25 @@ public class PatientMainPageActivity extends AppCompatActivity {
         tranStatus.add(R.id.patient_content, statusLineFragment);
         tranStatus.commit();
 
-        patientTrackFragment = new PatientTrackFragment();
-        patientTrackFragment.setMp_id(this.id);
-        FragmentTransaction trackTranStatus = fragmentManager.beginTransaction();
-        trackTranStatus.add(R.id.track_block, patientTrackFragment);
-        trackTranStatus.commit();
+        if (this.tracks.size() > 0) {
+            patientTrackFragment = new PatientTrackFragment();
+            patientTrackFragment.setMp_id(this.id);
+            FragmentTransaction trackTranStatus = fragmentManager.beginTransaction();
+            trackTranStatus.add(R.id.track_block, patientTrackFragment);
+            trackTranStatus.commit();
 
-        trackLineFragment = new TrackLineFragment();
-        trackLineFragment.setTracks(this.tracks);
-        FragmentTransaction trackLineTran = fragmentManager.beginTransaction();
-        trackLineTran.add(R.id.track_block, trackLineFragment);
-        trackLineTran.commit();
+            trackLineFragment = new TrackLineFragment();
+            trackLineFragment.setTracks(this.tracks);
+            FragmentTransaction trackLineTran = fragmentManager.beginTransaction();
+            trackLineTran.add(R.id.track_block, trackLineFragment);
+            trackLineTran.commit();
+        }
+        else {
+            notAvailable = new NotAvailable();
+            FragmentTransaction notTran = fragmentManager.beginTransaction();
+            notTran.add(R.id.track_block, notAvailable);
+            notTran.commit();
+        }
     }
 
     private void updateView() {

@@ -58,5 +58,5 @@
     <string name="set_username">设置用户名</string>
     <string name="set_name_hint1">首次登录，请填写昵称</string>
 
-
+    <string name="not_available">暂未上传</string>
 </resources>

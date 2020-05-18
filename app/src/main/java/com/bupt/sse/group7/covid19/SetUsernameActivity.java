@@ -68,6 +68,8 @@ public class SetUsernameActivity extends AppCompatActivity {
                 }
             }
         ).start();
+        CurrentUser.setId(this.id);
+        CurrentUser.setLabel("patient");
         finish();
         Toast.makeText(this, "设置成功", Toast.LENGTH_SHORT).show();
     }
