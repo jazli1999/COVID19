@@ -25,6 +25,7 @@ import java.util.Map;
 public class HospitalMainPageActivity extends AppCompatActivity {
     private JsonObject hospital;
     private JsonObject statusNumber;
+    private JsonObject supplies;
     private HospitalContactFragment contactFragment;
     private HospitalStatusFragment statusFragment;
     private int id;
@@ -76,6 +77,7 @@ public class HospitalMainPageActivity extends AppCompatActivity {
         Thread thread = getHospitalInfo(this.id);
         try {
             thread.join();
+            Log.d("lyj", supplies.toString());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -120,6 +122,7 @@ public class HospitalMainPageActivity extends AppCompatActivity {
                     public void run() {
                         hospital = DBConnector.getHospitalById(args).get(0).getAsJsonObject();
                         statusNumber = DBConnector.getStatusNumberById(args).get(0).getAsJsonObject();
+                        supplies = DBConnector.getSuppliesById(args).get(0).getAsJsonObject();
                     }
                 }
         );
