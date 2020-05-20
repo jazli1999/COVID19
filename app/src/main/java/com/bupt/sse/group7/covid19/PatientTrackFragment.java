@@ -3,6 +3,7 @@ package com.bupt.sse.group7.covid19;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.map.TextOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -102,14 +104,18 @@ public class PatientTrackFragment extends Fragment {
             double curLng= object.get("longitude").getAsDouble();
             double curLan= object.get("latitude").getAsDouble();
             String date=object.get("date_time").getAsString();
-            String descrip=object.get("description").getAsString();
+            String descrip = "";
+            JsonElement descObj = object.get("description");
+            if (!descObj.isJsonNull()) {
+                descrip = descObj.getAsString();
+            }
             LatLng currLatLng=new LatLng(curLan,curLng);
             //添加文字
             OverlayOptions textOption = new TextOptions()
                     //                    .bgColor(0xAAFFFF00)
                     .fontSize(36)
                     .fontColor(Color.BLACK)
-                    .text(date+" "+descrip)
+                    .text(date+" "+ descrip)
                     .position(currLatLng);
             optionsList.add(textOption);
 

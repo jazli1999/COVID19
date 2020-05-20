@@ -51,12 +51,9 @@ public class ShowMapActivity extends AppCompatActivity {
 
     MapView mapView;
     BaiduMap baiduMap;
-    private JsonArray track;
     private List<JsonArray> tracklist=new ArrayList<>();
     private JsonArray allpatientId;
-    BitmapDescriptor bitmap;
-    List<OverlayOptions> optionsList=new ArrayList<>();
-    List<LatLng> points=new ArrayList<>();
+    DrawMarker drawMarker;
 
 
     @Override
@@ -76,6 +73,7 @@ public class ShowMapActivity extends AppCompatActivity {
         mapView=findViewById(R.id.mapView);
         baiduMap=mapView.getMap();
         baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+        //点击marker跳转到病人主页
         baiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -88,7 +86,40 @@ public class ShowMapActivity extends AppCompatActivity {
                 return false;
             }
         });
+        //缩放地图时marker的变化
+        baiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
+            @Override
+            public void onMapStatusChangeStart(MapStatus mapStatus) {
+                float zoom=mapStatus.zoom;
 
+                //小于200米
+                if(zoom>=15){
+                    drawMarker.drawAllDetail(tracklist);
+                }
+                else {
+                    drawMarker.drawAllRough(tracklist);
+                }
+
+
+            }
+
+            @Override
+            public void onMapStatusChangeStart(MapStatus mapStatus, int i) {
+
+            }
+
+            @Override
+            public void onMapStatusChange(MapStatus mapStatus) {
+
+            }
+
+            @Override
+            public void onMapStatusChangeFinish(MapStatus mapStatus) {
+
+
+            }
+        });
+        //添加line
         baiduMap.setOnPolylineClickListener(new BaiduMap.OnPolylineClickListener() {
             @Override
             public boolean onPolylineClick(Polyline polyline) {
@@ -101,12 +132,14 @@ public class ShowMapActivity extends AppCompatActivity {
                 return false;
             }
         });
-        //marker图标
-        bitmap= BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
+
 
         initPatientInfo();
-        updateView();
+        drawMarker=new DrawMarker(baiduMap);
+        drawMarker.drawAllRough(tracklist);
+
     }
+    //获取所有病人的轨迹信息
     private void initPatientInfo(){
         Thread thread=getAllIds();
         try {
@@ -123,6 +156,7 @@ public class ShowMapActivity extends AppCompatActivity {
     }
 
 
+    //根据p_id获取病人的轨迹
     private void initTrackInfo(int p_id){
         Thread thread=getTrackInfo(p_id);
         try {
@@ -132,6 +166,8 @@ public class ShowMapActivity extends AppCompatActivity {
         }
 
     }
+
+    //获取所有病人id
     private Thread getAllIds(){
 
         Thread thread=new Thread(
@@ -164,63 +200,5 @@ public class ShowMapActivity extends AppCompatActivity {
         thread.start();
         return thread;
     }
-    //一个人的轨迹
-    private void updateView(){
-        List<Marker> markerList=new ArrayList<>();
-        for(int j=0;j<tracklist.size();j++){
-            track=tracklist.get(j);
-            Bundle bundle=null;
-            for(int i=0;i<track.size();i++){
 
-                JsonObject object=track.get(i).getAsJsonObject();
-                int id=object.get("p_id").getAsInt();
-                double curLng= object.get("longitude").getAsDouble();
-                double curLan= object.get("latitude").getAsDouble();
-                String date=object.get("date_time").getAsString();
-                String descrip=object.get("description").getAsString();
-                LatLng currLatLng=new LatLng(curLan,curLng);
-                //添加文字
-                OverlayOptions textOption = new TextOptions()
-                        //                    .bgColor(0xAAFFFF00)
-                        .fontSize(36)
-                        .fontColor(Color.BLACK)
-                        .text(date+" "+descrip)
-                        .position(currLatLng);
-                optionsList.add(textOption);
-
-                //添加Marker
-                OverlayOptions option=new MarkerOptions().position(currLatLng).icon(bitmap);
-
-                Marker marker= (Marker) baiduMap.addOverlay(option);
-                bundle=new Bundle();
-                bundle.putInt("p_id",id);
-                Log.i("hcccc","id:"+id);
-                marker.setExtraInfo(bundle);
-                //optionsList.add(option);
-                // markerList.add(marker);
-                points.add(currLatLng);
-            }
-            //添加line
-            if(points.size()>1) {
-                OverlayOptions ooPolyline = new PolylineOptions().width(10).color(0xAAFF0000).points(points);
-                Polyline polyline= (Polyline) baiduMap.addOverlay(ooPolyline);
-                polyline.setExtraInfo(bundle);
-            }
-            points=new ArrayList<>();
-        }
-        baiduMap.addOverlays(optionsList);
-
-    }
-
-
-    private void addData(final JsonObject args){
-        new Thread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        DBConnector.addPatientTrack(args);
-                    }
-                }
-        ).start();
-    }
 }
