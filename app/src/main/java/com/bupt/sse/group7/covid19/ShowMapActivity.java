@@ -16,6 +16,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,18 +53,113 @@ import java.util.Map;
 public class ShowMapActivity extends AppCompatActivity {
 
 
-    MapView mapView;
-    BaiduMap baiduMap;
+    private MapView mapView;
+    private BaiduMap baiduMap;
+    private List<JsonArray> alltracklist=new ArrayList<>();
     private List<JsonArray> tracklist=new ArrayList<>();
-    private JsonArray allpatientId;
-    DrawMarker drawMarker;
 
+    private JsonArray allpatientId;
+    private DrawMarker drawMarker;
+
+    //地区选择
+    private Spinner district_Sp;
+    private ArrayAdapter district_adapter;
+    private Button btn_dis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_show_map);
+
+        //地区选择
+        district_Sp=findViewById(R.id.district_spinner);
+        district_adapter=ArrayAdapter.createFromResource(this,R.array.beijing,android.R.layout.simple_spinner_item);
+        district_Sp.setAdapter(district_adapter);
+        btn_dis=findViewById(R.id.btn_district);
+        btn_dis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(district_Sp.getSelectedItem().toString().equals("全部")){
+
+                    if(baiduMap.getMapStatus().zoom>=15){
+                        drawMarker.drawAllDetail(alltracklist);
+
+                    }
+                    else {
+
+                        drawMarker.drawAllRough(alltracklist);
+
+                    }
+
+                }
+
+                else {
+                    for (int j = 0; j < allpatientId.size(); j++) {
+                        JsonObject object = allpatientId.get(j).getAsJsonObject();
+                        int pid = object.get("p_id").getAsInt();
+                        initTrackInfo(pid, "2020-05-01", "2020-05-23", district_Sp.getSelectedItem().toString());
+
+                    }
+
+                    if(baiduMap.getMapStatus().zoom>=15){
+                        drawMarker.drawAllDetail(tracklist);
+
+                    }
+                    else {
+
+                        drawMarker.drawAllRough(tracklist);
+
+                    }
+                }
+            }
+        });
+
+//        district_Sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//               // Log.i("hccccc","选择的district"+district_Sp.getSelectedItem().toString());
+//
+//                if(district_Sp.getSelectedItem().toString().equals("全部")){
+//
+//                    if(baiduMap.getMapStatus().zoom>=15){
+//                        drawMarker.drawAllDetail(alltracklist);
+//
+//                    }
+//                    else {
+//
+//                        drawMarker.drawAllRough(alltracklist);
+//
+//                    }
+//
+//                }
+//
+//                else {
+//                    for (int j = 0; j < allpatientId.size(); j++) {
+//                        JsonObject object = allpatientId.get(j).getAsJsonObject();
+//                        int pid = object.get("p_id").getAsInt();
+//                        initTrackInfo(pid, "2020-05-01", "2020-05-23", district_Sp.getSelectedItem().toString());
+//
+//                    }
+//
+//                    if(baiduMap.getMapStatus().zoom>=15){
+//                        drawMarker.drawAllDetail(tracklist);
+//
+//                    }
+//                    else {
+//
+//                        drawMarker.drawAllRough(tracklist);
+//
+//                    }
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -94,10 +193,23 @@ public class ShowMapActivity extends AppCompatActivity {
 
                 //小于200米
                 if(zoom>=15){
-                    drawMarker.drawAllDetail(tracklist);
+                    if(district_Sp.getSelectedItem().toString().equals("全部")){
+                        drawMarker.drawAllDetail(alltracklist);
+                    }
+                    else {
+                        drawMarker.drawAllDetail(tracklist);
+
+                    }
+
                 }
                 else {
-                    drawMarker.drawAllRough(tracklist);
+                    if(district_Sp.getSelectedItem().toString().equals("全部")){
+                        drawMarker.drawAllRough(alltracklist);
+                    }
+                    else {
+                        drawMarker.drawAllRough(tracklist);
+
+                    }
                 }
 
 
@@ -136,7 +248,7 @@ public class ShowMapActivity extends AppCompatActivity {
 
         initPatientInfo();
         drawMarker=new DrawMarker(baiduMap);
-        drawMarker.drawAllRough(tracklist);
+        drawMarker.drawAllRough(alltracklist);
 
     }
     //获取所有病人的轨迹信息
@@ -182,6 +294,39 @@ public class ShowMapActivity extends AppCompatActivity {
         thread.start();
         return thread;
     }
+    //根据p_id、date、行政区获取病人的轨迹
+    private void initTrackInfo(int p_id,String low,String up,String district){
+        Thread thread=getTrackInfo(p_id,low,up ,district);
+        try {
+            thread.join();
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    //根据时间和区域选择
+    private Thread getTrackInfo(int p_id,String low,String up,String district){
+        final Map<String,String> args=new HashMap<>();
+        tracklist=new ArrayList<>();
+        args.put("p_id",p_id+"");
+        args.put("low",low);
+        args.put("up",up);
+        args.put("district",district);
+
+        Thread thread=new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        JsonArray track=DBConnector.getTrackByDateAndTrack(args);
+                        tracklist.add(track);
+                    }
+                }
+        );
+
+        thread.start();
+        return thread;
+    }
 
 
     //get all track by p_id
@@ -192,7 +337,7 @@ public class ShowMapActivity extends AppCompatActivity {
                 new Runnable() {
                     @Override
                     public void run() {
-                        tracklist.add(DBConnector.getPatientTrackById(args));
+                        alltracklist.add(DBConnector.getPatientTrackById(args));
 
                     }
                 }

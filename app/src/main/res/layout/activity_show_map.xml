@@ -23,9 +23,40 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.baidu.mapapi.map.MapView
-        android:id="@+id/mapView"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="选择区域"></TextView>
+            <Spinner
+                android:id="@+id/district_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/beijing" />
+
+            <Button
+                android:text="确认"
+                android:id="@+id/btn_district"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ></Button>
+        </LinearLayout>
+        <com.baidu.mapapi.map.MapView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+        </com.baidu.mapapi.map.MapView>
+    </LinearLayout>
+
+
 
 </LinearLayout>

@@ -34,14 +34,18 @@ public class DrawMarker {
 
     //展示所有人详细的轨迹
     public void drawAllDetail(List<JsonArray> tracklist){
-        optionsList=new ArrayList<>();
         baiduMap.clear();
+        if(tracklist==null||tracklist.size()==0)
+            return;
+        optionsList=new ArrayList<>();
         for(int j=0;j<tracklist.size();j++){
             JsonArray track=tracklist.get(j);
+           
             Bundle bundle=null;
             List<LatLng> points=new ArrayList<>();
 
             for(int i=0;i<track.size();i++){
+
                 JsonObject object=track.get(i).getAsJsonObject();
                 int id=object.get("p_id").getAsInt();
                 double curLng= object.get("longitude").getAsDouble();
@@ -85,11 +89,16 @@ public class DrawMarker {
 
     //展示所有人的粗略轨迹
     public void drawAllRough(List<JsonArray> tracklist){
-        optionsList=new ArrayList<>();
         baiduMap.clear();
+
+        if(tracklist==null||tracklist.size()==0)
+            return;
+        optionsList=new ArrayList<>();
         List<Marker> markerList=new ArrayList<>();
         for(int j=0;j<tracklist.size();j++){
             JsonArray track=tracklist.get(j);
+            if(track.size()==0)
+                return;
             Bundle bundle=null;
             JsonObject object=track.get(0).getAsJsonObject();//获取起点
             int id=object.get("p_id").getAsInt();
