@@ -15,6 +15,7 @@ import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.map.TextOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -46,7 +47,12 @@ public class DrawMarker {
                 double curLng= object.get("longitude").getAsDouble();
                 double curLan= object.get("latitude").getAsDouble();
                 String date=object.get("date_time").getAsString();
-                String descrip=object.get("description").getAsString();
+                String descrip = "";
+                JsonElement descObj = object.get("description");
+                if (!descObj.isJsonNull()) {
+                    descrip = descObj.getAsString();
+                }
+
                 LatLng currLatLng=new LatLng(curLan,curLng);
                 //添加文字
                 OverlayOptions textOption = new TextOptions()
@@ -90,7 +96,11 @@ public class DrawMarker {
             double curLng= object.get("longitude").getAsDouble();
             double curLan= object.get("latitude").getAsDouble();
             String date=object.get("date_time").getAsString();
-            String descrip=object.get("description").getAsString();
+            String descrip = "";
+            JsonElement descObj = object.get("description");
+            if (!descObj.isJsonNull()) {
+                descrip = descObj.getAsString();
+            }
             LatLng currLatLng=new LatLng(curLan,curLng);
             //添加文字
             OverlayOptions textOption = new TextOptions()

@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.icu.util.BuddhistCalendar;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -67,6 +68,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     private Handler mHandler;
     private GeoCoder geoCoder;
     private List<String> addressList=new ArrayList<>();
+    private List<String> districtList=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,7 +192,9 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             @Override
             public boolean handleMessage(Message msg) {
                 //处理消息
-                addressList.add(String.valueOf(msg.obj));
+                Bundle bundle=msg.getData();
+                districtList.add(bundle.getString("district"));
+                addressList.add(bundle.getString("address"));
                 return true;
             }
         });
@@ -212,6 +216,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             info.add("longitude", new JsonPrimitive(points.get(i).longitude));
             info.add("latitude", new JsonPrimitive(points.get(i).latitude));
             info.add("location", new JsonPrimitive(addressList.get(i)));
+            info.add("district", new JsonPrimitive(districtList.get(i)));
             info.add("p_id", new JsonPrimitive(p_id+""));
             jsonArray.add(info);
         }
@@ -298,10 +303,15 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         ReverseGeoCodeResult.AddressComponent component=reverseGeoCodeResult.getAddressDetail();
 
         String address=component.street+component.streetNumber;
+        String district=component.district;
         Log.i("hcccc","address:"+address);
         Message message=new Message();
         message.what=1;
-        message.obj=address;
+        //message.obj=address;
+        Bundle bundle=new Bundle();
+        bundle.putString("address",address);
+        bundle.putString("district",district);
+        message.setData(bundle);
         mHandler.sendMessage(message);
 
 

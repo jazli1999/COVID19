@@ -42,7 +42,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="wyS76jlbxMwGgIXzBgs4kI2UndREdlYM" />
+            android:value="WorMan69chftt2d3EYkrWiB2v4nD9Dxk" />
 
         <service
             android:name="com.baidu.location.f"
@@ -107,7 +107,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".EditTrackActivity"
+        <activity android:name=".HomeActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -115,7 +115,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".HomeActivity"
+        <activity android:name=".EditTrackActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
