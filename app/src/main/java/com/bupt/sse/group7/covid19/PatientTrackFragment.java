@@ -37,10 +37,10 @@ public class PatientTrackFragment extends Fragment {
     int mp_id;
     MapView mapView;
     BaiduMap baiduMap;
-    private JsonArray track;
     BitmapDescriptor bitmap;
-    List<OverlayOptions> optionsList = new ArrayList<>();
-    List<LatLng> points=new ArrayList<>();
+    private DrawMarker drawMarker;
+    private List<JsonArray> tracklist=new ArrayList<>();
+
 
     @Nullable
     @Override
@@ -69,10 +69,11 @@ public class PatientTrackFragment extends Fragment {
 
         //marker图标
         bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
-
+        drawMarker=new DrawMarker(baiduMap);
+        drawMarker.drawAllRough(tracklist);
         initData(mp_id);
-        updateView();
-    }
+        drawMarker.drawAllDetail(tracklist);
+        }
 
     private void initData(int p_id){
         Thread thread=getTrackInfo(p_id);
@@ -90,7 +91,7 @@ public class PatientTrackFragment extends Fragment {
                 new Runnable() {
                     @Override
                     public void run() {
-                        track=DBConnector.getPatientTrackById(args);
+                        tracklist.add(DBConnector.getPatientTrackById(args));
                     }
                 }
         );
@@ -98,41 +99,7 @@ public class PatientTrackFragment extends Fragment {
         return thread;
     }
 
-    private void updateView(){
-        for(int i=0;i<track.size();i++){
-            JsonObject object=track.get(i).getAsJsonObject();
-            double curLng= object.get("longitude").getAsDouble();
-            double curLan= object.get("latitude").getAsDouble();
-            String date=object.get("date_time").getAsString();
-            String descrip = "";
-            JsonElement descObj = object.get("description");
-            if (!descObj.isJsonNull()) {
-                descrip = descObj.getAsString();
-            }
-            LatLng currLatLng=new LatLng(curLan,curLng);
-            //添加文字
-            OverlayOptions textOption = new TextOptions()
-                    //                    .bgColor(0xAAFFFF00)
-                    .fontSize(36)
-                    .fontColor(Color.BLACK)
-                    .text(date+" "+ descrip)
-                    .position(currLatLng);
-            optionsList.add(textOption);
 
-            //添加Marker
-            OverlayOptions option=new MarkerOptions().position(currLatLng).icon(bitmap);
-            optionsList.add(option);
-            baiduMap.addOverlays(optionsList);
-
-
-            points.add(currLatLng);
-        }
-        //添加line
-        if(points.size()>1) {
-            OverlayOptions ooPolyline = new PolylineOptions().width(10).color(0xAAFF0000).points(points);
-            baiduMap.addOverlay(ooPolyline);
-        }
-    }
 
     public void setMp_id(int mp_id) {
         this.mp_id = mp_id;
