@@ -75,6 +75,11 @@ public class DBConnector {
         }
     }
 
+    public static JsonArray getTrackByDateAndTrack(Map<String, String> args) {
+        String newURL = encapParamURL(host + "getTrackByDateAndTrack.php", args);
+        return executeGET(newURL);
+    }
+
     public static JsonArray getSuppliesById(Map<String, String> args) {
         String newURL = encapParamURL(host + "getSuppliesById.php", args);
         return executeGET(newURL);
