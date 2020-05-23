@@ -1,6 +1,8 @@
 package com.bupt.sse.group7.covid19;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 
@@ -19,6 +21,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +50,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +70,10 @@ public class ShowMapActivity extends AppCompatActivity {
     private Spinner district_Sp;
     private ArrayAdapter district_adapter;
     private Button btn_dis;
+    //时间选择
+    private TextView tv_start;
+    private TextView tv_end;
+    String end;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +107,9 @@ public class ShowMapActivity extends AppCompatActivity {
                     for (int j = 0; j < allpatientId.size(); j++) {
                         JsonObject object = allpatientId.get(j).getAsJsonObject();
                         int pid = object.get("p_id").getAsInt();
-                        initTrackInfo(pid, "2020-05-01", "2020-05-23", district_Sp.getSelectedItem().toString());
+
+
+                        initTrackInfo(pid, tv_start.getText().toString(), end, district_Sp.getSelectedItem().toString());
 
                     }
 
@@ -115,51 +126,51 @@ public class ShowMapActivity extends AppCompatActivity {
             }
         });
 
-//        district_Sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//               // Log.i("hccccc","选择的district"+district_Sp.getSelectedItem().toString());
-//
-//                if(district_Sp.getSelectedItem().toString().equals("全部")){
-//
-//                    if(baiduMap.getMapStatus().zoom>=15){
-//                        drawMarker.drawAllDetail(alltracklist);
-//
-//                    }
-//                    else {
-//
-//                        drawMarker.drawAllRough(alltracklist);
-//
-//                    }
-//
-//                }
-//
-//                else {
-//                    for (int j = 0; j < allpatientId.size(); j++) {
-//                        JsonObject object = allpatientId.get(j).getAsJsonObject();
-//                        int pid = object.get("p_id").getAsInt();
-//                        initTrackInfo(pid, "2020-05-01", "2020-05-23", district_Sp.getSelectedItem().toString());
-//
-//                    }
-//
-//                    if(baiduMap.getMapStatus().zoom>=15){
-//                        drawMarker.drawAllDetail(tracklist);
-//
-//                    }
-//                    else {
-//
-//                        drawMarker.drawAllRough(tracklist);
-//
-//                    }
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//            }
-//        });
+        //时间选择
+        Calendar calendar=Calendar.getInstance();
+        tv_start=findViewById(R.id.tv_start);
+        tv_end=findViewById(R.id.tv_end);
+        int eYear=calendar.get(Calendar.YEAR);
+        int eMonth=calendar.get(Calendar.MONTH);
+        int eDay=calendar.get(Calendar.DAY_OF_MONTH);
+        tv_end.setText(eYear+"-"+(eMonth+1)+"-"+ eDay);
+        end=eYear+"-"+(eMonth+1)+"-"+ (eDay+1);
+        //七天前的日期
+        calendar.add(Calendar.DATE,-7);
+        int sYear=calendar.get(Calendar.YEAR);
+        int sMonth=calendar.get(Calendar.MONTH);
+        int sDay =calendar.get(Calendar.DAY_OF_MONTH);
+        tv_start.setText(sYear+"-"+(sMonth+1)+"-"+sDay);
+
+        tv_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog.OnDateSetListener listener=new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        tv_start.setText(year+"-"+(++month)+"-"+dayOfMonth);
+
+
+                    }
+                };
+                DatePickerDialog dialog=new DatePickerDialog(ShowMapActivity.this, AlertDialog.THEME_HOLO_LIGHT,listener,sYear,sMonth, sDay);
+                dialog.show();
+            }
+        });
+        tv_end.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog.OnDateSetListener listener=new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        tv_end.setText(year+"-"+(month+1)+"-"+dayOfMonth);
+                        end=year+"-"+(month+1)+"-"+(dayOfMonth+1);
+                    }
+                };
+                DatePickerDialog dialog=new DatePickerDialog(ShowMapActivity.this, AlertDialog.THEME_HOLO_LIGHT,listener,eYear,eMonth,eDay);
+                dialog.show();
+            }
+        });
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

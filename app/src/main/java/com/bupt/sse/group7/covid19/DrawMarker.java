@@ -40,7 +40,7 @@ public class DrawMarker {
         optionsList=new ArrayList<>();
         for(int j=0;j<tracklist.size();j++){
             JsonArray track=tracklist.get(j);
-           
+
             Bundle bundle=null;
             List<LatLng> points=new ArrayList<>();
 
