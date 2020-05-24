@@ -49,8 +49,11 @@ import com.baidu.mapapi.model.LatLng;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,8 +136,9 @@ public class ShowMapActivity extends AppCompatActivity {
         int eYear=calendar.get(Calendar.YEAR);
         int eMonth=calendar.get(Calendar.MONTH);
         int eDay=calendar.get(Calendar.DAY_OF_MONTH);
-        tv_end.setText(eYear+"-"+(eMonth+1)+"-"+ eDay);
-        end=eYear+"-"+(eMonth+1)+"-"+ (eDay+1);
+        String now=eYear+"-"+(eMonth+1)+"-"+ eDay;
+        tv_end.setText(now);
+        end=getDayAfter(now);
         //七天前的日期
         calendar.add(Calendar.DATE,-7);
         int sYear=calendar.get(Calendar.YEAR);
@@ -163,8 +167,10 @@ public class ShowMapActivity extends AppCompatActivity {
                 DatePickerDialog.OnDateSetListener listener=new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        tv_end.setText(year+"-"+(month+1)+"-"+dayOfMonth);
-                        end=year+"-"+(month+1)+"-"+(dayOfMonth+1);
+                        String day=year+"-"+(month+1)+"-"+dayOfMonth;
+                        tv_end.setText(day);
+                        end=getDayAfter(day);
+                        Log.i("hccccc","end"+end);
                     }
                 };
                 DatePickerDialog dialog=new DatePickerDialog(ShowMapActivity.this, AlertDialog.THEME_HOLO_LIGHT,listener,eYear,eMonth,eDay);
@@ -261,6 +267,24 @@ public class ShowMapActivity extends AppCompatActivity {
         drawMarker=new DrawMarker(baiduMap);
         drawMarker.drawAllRough(alltracklist);
 
+    }
+
+
+    //获取某一天的后一天
+    private String getDayAfter(String specifiedDay){
+        Calendar c = Calendar.getInstance();
+        Date date=null;
+        try {
+            date = new SimpleDateFormat("yy-MM-dd").parse(specifiedDay);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.setTime(date);
+        int day=c.get(Calendar.DATE);
+        c.set(Calendar.DATE,day+1);
+
+        String dayAfter=new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+        return dayAfter;
     }
     //获取所有病人的轨迹信息
     private void initPatientInfo(){
