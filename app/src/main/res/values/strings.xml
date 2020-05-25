@@ -59,4 +59,14 @@
     <string name="set_name_hint1">首次登录，请填写昵称</string>
 
     <string name="not_available">暂未上传</string>
+
+    <string name="supplies_remains">物资情况</string>
+    <string name="remains_count">剩余数量</string>
+    <string name="n95">N95口罩</string>
+    <string name="surgeon">医用外科口罩</string>
+    <string name="ventilator">呼吸机</string>
+    <string name="clothe">防护服</string>
+    <string name="glasses">护目镜</string>
+    <string name="alcohol">医用酒精</string>
+    <string name="pants">安心裤</string>
 </resources>
