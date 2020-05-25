@@ -76,7 +76,7 @@ public class ShowMapActivity extends AppCompatActivity {
     //时间选择
     private TextView tv_start;
     private TextView tv_end;
-    String end;
+    String end,seven_ago;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +93,15 @@ public class ShowMapActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(district_Sp.getSelectedItem().toString().equals("全部")){
+                    alltracklist=new ArrayList<>();
+                    for (int j = 0; j < allpatientId.size(); j++) {
+                        JsonObject object = allpatientId.get(j).getAsJsonObject();
+                        int pid = object.get("p_id").getAsInt();
 
+
+                        initTrackInfo(pid, tv_start.getText().toString(), end);
+
+                    }
                     if(baiduMap.getMapStatus().zoom>=15){
                         drawMarker.drawAllDetail(alltracklist);
 
@@ -107,10 +115,11 @@ public class ShowMapActivity extends AppCompatActivity {
                 }
 
                 else {
+                    tracklist=new ArrayList<>();
+
                     for (int j = 0; j < allpatientId.size(); j++) {
                         JsonObject object = allpatientId.get(j).getAsJsonObject();
                         int pid = object.get("p_id").getAsInt();
-
 
                         initTrackInfo(pid, tv_start.getText().toString(), end, district_Sp.getSelectedItem().toString());
 
@@ -144,7 +153,8 @@ public class ShowMapActivity extends AppCompatActivity {
         int sYear=calendar.get(Calendar.YEAR);
         int sMonth=calendar.get(Calendar.MONTH);
         int sDay =calendar.get(Calendar.DAY_OF_MONTH);
-        tv_start.setText(sYear+"-"+(sMonth+1)+"-"+sDay);
+        seven_ago=sYear+"-"+(sMonth+1)+"-"+sDay;
+        tv_start.setText(seven_ago);
 
         tv_start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -286,7 +296,7 @@ public class ShowMapActivity extends AppCompatActivity {
         String dayAfter=new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
         return dayAfter;
     }
-    //获取所有病人的轨迹信息
+    //打开页面时候初始化，获取所有病人的轨迹信息
     private void initPatientInfo(){
         Thread thread=getAllIds();
         try {
@@ -297,15 +307,15 @@ public class ShowMapActivity extends AppCompatActivity {
         for(int i=0;i<allpatientId.size();i++) {
             JsonObject object = allpatientId.get(i).getAsJsonObject();
             int pid = object.get("p_id").getAsInt();
-            initTrackInfo(pid);
+            initTrackInfo(pid,seven_ago,end);
 
         }
     }
 
 
     //根据p_id获取病人的轨迹
-    private void initTrackInfo(int p_id){
-        Thread thread=getTrackInfo(p_id);
+    private void initTrackInfo(int p_id,String low,String up){
+        Thread thread=getTrackInfo(p_id,low,up);
         try {
             thread.join();
         }catch (InterruptedException e){
@@ -343,7 +353,6 @@ public class ShowMapActivity extends AppCompatActivity {
     //根据时间和区域选择
     private Thread getTrackInfo(int p_id,String low,String up,String district){
         final Map<String,String> args=new HashMap<>();
-        tracklist=new ArrayList<>();
         args.put("p_id",p_id+"");
         args.put("low",low);
         args.put("up",up);
@@ -364,15 +373,18 @@ public class ShowMapActivity extends AppCompatActivity {
     }
 
 
-    //get all track by p_id
-    private Thread getTrackInfo(int p_id){
+    //get all track by p_id and time
+    private Thread getTrackInfo(int p_id,String low,String up){
         final Map<String,String> args=new HashMap<>();
+
         args.put("p_id",p_id+"");
+        args.put("low",low);
+        args.put("up",up);
         Thread thread=new Thread(
                 new Runnable() {
                     @Override
                     public void run() {
-                        alltracklist.add(DBConnector.getPatientTrackById(args));
+                        alltracklist.add(DBConnector.getTrackByIdAndDate(args));
 
                     }
                 }
