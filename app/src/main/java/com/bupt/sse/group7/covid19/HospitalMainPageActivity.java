@@ -16,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.text.MessageFormat;
@@ -28,7 +29,7 @@ public class HospitalMainPageActivity extends AppCompatActivity {
     private JsonObject supplies;
     private HospitalContactFragment contactFragment;
     private HospitalStatusFragment statusFragment;
-    private HospitalSuppliesFragment suppliesFragment;//添加一个物资类
+    private HospitalSuppliesFragment suppliesFragment;
     private int id;
     private String name;
     private String people;
@@ -86,7 +87,6 @@ public class HospitalMainPageActivity extends AppCompatActivity {
         Thread thread = getHospitalInfo(this.id);
         try {
             thread.join();
-            Log.d("lyj", supplies.toString());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -101,20 +101,25 @@ public class HospitalMainPageActivity extends AppCompatActivity {
         this.mild = hospital.get("mild_left").getAsInt();
         this.severe = hospital.get("severe_left").getAsInt();
 
-        this.n95 = supplies.get("n95").getAsString();
-        this.surgeon = supplies.get("surgeon").getAsString();
-        this.ventilator = supplies.get("ventilator").getAsString();
-        this.clothe = supplies.get("clothe").getAsString();
-        this.glasses = supplies.get("glasses").getAsString();
-        this.alcohol = supplies.get("alcohol").getAsString();
-        this.pants = supplies.get("pants").getAsString();
+        if (this.supplies != null) {
+            Log.d("lyj", "in");
+            this.n95 = supplies.get("n95").getAsString();
+            this.surgeon = supplies.get("surgeon").getAsString();
+            this.ventilator = supplies.get("ventilator").getAsString();
+            this.clothe = supplies.get("clothe").getAsString();
+            this.glasses = supplies.get("glasses").getAsString();
+            this.alcohol = supplies.get("alcohol").getAsString();
+            this.pants = supplies.get("pants").getAsString();
+        }
 
         ((TextView)this.findViewById(R.id.hospital_name)).setText(name);
         ((TextView)this.findViewById(R.id.hospital_desc)).setText(MessageFormat.format("剩余床位  轻症 {0} | 重症 {1}",
                 this.mild, this.severe));
         updateHospitalContact();
         updateHospitalStatus();
-        updateHospitalSupplies();//更新fragment对象中的各个私有属性的值
+        if (suppliesFragment != null) {
+            updateHospitalSupplies();
+        }
     }
 
     private void updateHospitalStatus() {
@@ -151,7 +156,11 @@ public class HospitalMainPageActivity extends AppCompatActivity {
                     public void run() {
                         hospital = DBConnector.getHospitalById(args).get(0).getAsJsonObject();
                         statusNumber = DBConnector.getStatusNumberById(args).get(0).getAsJsonObject();
-                        supplies = DBConnector.getSuppliesById(args).get(0).getAsJsonObject();
+                        JsonArray temp = DBConnector.getSuppliesById(args);
+                        Log.d("lyj", temp.toString());
+                        if (temp != null && temp.size() > 0) {
+                            supplies = temp.get(0).getAsJsonObject();
+                        }
                     }
                 }
         );

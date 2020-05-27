@@ -69,4 +69,6 @@
     <string name="glasses">护目镜</string>
     <string name="alcohol">医用酒精</string>
     <string name="pants">安心裤</string>
+
+    <string name="nothing">-</string>
 </resources>
