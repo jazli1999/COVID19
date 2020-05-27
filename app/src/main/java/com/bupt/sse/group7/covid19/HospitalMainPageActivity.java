@@ -102,7 +102,6 @@ public class HospitalMainPageActivity extends AppCompatActivity {
         this.severe = hospital.get("severe_left").getAsInt();
 
         if (this.supplies != null) {
-            Log.d("lyj", "in");
             this.n95 = supplies.get("n95").getAsString();
             this.surgeon = supplies.get("surgeon").getAsString();
             this.ventilator = supplies.get("ventilator").getAsString();
@@ -157,7 +156,6 @@ public class HospitalMainPageActivity extends AppCompatActivity {
                         hospital = DBConnector.getHospitalById(args).get(0).getAsJsonObject();
                         statusNumber = DBConnector.getStatusNumberById(args).get(0).getAsJsonObject();
                         JsonArray temp = DBConnector.getSuppliesById(args);
-                        Log.d("lyj", temp.toString());
                         if (temp != null && temp.size() > 0) {
                             supplies = temp.get(0).getAsJsonObject();
                         }
