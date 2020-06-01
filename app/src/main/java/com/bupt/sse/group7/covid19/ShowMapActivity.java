@@ -274,7 +274,7 @@ public class ShowMapActivity extends AppCompatActivity {
 
 
         initPatientInfo();
-        drawMarker=new DrawMarker(baiduMap);
+        drawMarker=new DrawMarker(baiduMap,this);
         drawMarker.drawAllRough(alltracklist);
 
     }

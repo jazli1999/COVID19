@@ -68,12 +68,14 @@ public class PatientTrackFragment extends Fragment {
         baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
 
         //marker图标
-        bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
-        drawMarker=new DrawMarker(baiduMap);
-        drawMarker.drawAllRough(tracklist);
+       // bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
+        drawMarker=new DrawMarker(baiduMap,getActivity().getApplicationContext());
+        //drawMarker.drawAllRough(tracklist);
         initData(mp_id);
-        drawMarker.drawAllDetail(tracklist);
-        }
+       drawMarker.drawAllDetailWithoutDes(tracklist);
+        //drawMarker.drawAllRough(tracklist);
+
+    }
 
     private void initData(int p_id){
         Thread thread=getTrackInfo(p_id);

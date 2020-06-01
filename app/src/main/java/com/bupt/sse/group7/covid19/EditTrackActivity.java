@@ -45,7 +45,7 @@ import java.util.List;
 
 public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCoderResultListener {
 
-    int p_id=4;
+    int p_id=CurrentUser.getId();
     private MapView mapView;
     private BaiduMap baiduMap;
     LatLng currLatLng;

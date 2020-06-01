@@ -1,8 +1,13 @@
 package com.bupt.sse.group7.covid19;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
@@ -21,15 +26,28 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.ContentView;
+
 public class DrawMarker {
     private List<OverlayOptions> optionsList;//存访标志的集合
     BaiduMap baiduMap;
-    BitmapDescriptor bitmap;
+    BitmapDescriptor geo_bitmap;
 
-
-    public DrawMarker(BaiduMap baiduMap){
-        bitmap= BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
+    LayoutInflater inflater;
+    View view;
+    TextView tv_time;
+    TextView tv_desc;
+    Context context;
+    public DrawMarker(BaiduMap baiduMap,Context context){
+       geo_bitmap= BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
         this.baiduMap=baiduMap;
+        inflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        view=inflater.inflate(R.layout.marker_item, null);
+        tv_time=view.findViewById(R.id.tv_time);
+        tv_desc=view.findViewById(R.id.tv_desc);
+        this.context=context;
+
+
     }
 
     //展示所有人详细的轨迹
@@ -59,14 +77,21 @@ public class DrawMarker {
 
                 LatLng currLatLng=new LatLng(curLan,curLng);
                 //添加文字
-                OverlayOptions textOption = new TextOptions()
-                        //                    .bgColor(0xAAFFFF00)
-                        .fontSize(36)
-                        .fontColor(Color.BLACK)
-                        .text(date+" "+descrip)
-                        .position(currLatLng);
-                optionsList.add(textOption);
+//                OverlayOptions textOption = new TextOptions()
+//                        //                    .bgColor(0xAAFFFF00)
+//                        .fontSize(36)
+//                        .fontColor(Color.BLACK)
+//                        .text(date+" "+descrip)
+//                        .position(currLatLng)
+//
+//                        ;
+//
+//                optionsList.add(textOption);
 
+                tv_time.setText(date);
+                tv_desc.setText(descrip);
+
+                BitmapDescriptor bitmap = BitmapDescriptorFactory.fromBitmap(getBitmapFromView(view));
                 //添加Marker
                 OverlayOptions option=new MarkerOptions().position(currLatLng).icon(bitmap);
                 Marker marker= (Marker) baiduMap.addOverlay(option);
@@ -87,6 +112,78 @@ public class DrawMarker {
         baiduMap.addOverlays(optionsList);
     }
 
+    //展示所有人详细的轨迹,不包括描述
+    public void drawAllDetailWithoutDes(List<JsonArray> tracklist){
+        baiduMap.clear();
+        if(tracklist==null||tracklist.size()==0)
+            return;
+        optionsList=new ArrayList<>();
+        for(int j=0;j<tracklist.size();j++){
+            JsonArray track=tracklist.get(j);
+
+            Bundle bundle=null;
+            List<LatLng> points=new ArrayList<>();
+
+            for(int i=0;i<track.size();i++){
+
+                JsonObject object=track.get(i).getAsJsonObject();
+                int id=object.get("p_id").getAsInt();
+                double curLng= object.get("longitude").getAsDouble();
+                double curLan= object.get("latitude").getAsDouble();
+
+
+                LatLng currLatLng=new LatLng(curLan,curLng);
+
+                //添加Marker
+                OverlayOptions option=new MarkerOptions().position(currLatLng).icon(geo_bitmap);
+                Marker marker= (Marker) baiduMap.addOverlay(option);
+                //Marker上绑定id信息用于界面跳转
+                bundle=new Bundle();
+                bundle.putInt("p_id",id);
+                marker.setExtraInfo(bundle);
+                points.add(currLatLng);
+            }
+            //添加line
+            if(points.size()>1) {
+                OverlayOptions ooPolyline = new PolylineOptions().width(10).color(0xAAFF0000).points(points);
+                Polyline polyline= (Polyline) baiduMap.addOverlay(ooPolyline);
+                polyline.setExtraInfo(bundle);
+            }
+            points=new ArrayList<>();
+        }
+        baiduMap.addOverlays(optionsList);
+    }
+    //展示所有人的粗略轨迹,不包括描述
+    public void drawAllRoughWithoutDes(List<JsonArray> tracklist){
+        baiduMap.clear();
+
+        if(tracklist==null||tracklist.size()==0)
+            return;
+        optionsList=new ArrayList<>();
+        List<Marker> markerList=new ArrayList<>();
+        for(int j=0;j<tracklist.size();j++){
+            JsonArray track=tracklist.get(j);
+            if(track.size()==0)
+                return;
+            Bundle bundle=null;
+            JsonObject object=track.get(0).getAsJsonObject();//获取起点
+            int id=object.get("p_id").getAsInt();
+            double curLng= object.get("longitude").getAsDouble();
+            double curLan= object.get("latitude").getAsDouble();
+
+            LatLng currLatLng=new LatLng(curLan,curLng);
+
+            //添加Marker
+            OverlayOptions option=new MarkerOptions().position(currLatLng).icon(geo_bitmap);
+            Marker marker= (Marker) baiduMap.addOverlay(option);
+
+            //Marker上绑定id信息用于界面跳转
+            bundle=new Bundle();
+            bundle.putInt("p_id",id);
+            marker.setExtraInfo(bundle);
+        }
+        baiduMap.addOverlays(optionsList);
+    }
     //展示所有人的粗略轨迹
     public void drawAllRough(List<JsonArray> tracklist){
         baiduMap.clear();
@@ -111,14 +208,17 @@ public class DrawMarker {
                 descrip = descObj.getAsString();
             }
             LatLng currLatLng=new LatLng(curLan,curLng);
+            tv_time.setText(date);
+            tv_desc.setText(descrip);
+            BitmapDescriptor bitmap = BitmapDescriptorFactory.fromBitmap(getBitmapFromView(view));
             //添加文字
-            OverlayOptions textOption = new TextOptions()
-                    //                    .bgColor(0xAAFFFF00)
-                    .fontSize(36)
-                    .fontColor(Color.BLACK)
-                    .text(date+" "+descrip)
-                    .position(currLatLng);
-            optionsList.add(textOption);
+//            OverlayOptions textOption = new TextOptions()
+//                    //                    .bgColor(0xAAFFFF00)
+//                    .fontSize(36)
+//                    .fontColor(Color.BLACK)
+//                    .text(date+" "+descrip)
+//                    .position(currLatLng);
+//            optionsList.add(textOption);
 
             //添加Marker
             OverlayOptions option=new MarkerOptions().position(currLatLng).icon(bitmap);
@@ -132,4 +232,12 @@ public class DrawMarker {
         baiduMap.addOverlays(optionsList);
     }
 
+    private Bitmap getBitmapFromView(View view) {
+        view.destroyDrawingCache();
+        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.UNSPECIFIED);
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        view.setDrawingCacheEnabled(true);
+        Bitmap bitmap = view.getDrawingCache();
+        return bitmap;
+    }
 }

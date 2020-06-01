@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class TrackLineAdapter extends RecyclerView.Adapter<TrackLineAdapter.TrackHolder> {
@@ -33,10 +34,15 @@ public class TrackLineAdapter extends RecyclerView.Adapter<TrackLineAdapter.Trac
         JsonObject obj = list.get(position).getAsJsonObject();
         String[] dateTime = obj.get("date_time").getAsString().split(" ");
         String location = obj.get("location").getAsString();
-
+        String descrip = "";
+        JsonElement descObj = obj.get("description");
+        if (!descObj.isJsonNull()) {
+            descrip = descObj.getAsString();
+        }
         holder.dateView.setText(dateTime[0]);
         holder.timeView.setText(dateTime[1].substring(0, 5));
         holder.locationView.setText(location);
+        holder.desView.setText(descrip);
     }
 
     @Override
@@ -48,12 +54,14 @@ public class TrackLineAdapter extends RecyclerView.Adapter<TrackLineAdapter.Trac
         TextView dateView;
         TextView timeView;
         TextView locationView;
+        TextView desView;
 
         public TrackHolder(View itemView) {
             super(itemView);
             dateView = itemView.findViewById(R.id.track_date);
             timeView = itemView.findViewById(R.id.track_time);
             locationView = itemView.findViewById(R.id.track_location);
+            desView=itemView.findViewById(R.id.track_des);
         }
     }
 }
