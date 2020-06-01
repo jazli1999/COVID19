@@ -164,7 +164,7 @@ public class DrawMarker {
         for(int j=0;j<tracklist.size();j++){
             JsonArray track=tracklist.get(j);
             if(track.size()==0)
-                return;
+                continue;
             Bundle bundle=null;
             JsonObject object=track.get(0).getAsJsonObject();//获取起点
             int id=object.get("p_id").getAsInt();
@@ -195,7 +195,7 @@ public class DrawMarker {
         for(int j=0;j<tracklist.size();j++){
             JsonArray track=tracklist.get(j);
             if(track.size()==0)
-                return;
+                continue;
             Bundle bundle=null;
             JsonObject object=track.get(0).getAsJsonObject();//获取起点
             int id=object.get("p_id").getAsInt();
