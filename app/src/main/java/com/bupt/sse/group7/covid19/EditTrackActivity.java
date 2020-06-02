@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.icu.util.BuddhistCalendar;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TimePicker;
 
 import com.baidu.mapapi.SDKInitializer;
@@ -45,7 +47,8 @@ import java.util.List;
 
 public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCoderResultListener {
 
-    int p_id=CurrentUser.getId();
+    //int p_id=CurrentUser.getId();
+    int p_id=5;
     private MapView mapView;
     private BaiduMap baiduMap;
     LatLng currLatLng;
@@ -55,7 +58,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     Marker marker;
     List<Marker> markerList=new ArrayList<>();
 
-    private Button btn_end,btn_confirm;
+    private Button btn_end,btn_confirm,btn_cancel;
 
     //时间选择
     private DatePicker datePickerStart;
@@ -70,6 +73,12 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     private List<String> addressList=new ArrayList<>();
     private List<String> districtList=new ArrayList<>();
 
+    //输入描述
+    private String description;
+    private EditText et_des;
+    private AlertDialog desDialog;
+    private List<String> descriptionList=new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +88,23 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         btn_end=findViewById(R.id.btn_end);
         //确认单个marker
         btn_confirm=findViewById(R.id.btn_confirm);
+
+        //取消打点
+        btn_cancel=findViewById(R.id.btn_cancel);
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                baiduMap.clear();
+                markerList.clear();
+                datelist.clear();
+                addressList.clear();
+                districtList.clear();
+                optionsList.clear();
+                points.clear();
+                descriptionList.clear();
+
+            }
+        });
 
         mapView=findViewById(R.id.mapView);
         baiduMap=mapView.getMap();
@@ -96,43 +122,67 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         timebuilder.setView(timeView);
         timePickerStart.setIs24HourView(true);
         hideYear(datePickerStart);
-        date_time_picker=timebuilder.create();
+        date_time_picker=timebuilder.setCancelable(false).create();
+
+
+        //description输入框
+        AlertDialog.Builder desbuilder=new AlertDialog.Builder(this);
+        View desview=View.inflate(this,R.layout.dialog_description,null);
+        et_des=desview.findViewById(R.id.et_des);
+        desbuilder.setView(desview);
+        desDialog=desbuilder.setTitle("请输入相关描述")
+                .setCancelable(false)
+                .setPositiveButton("完成",
+                new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        description=et_des.getText().toString();
+                        Log.i("hcccc","输入的description"+description);
+                        descriptionList.add(description);
+                        et_des.setText("");
+
+                        //date
+                        String date=datePickerStart.getYear()+"-";
+                        if(datePickerStart.getMonth()+1<10) date+="0";
+                        date+=(datePickerStart.getMonth()+1)+"-";
+                        if(datePickerStart.getDayOfMonth()<10) date+="0";
+                        date+=datePickerStart.getDayOfMonth();
+
+                        //time
+                        date+=" ";
+                        if(timePickerStart.getHour()<10) date+="0";
+                        date+=timePickerStart.getHour()+":";
+                        if(timePickerStart.getMinute()<10) date+="0";
+                        date+=timePickerStart.getMinute()+":00";
+                        datelist.add(date);
+                        OverlayOptions textOption = new TextOptions()
+                                //                    .bgColor(0xAAFFFF00)
+                                .fontSize(36)
+                                .fontColor(Color.BLACK)
+                                .text(date+" "+description)
+                                .position(currLatLng);
+                        optionsList.add(textOption);
+                        baiduMap.addOverlay(textOption);
+                        if(points.size()>1) {
+                            OverlayOptions ooPolyline = new PolylineOptions().width(10).color(0xAAFF0000).points(points);
+                            baiduMap.addOverlay(ooPolyline);
+                        }
+                    }
+                }).create();
 
         btn_confirmTime=timeView.findViewById(R.id.btn_confirmTime);
         btn_confirmTime.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-                Log.i("hcccccc","选择的时间是："+(datePickerStart.getMonth()+1)+":"+datePickerStart.getDayOfMonth()
-                        +":"+timePickerStart.getHour()+":"+timePickerStart.getMinute());
+                Log.i("hcccccc","选择的时间是："+(datePickerStart.getMonth()+1)+"-"+datePickerStart.getDayOfMonth()
+                        +" "+timePickerStart.getHour()+":"+timePickerStart.getMinute());
                 date_time_picker.dismiss();
 
-                //date
-                String date=datePickerStart.getYear()+"-";
-                if(datePickerStart.getMonth()+1<10) date+="0";
-                date+=(datePickerStart.getMonth()+1)+"-";
-                if(datePickerStart.getDayOfMonth()<10) date+="0";
-                date+=datePickerStart.getDayOfMonth();
+                desDialog.show();
 
-                //time
-                date+=" ";
-                if(timePickerStart.getHour()<10) date+="0";
-                date+=timePickerStart.getHour()+":";
-                if(timePickerStart.getMinute()<10) date+="0";
-                date+=timePickerStart.getMinute()+":00";
-                datelist.add(date);
-                OverlayOptions textOption = new TextOptions()
-                        //                    .bgColor(0xAAFFFF00)
-                        .fontSize(36)
-                        .fontColor(Color.BLACK)
-                        .text(date)
-                        .position(currLatLng);
-                optionsList.add(textOption);
-                baiduMap.addOverlay(textOption);
-                if(points.size()>1) {
-                    OverlayOptions ooPolyline = new PolylineOptions().width(10).color(0xAAFF0000).points(points);
-                    baiduMap.addOverlay(ooPolyline);
-                }
+
             }
         });
 
@@ -176,7 +226,6 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
 
 
-
             }
         });
         //结束上报，提交到数据库
@@ -209,20 +258,24 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         JsonArray jsonArray=new JsonArray();
         // jsonArray.add(info);
 
-        for(int i=0;i<points.size();i++) {
-            JsonObject info=new JsonObject();
+        if(points.size()==0)
+            return;
+        for (int i = 0; i < points.size(); i++) {
+            JsonObject info = new JsonObject();
 
             info.add("date_time", new JsonPrimitive(datelist.get(i)));
             info.add("longitude", new JsonPrimitive(points.get(i).longitude));
             info.add("latitude", new JsonPrimitive(points.get(i).latitude));
             info.add("location", new JsonPrimitive(addressList.get(i)));
             info.add("district", new JsonPrimitive(districtList.get(i)));
-            info.add("p_id", new JsonPrimitive(p_id+""));
+            info.add("p_id", new JsonPrimitive(p_id + ""));
+            info.add("description",new JsonPrimitive(descriptionList.get(i)));
             jsonArray.add(info);
         }
         args.add("rows", jsonArray);
 
         addData(args);
+
 
     }
 
