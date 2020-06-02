@@ -31,6 +31,115 @@
         android:layout_marginTop="70dp">
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp">
+
+            <LinearLayout
+                android:id="@+id/statistic"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:gravity="center"
+                android:layout_width="355dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="实时疫情"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/textGrey" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/home_card_desc"
+                            android:text="@string/mild"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/mild"/>
+
+                        <TextView
+                            android:id="@+id/mild_statistic"
+                            style="@style/home_card_desc"
+                            android:textColor="@color/textGrey"
+                            android:textSize="16sp"
+                            android:text="7"
+                            android:layout_marginLeft="15dp"/>
+
+                        <TextView
+                            style="@style/home_card_desc"
+                            android:layout_marginLeft="20dp"
+                            android:text="@string/severe"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:textColor="@color/severe"/>
+
+                        <TextView
+                            android:id="@+id/severe_statistic"
+                            style="@style/home_card_desc"
+                            android:text="4"
+                            android:textSize="16sp"
+                            android:textColor="@color/textGrey"
+                            android:layout_marginLeft="15dp"/>
+
+                        <TextView
+                            style="@style/home_card_desc"
+                            android:layout_marginLeft="20dp"
+                            android:text="@string/cured"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:textColor="@color/healthy"/>
+
+                        <TextView
+                            android:id="@+id/cured_statistic"
+                            style="@style/home_card_desc"
+                            android:textSize="16sp"
+                            android:text="3"
+                            android:textColor="@color/textGrey"
+                            android:layout_marginLeft="15dp"/>
+
+                        <TextView
+                            style="@style/home_card_desc"
+                            android:layout_marginLeft="20dp"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:text="@string/dead"
+                            android:textColor="@color/dead"/>
+
+                        <TextView
+                            android:id="@+id/dead_statistic"
+                            style="@style/home_card_desc"
+                            android:text="0"
+                            android:textSize="16sp"
+                            android:textColor="@color/textGrey"
+                            android:layout_marginLeft="15dp"/>
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
             style="@style/home_row">
 
             <androidx.cardview.widget.CardView

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -12,11 +13,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 public class HomeActivity extends AppCompatActivity {
     private CardView hospitalCard;
     private CardView authCard;
     private CardView trackCard;
     private CardView pageCard;
+
+    private JsonObject statistics;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,7 +37,38 @@ public class HomeActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
+        initData();
         initView();
+    }
+
+    private void initData() {
+        Thread thread = getStatistics();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Thread getStatistics() {
+        Thread thread = new Thread(
+            new Runnable() {
+                @Override
+                public void run() {
+                    statistics = DBConnector.getStatistics().get(0).getAsJsonObject();
+                }
+            }
+        );
+        thread.start();
+        return thread;
+    }
+
+    private void updateStatusView() {
+        ((TextView) findViewById(R.id.mild_statistic)).setText(
+                    String.valueOf(statistics.get("1").getAsInt() + statistics.get("2").getAsInt()));
+        ((TextView) findViewById(R.id.severe_statistic)).setText(statistics.get("3").getAsString());
+        ((TextView) findViewById(R.id.dead_statistic)).setText(statistics.get("4").getAsString());
+        ((TextView) findViewById(R.id.cured_statistic)).setText(statistics.get("0").getAsString());
     }
 
     private void initView() {
@@ -39,6 +76,8 @@ public class HomeActivity extends AppCompatActivity {
         hospitalCard = findViewById(R.id.hospital_card);
         trackCard = findViewById(R.id.track_card);
         authCard = findViewById(R.id.auth_card);
+
+        updateStatusView();
 
         hospitalCard.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -43,8 +43,7 @@ public class PatientMainPageActivity extends AppCompatActivity {
     private JsonObject patient;
     private JsonArray pStatus;
     private StatusLineFragment statusLineFragment;
-    private PatientTrackFragment patientTrackFragment;
-    private TrackLineFragment trackLineFragment;
+    private PatientTrackBlock patientTrackBlock;
     private NotAvailable notAvailable;
     private JsonArray tracks;
 
@@ -90,20 +89,15 @@ public class PatientMainPageActivity extends AppCompatActivity {
         tranStatus.commit();
 
         if (this.tracks.size() > 0) {
-            patientTrackFragment = new PatientTrackFragment();
-            patientTrackFragment.setMp_id(this.id);
-            FragmentTransaction trackTranStatus = fragmentManager.beginTransaction();
-            trackTranStatus.add(R.id.track_block, patientTrackFragment);
-            trackTranStatus.commit();
-
-            trackLineFragment = new TrackLineFragment();
-            trackLineFragment.setTracks(this.tracks);
-            FragmentTransaction trackLineTran = fragmentManager.beginTransaction();
-            trackLineTran.add(R.id.track_block, trackLineFragment);
-            trackLineTran.commit();
+            patientTrackBlock = new PatientTrackBlock();
+            patientTrackBlock.setId(this.id);
+            FragmentTransaction trackTran = fragmentManager.beginTransaction();
+            trackTran.add(R.id.patient_content, patientTrackBlock);
+            trackTran.commit();
         }
         else {
             notAvailable = new NotAvailable();
+            notAvailable.setTitle("ta的轨迹");
             FragmentTransaction notTran = fragmentManager.beginTransaction();
             notTran.add(R.id.track_block, notAvailable);
             notTran.commit();
