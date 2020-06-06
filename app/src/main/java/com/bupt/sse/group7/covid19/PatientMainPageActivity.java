@@ -99,7 +99,7 @@ public class PatientMainPageActivity extends AppCompatActivity {
             notAvailable = new NotAvailable();
             notAvailable.setTitle("ta的轨迹");
             FragmentTransaction notTran = fragmentManager.beginTransaction();
-            notTran.add(R.id.track_block, notAvailable);
+            notTran.add(R.id.patient_content, notAvailable);
             notTran.commit();
         }
     }
