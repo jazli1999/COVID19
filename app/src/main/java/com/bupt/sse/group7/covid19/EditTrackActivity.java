@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.icu.util.BuddhistCalendar;
@@ -47,8 +48,8 @@ import java.util.List;
 
 public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCoderResultListener {
 
-    //int p_id=CurrentUser.getId();
-    int p_id=5;
+    int p_id=CurrentUser.getId();
+    //int p_id=5;
     private MapView mapView;
     private BaiduMap baiduMap;
     LatLng currLatLng;
@@ -102,6 +103,13 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
                 optionsList.clear();
                 points.clear();
                 descriptionList.clear();
+                Bundle bundle=new Bundle();
+                bundle.putInt("id",p_id);
+                Intent intent = new Intent(EditTrackActivity.this, PatientMainPageActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                finish();
+
 
             }
         });
@@ -233,6 +241,13 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             @Override
             public void onClick(View v) {
                 submit();
+                Bundle bundle=new Bundle();
+                bundle.putInt("id",p_id);
+                Intent intent = new Intent(EditTrackActivity.this, PatientMainPageActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                finish();
+
             }
         });
         geoCoder= GeoCoder.newInstance();
