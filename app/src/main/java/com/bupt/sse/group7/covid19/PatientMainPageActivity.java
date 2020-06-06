@@ -2,11 +2,13 @@ package com.bupt.sse.group7.covid19;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -78,6 +80,16 @@ public class PatientMainPageActivity extends AppCompatActivity {
         initData();
         initView();
         updateView();
+
+        Button btn_edit_track=findViewById(R.id.btn_edit_track);
+        btn_edit_track.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PatientMainPageActivity.this, EditTrackActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void initView() {
