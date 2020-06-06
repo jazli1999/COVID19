@@ -19,6 +19,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.internal.JsonReaderInternalAccess;
 
 public class EditHospitalActivity extends AppCompatActivity {
     private Bundle bundle;
@@ -64,8 +65,8 @@ public class EditHospitalActivity extends AppCompatActivity {
 
     private void initView() {
         ((TextView) findViewById(R.id.hospital_name_edit)).setText(this.bundle.getString("name"));
-        ((EditText) findViewById(R.id.set_mild)).setText(String.valueOf(this.bundle.getInt("mild")));
-        ((EditText) findViewById(R.id.set_severe)).setText(String.valueOf(this.bundle.getInt("severe")));
+        ((EditText) findViewById(R.id.set_mild)).setText(this.bundle.getString("mild"));
+        ((EditText) findViewById(R.id.set_severe)).setText(this.bundle.getString("severe"));
         ((EditText) findViewById(R.id.set_inCharge)).setText(this.bundle.getString("people"));
         ((EditText) findViewById(R.id.set_address)).setText(this.bundle.getString("address"));
         ((EditText) findViewById(R.id.set_tel)).setText(this.bundle.getString("tel"));
@@ -75,11 +76,11 @@ public class EditHospitalActivity extends AppCompatActivity {
         JsonObject args = new JsonObject();
         JsonObject info = new JsonObject();
 
-        info.add("address", new JsonPrimitive(((EditText) findViewById(R.id.set_address)).getText().toString()));
-        info.add("tel", new JsonPrimitive(((EditText) findViewById(R.id.set_tel)).getText().toString()));
-        info.add("contact", new JsonPrimitive(((EditText) findViewById(R.id.set_inCharge)).getText().toString()));
-        info.add("mild_left", new JsonPrimitive(((EditText) findViewById(R.id.set_mild)).getText().toString()));
-        info.add("severe_left", new JsonPrimitive(((EditText) findViewById(R.id.set_severe)).getText().toString()));
+        addValueFromInput(info, "address", R.id.set_address);
+        addValueFromInput(info, "tel", R.id.set_tel);
+        addValueFromInput(info, "contact", R.id.set_inCharge);
+        addValueFromInput(info, "mild_left", R.id.set_mild);
+        addValueFromInput(info, "severe_left", R.id.set_severe);
 
         args.add("id", new JsonPrimitive(this.bundle.getInt("id")));
         args.add("row", info);
@@ -88,6 +89,13 @@ public class EditHospitalActivity extends AppCompatActivity {
 
         Toast.makeText(this, "已提交",Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+    private void addValueFromInput(JsonObject obj, String arg, int id) {
+        String text = ((EditText)findViewById(id)).getText().toString();
+        if (!text.equals("-")) {
+            obj.add(arg, new JsonPrimitive(text));
+        }
     }
 
     private void updateData(JsonObject args) {

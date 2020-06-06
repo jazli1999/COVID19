@@ -35,8 +35,8 @@ public class HospitalMainPageActivity extends AppCompatActivity {
     private String people;
     private String address;
     private String tel;
-    private int mild;
-    private int severe;
+    private String mild;
+    private String severe;
 
     private String n95;
     private String surgeon;
@@ -94,12 +94,13 @@ public class HospitalMainPageActivity extends AppCompatActivity {
     }
 
     private void updateView() {
-        this.name = hospital.get("name").getAsString();
-        this.address = hospital.get("address").getAsString();
-        this.people = hospital.get("contact").getAsString();
-        this.tel = hospital.get("tel").getAsString();
-        this.mild = hospital.get("mild_left").getAsInt();
-        this.severe = hospital.get("severe_left").getAsInt();
+        this.name = getStringFromJsonObject(hospital, "name");
+        this.address = getStringFromJsonObject(hospital, "address");
+        this.people = getStringFromJsonObject(hospital, "contact");
+        this.tel = getStringFromJsonObject(hospital, "tel");
+        this.mild = getStringFromJsonObject(hospital, "mild_left");
+        this.severe = getStringFromJsonObject(hospital, "severe_left");
+
 
         if (this.supplies != null) {
             this.n95 = supplies.get("n95").getAsString();
@@ -121,11 +122,20 @@ public class HospitalMainPageActivity extends AppCompatActivity {
         }
     }
 
+    private String getStringFromJsonObject(JsonObject obj, String arg) {
+        if (obj.get(arg) == null || obj.get(arg).isJsonNull()) {
+            return "-";
+        }
+        else {
+            return obj.get(arg).getAsString();
+        }
+    }
+
     private void updateHospitalStatus() {
-        statusFragment.setMild(statusNumber.get("mild").getAsString());
-        statusFragment.setSevere(statusNumber.get("severe").getAsString());
-        statusFragment.setCured(statusNumber.get("cured").getAsString());
-        statusFragment.setDead(statusNumber.get("dead").getAsString());
+        statusFragment.setMild(getStringFromJsonObject(statusNumber, "mild"));
+        statusFragment.setSevere(getStringFromJsonObject(statusNumber, "severe"));
+        statusFragment.setCured(getStringFromJsonObject(statusNumber, "cured"));
+        statusFragment.setDead(getStringFromJsonObject(statusNumber, "dead"));
     }
 
 
@@ -204,8 +214,8 @@ public class HospitalMainPageActivity extends AppCompatActivity {
                     bundle.putString("address", this.address);
                     bundle.putString("people", this.people);
                     bundle.putString("tel", this.tel);
-                    bundle.putInt("mild", this.mild);
-                    bundle.putInt("severe", this.severe);
+                    bundle.putString("mild", this.mild);
+                    bundle.putString("severe", this.severe);
 
                     bundle.putString("n95",this.n95);
                     bundle.putString("surgeon",this.surgeon);

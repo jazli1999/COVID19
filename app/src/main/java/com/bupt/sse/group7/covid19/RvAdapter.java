@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public class RvAdapter extends RecyclerView.Adapter<RvAdapter.Holder> {
     private JsonArray list;
@@ -43,7 +45,13 @@ public class RvAdapter extends RecyclerView.Adapter<RvAdapter.Holder> {
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         holder.nameView.setText(list.get(position).getAsJsonObject().get("name").getAsString());
-        holder.addressView.setText(list.get(position).getAsJsonObject().get("address").getAsString());
+        JsonElement addrElement = list.get(position).getAsJsonObject().get("address");
+        if (!addrElement.isJsonNull()) {
+            holder.addressView.setText(addrElement.getAsString());
+        }
+        else {
+            holder.addressView.setText("暂无地址");
+        }
         holder.noView.setText(list.get(position).getAsJsonObject().get("h_id").getAsString());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
