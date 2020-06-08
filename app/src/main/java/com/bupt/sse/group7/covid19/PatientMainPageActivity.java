@@ -7,9 +7,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -81,15 +84,31 @@ public class PatientMainPageActivity extends AppCompatActivity {
         initView();
         updateView();
 
-        Button btn_edit_track=findViewById(R.id.btn_edit_track);
-        btn_edit_track.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(PatientMainPageActivity.this, EditTrackActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_update_track:
+                if(CurrentUser.getLabel().equals("patient") && CurrentUser.getId() == this.id) {
+                    Intent intent = new Intent(PatientMainPageActivity.this, EditTrackActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(this, "请先认证本用户账号", Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_patient_main, menu);
+        return true;
     }
 
     private void initView() {

@@ -48,11 +48,6 @@
                 android:layout_marginStart="30dp"
                 android:orientation="horizontal">
 
-                <Button
-                    android:text="上传轨迹"
-                    android:id="@+id/btn_edit_track"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/cardAvatar"
                     android:src="@drawable/patient_avatar" />

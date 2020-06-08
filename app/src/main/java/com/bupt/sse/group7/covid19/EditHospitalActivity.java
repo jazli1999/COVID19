@@ -55,9 +55,6 @@ public class EditHospitalActivity extends AppCompatActivity {
             case R.id.action_done:
                 submit();
                 return true;
-            case R.id.action_update:
-                Log.d("lyj", "update_clicked");
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
