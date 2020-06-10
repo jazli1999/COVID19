@@ -26,10 +26,10 @@ import java.util.Map;
 public class HospitalMainPageActivity extends AppCompatActivity {
     private JsonObject hospital;
     private JsonObject statusNumber;
-    private JsonObject supplies;//一个json对象
+    private JsonObject supplies;
     private HospitalContactFragment contactFragment;
     private HospitalStatusFragment statusFragment;
-    private HospitalSuppliesFragment suppliesFragment;//在activity中使用的片段
+    private HospitalSuppliesFragment suppliesFragment;
     private int id;
     private String name;
     private String people;
@@ -62,10 +62,10 @@ public class HospitalMainPageActivity extends AppCompatActivity {
         Bundle bundle = this.getIntent().getExtras();
         this.id = bundle.getInt("id");
 
-        initView();//初始化一下view
-        initData();//初始化数据
+        initView();
+        initData();
 
-        updateView();//更新view
+        updateView();
     }
 
 
@@ -77,14 +77,14 @@ public class HospitalMainPageActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestart() {//重新回到页面时需要初始化数据并更新view
+    protected void onRestart() {
         super.onRestart();
         initData();
         updateView();
     }
 
-    private void initData() {//初始化数据
-        Thread thread = getHospitalInfo(this.id);//创建线程，获取医院的信息
+    private void initData() {
+        Thread thread = getHospitalInfo(this.id);
         try {
             thread.join();
         } catch (InterruptedException e) {
@@ -92,7 +92,7 @@ public class HospitalMainPageActivity extends AppCompatActivity {
         }
     }
 
-    private void updateView() {//更新view
+    private void updateView() {
         this.name = getStringFromJsonObject(hospital, "name");
         this.address = getStringFromJsonObject(hospital, "address");
         this.people = getStringFromJsonObject(hospital, "contact");
@@ -119,9 +119,6 @@ public class HospitalMainPageActivity extends AppCompatActivity {
         updateHospitalContact();
         updateHospitalStatus();
         updateHospitalSupplies();
-//        if (suppliesFragment != null) {
-//            updateHospitalSupplies();
-//        }
     }
 
     private String getStringFromJsonObject(JsonObject obj, String arg) {
@@ -147,16 +144,7 @@ public class HospitalMainPageActivity extends AppCompatActivity {
         contactFragment.setPeople(this.people);
     }
 
-    //----edit------
     private void updateHospitalSupplies(){
-//        suppliesFragment.setN95(this.n95);
-//        suppliesFragment.setSurgeon(this.surgeon);
-//        suppliesFragment.setVentilator(this.ventilator);
-//        suppliesFragment.setClothe(this.clothe);
-//        suppliesFragment.setGlasses(this.glasses);
-//        suppliesFragment.setAlcohol(this.alcohol);
-//        suppliesFragment.setPants(this.pants);
-        //就这一块的为空判断是多余的
         suppliesFragment.setN95(getStringFromJsonObject(supplies, "n95"));
         suppliesFragment.setSurgeon(getStringFromJsonObject(supplies, "surgeon"));
         suppliesFragment.setVentilator(getStringFromJsonObject(supplies, "ventilator"));
@@ -166,7 +154,6 @@ public class HospitalMainPageActivity extends AppCompatActivity {
         suppliesFragment.setPants(getStringFromJsonObject(supplies, "pants"));
     }
 
-    //获取医院的信息
     private Thread getHospitalInfo(int h_id) {
         Map<String, String> args = new HashMap<>();
         args.put("h_id", String.valueOf(h_id));
@@ -188,7 +175,7 @@ public class HospitalMainPageActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        FragmentManager fragmentManager = getSupportFragmentManager();//创建了一个fragment管理器
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (this.statusFragment == null) {
             statusFragment = new HospitalStatusFragment();

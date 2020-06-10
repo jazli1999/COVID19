@@ -94,7 +94,7 @@ public class EditHospitalActivity extends AppCompatActivity {
 
 
 
-        JsonObject args2 = new JsonObject();//一个加上id和supplies字段的json对象
+        JsonObject args2 = new JsonObject();
         JsonObject supplies = new JsonObject();
 
         addValueFromInput(supplies, "n95", R.id.set_n95);
