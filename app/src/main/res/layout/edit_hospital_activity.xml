@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none">
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/lightGrey"
@@ -134,104 +138,329 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorPrimary"
         android:orientation="vertical"
-        android:layout_marginTop="20dp"
-        android:paddingVertical="20dp"
-        android:background="@color/colorPrimary">
+        android:paddingVertical="20dp">
 
         <TextView
             style="@style/detail_card_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/hospital_info"
-            android:layout_marginStart="30dp"/>
-
-        <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="5dp">
-
-        <TextView
-            style="@style/detail_card"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/inCharge"
-            android:textColor="#000"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="30dp" />
-
-        <EditText
-            android:id="@+id/set_inCharge"
-            android:layout_width="140dp"
-            android:layout_height="25dp"
-            android:background="@drawable/rec_tangle"
-            android:paddingBottom="0dp"
-            android:paddingStart="5dp"
-            android:textSize="14sp"
-            android:layout_marginTop="7dp"
-            android:layout_marginStart="12dp"/>
-
-    </LinearLayout>
+            android:layout_marginStart="30dp"
+            android:text="@string/hospital_info" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="5dp">
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
 
             <TextView
                 style="@style/detail_card"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/tel"
-                android:textColor="#000"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="30dp" />
+                android:text="@string/inCharge"
+                android:textColor="#000" />
 
             <EditText
-                android:id="@+id/set_tel"
-                android:paddingStart="5dp"
-                android:layout_width="280dp"
+                android:id="@+id/set_inCharge"
+                android:layout_width="140dp"
                 android:layout_height="25dp"
-                android:textSize="14sp"
-                android:background="@drawable/rec_tangle"
-                android:paddingBottom="0dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="7dp"
-                android:layout_marginStart="27dp" />
+                android:background="@drawable/rec_tangle"
+                android:paddingStart="5dp"
+                android:paddingBottom="0dp"
+                android:textSize="14sp" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="5dp">
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
 
             <TextView
                 style="@style/detail_card"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/address"
-                android:textColor="#000"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="30dp" />
+                android:text="@string/tel"
+                android:textColor="#000" />
+
+            <EditText
+                android:id="@+id/set_tel"
+                android:layout_width="280dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="27dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/rec_tangle"
+                android:paddingStart="5dp"
+                android:paddingBottom="0dp"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/detail_card"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/address"
+                android:textColor="#000" />
 
             <EditText
                 android:id="@+id/set_address"
                 android:layout_width="280dp"
                 android:layout_height="55dp"
-                android:background="@drawable/rec_tangle"
-                android:paddingBottom="0dp"
-                android:paddingStart="5dp"
-                android:textSize="14sp"
-                android:gravity="top"
+                android:layout_marginStart="27dp"
                 android:layout_marginTop="7dp"
-                android:layout_marginStart="27dp" />
+                android:background="@drawable/rec_tangle"
+                android:gravity="top"
+                android:paddingStart="5dp"
+                android:paddingBottom="0dp"
+                android:textSize="14sp" />
 
         </LinearLayout>
 
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/detail_card_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:text="@string/supplies_remains" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/detail_card"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:text="@string/n95"
+                android:textColor="#000" />
+
+            <EditText
+                android:id="@+id/set_n95"
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="45dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/rec_tangle"
+                android:ems="10"
+                android:inputType="number"
+                android:paddingStart="5dp"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/detail_card"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:text="@string/surgeon"
+                android:textColor="#000" />
+
+            <EditText
+                android:id="@+id/set_surgeon"
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/rec_tangle"
+                android:ems="10"
+                android:inputType="number"
+                android:paddingStart="5dp"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/detail_card"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:text="@string/ventilator"
+                android:textColor="#000" />
+
+            <EditText
+                android:id="@+id/set_ventilator"
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="57dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/rec_tangle"
+                android:ems="10"
+                android:inputType="number"
+                android:paddingStart="5dp"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/detail_card"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:text="@string/clothe"
+                android:textColor="#000" />
+
+            <EditText
+                android:id="@+id/set_clothe"
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="57dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/rec_tangle"
+                android:ems="10"
+                android:inputType="number"
+                android:paddingStart="5dp"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/detail_card"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:text="@string/glasses"
+                android:textColor="#000" />
+
+            <EditText
+                android:id="@+id/set_glasses"
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="57dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/rec_tangle"
+                android:ems="10"
+                android:inputType="number"
+                android:paddingStart="5dp"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/detail_card"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:text="@string/alcohol"
+                android:textColor="#000" />
+
+            <EditText
+                android:id="@+id/set_alcohol"
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="43dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/rec_tangle"
+                android:ems="10"
+                android:inputType="number"
+                android:paddingStart="5dp"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/detail_card"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:text="@string/pants"
+                android:textColor="#000" />
+
+            <EditText
+                android:id="@+id/set_pants"
+                android:layout_width="150dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="57dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/rec_tangle"
+                android:ems="10"
+                android:inputType="number"
+                android:paddingStart="5dp"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>
+
+</ScrollView>

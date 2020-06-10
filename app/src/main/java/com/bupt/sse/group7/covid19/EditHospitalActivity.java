@@ -67,11 +67,21 @@ public class EditHospitalActivity extends AppCompatActivity {
         ((EditText) findViewById(R.id.set_inCharge)).setText(this.bundle.getString("people"));
         ((EditText) findViewById(R.id.set_address)).setText(this.bundle.getString("address"));
         ((EditText) findViewById(R.id.set_tel)).setText(this.bundle.getString("tel"));
+
+        //初始化物资框为主页显示
+        ((EditText) findViewById(R.id.set_n95)).setText(this.bundle.getString("n95"));
+        ((EditText) findViewById(R.id.set_surgeon)).setText(this.bundle.getString("surgeon"));
+        ((EditText) findViewById(R.id.set_ventilator)).setText(this.bundle.getString("ventilator"));
+        ((EditText) findViewById(R.id.set_clothe)).setText(this.bundle.getString("clothe"));
+        ((EditText) findViewById(R.id.set_glasses)).setText(this.bundle.getString("glasses"));
+        ((EditText) findViewById(R.id.set_alcohol)).setText(this.bundle.getString("alcohol"));
+        ((EditText) findViewById(R.id.set_pants)).setText(this.bundle.getString("pants"));
     }
 
     public void submit() {
         JsonObject args = new JsonObject();
         JsonObject info = new JsonObject();
+
 
         addValueFromInput(info, "address", R.id.set_address);
         addValueFromInput(info, "tel", R.id.set_tel);
@@ -82,7 +92,23 @@ public class EditHospitalActivity extends AppCompatActivity {
         args.add("id", new JsonPrimitive(this.bundle.getInt("id")));
         args.add("row", info);
 
-        updateData(args);
+
+
+        JsonObject args2 = new JsonObject();//一个加上id和supplies字段的json对象
+        JsonObject supplies = new JsonObject();
+
+        addValueFromInput(supplies, "n95", R.id.set_n95);
+        addValueFromInput(supplies, "surgeon", R.id.set_surgeon);
+        addValueFromInput(supplies, "ventilator", R.id.set_ventilator);
+        addValueFromInput(supplies, "clothe", R.id.set_clothe);
+        addValueFromInput(supplies, "glasses", R.id.set_glasses);
+        addValueFromInput(supplies, "alcohol", R.id.set_alcohol);
+        addValueFromInput(supplies, "pants", R.id.set_pants);
+
+        args2.add("id", new JsonPrimitive(this.bundle.getInt("id")));
+        args2.add("row", supplies);
+
+        updateData(args, args2);
 
         Toast.makeText(this, "已提交",Toast.LENGTH_SHORT).show();
         finish();
@@ -95,12 +121,14 @@ public class EditHospitalActivity extends AppCompatActivity {
         }
     }
 
-    private void updateData(JsonObject args) {
+    //第二个参数中包含supplies的所有信息
+    private void updateData(JsonObject args,JsonObject args2) {
         new Thread(
                 new Runnable() {
                     @Override
                     public void run() {
                         DBConnector.editHospitalById(args);
+                        DBConnector.editSuppliesById(args2);
                     }
                 }
         ).start();

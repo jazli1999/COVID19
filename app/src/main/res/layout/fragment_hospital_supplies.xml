@@ -96,14 +96,14 @@
                 android:paddingEnd="10dp">
 
                 <TextView
-                    android:id="@+id/textView15"
+                    android:id="@+id/textView13"
                     android:layout_width="180dp"
                     android:layout_height="match_parent"
-                    android:text="@string/glasses"
+                    android:text="@string/clothe"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                 <TextView
-                    android:id="@+id/glasses_view"
+                    android:id="@+id/clothe_view"
                     android:layout_width="180dp"
                     android:layout_height="match_parent"
                     android:text="@string/nothing"
@@ -118,14 +118,14 @@
                 android:paddingEnd="10dp">
 
                 <TextView
-                    android:id="@+id/textView13"
+                    android:id="@+id/textView15"
                     android:layout_width="180dp"
                     android:layout_height="match_parent"
-                    android:text="@string/clothe"
+                    android:text="@string/glasses"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                 <TextView
-                    android:id="@+id/clothe_view"
+                    android:id="@+id/glasses_view"
                     android:layout_width="180dp"
                     android:layout_height="match_parent"
                     android:text="@string/nothing"
