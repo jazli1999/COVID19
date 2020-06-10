@@ -60,7 +60,7 @@
 
     <string name="not_available">暂未上传</string>
 
-    <string name="supplies_remains">物资情况</string>
+    <string name="supplies_remains">物资情况(缺少数量)</string>
     <string name="remains_count">剩余数量</string>
     <string name="n95">N95口罩</string>
     <string name="surgeon">医用外科口罩</string>
