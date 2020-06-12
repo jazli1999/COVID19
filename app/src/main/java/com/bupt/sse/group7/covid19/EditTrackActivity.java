@@ -86,6 +86,13 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_edit_track);
         //返回
+
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+
         btn_end=findViewById(R.id.btn_end);
         //确认单个marker
         btn_confirm=findViewById(R.id.btn_confirm);
