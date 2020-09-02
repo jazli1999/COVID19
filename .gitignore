@@ -14,3 +14,4 @@ gradlew.bat
 local.properties
 screenshot/.DS_Store
 app/build
+gradle.properties
