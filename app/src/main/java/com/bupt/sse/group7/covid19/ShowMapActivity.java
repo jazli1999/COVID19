@@ -24,6 +24,7 @@ import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.Polyline;
+import com.bupt.sse.group7.covid19.presenter.PatientPresenter;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.bupt.sse.group7.covid19.utils.DrawMarker;
 import com.google.gson.JsonArray;
@@ -189,8 +190,8 @@ public class ShowMapActivity extends AppCompatActivity {
                 Log.i("hcccc","marker onclicked");
                 Bundle bundle=marker.getExtraInfo();
                 int p_id=bundle.getInt("p_id");
+                PatientPresenter.getInstance().setPatientId(p_id);
                 Intent intent=new Intent(ShowMapActivity.this,PatientMainPageActivity.class);
-                intent.putExtra("id",p_id);
                 startActivity(intent);
                 return false;
             }

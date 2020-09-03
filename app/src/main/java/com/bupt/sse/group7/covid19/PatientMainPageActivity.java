@@ -1,14 +1,10 @@
 package com.bupt.sse.group7.covid19;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,39 +15,22 @@ import androidx.fragment.app.FragmentTransaction;
 import com.bupt.sse.group7.covid19.fragment.NotAvailable;
 import com.bupt.sse.group7.covid19.fragment.PatientTrackBlockFragment;
 import com.bupt.sse.group7.covid19.fragment.StatusLineFragment;
-import com.bupt.sse.group7.covid19.model.CurrentUser;
-import com.bupt.sse.group7.covid19.utils.DBConnector;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.bupt.sse.group7.covid19.interfaces.IPatientViewCallBack;
+import com.bupt.sse.group7.covid19.model.Patient;
+import com.bupt.sse.group7.covid19.model.Status;
+import com.bupt.sse.group7.covid19.presenter.PatientPresenter;
+import com.bupt.sse.group7.covid19.utils.Constants;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-/**
- * 病人主页
- */
-public class PatientMainPageActivity extends AppCompatActivity {
-
-    private int id;
-    private JsonObject patient; //pre
-    private JsonArray pStatus; //pre
+public class PatientMainPageActivity extends AppCompatActivity implements IPatientViewCallBack {
+    private PatientPresenter patientPresenter;
     private StatusLineFragment statusLineFragment;
     private PatientTrackBlockFragment patientTrackBlockFragment;
     private NotAvailable notAvailable;
-    private JsonArray tracks; //pre
-
-    public static Map<Integer, String> statuses;
-    static {
-        statuses = new HashMap<>();
-
-        statuses.put(1, "确诊");
-        statuses.put(2, "轻症");
-        statuses.put(3, "重症");
-        statuses.put(4, "死亡");
-        statuses.put(0, "已治愈");
-    }
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,108 +45,41 @@ public class PatientMainPageActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
-        Bundle bundle = this.getIntent().getExtras();
-        this.id = bundle.getInt("id");
-
-        initData();
-        initView();
-        updateView();
-
+        patientPresenter = PatientPresenter.getInstance();
+        patientPresenter.registerCallBack(this);
+        patientPresenter.getPatientInfo();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_update_track:
-                if(CurrentUser.getLabel().equals("patient") && CurrentUser.getId() == this.id) {
-                    Intent intent = new Intent(PatientMainPageActivity.this, EditTrackActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(this, "请先认证本用户账号", Toast.LENGTH_SHORT).show();
-                }
-
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_patient_main, menu);
-        return true;
-    }
-
-    private void initView() {
+    public void onPatientInfoReturned(Patient patient) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-
+        //TODO 这里不设置Pstatus的话，在statuLineFragment里面new Adapter会有问题
         statusLineFragment = new StatusLineFragment();
+        statusLineFragment.setList(patient.getStatuses());
         FragmentTransaction tranStatus = fragmentManager.beginTransaction();
         tranStatus.add(R.id.patient_content, statusLineFragment);
-        tranStatus.commit();
+        tranStatus.commitAllowingStateLoss();
 
-        if (this.tracks.size() > 0) {
+        if (patient.getTrackPoints().size() > 0) {
             patientTrackBlockFragment = new PatientTrackBlockFragment();
-            patientTrackBlockFragment.setId(this.id);
+            patientTrackBlockFragment.setId(patient.getId());
             FragmentTransaction trackTran = fragmentManager.beginTransaction();
             trackTran.add(R.id.patient_content, patientTrackBlockFragment);
-            trackTran.commit();
+            trackTran.commitAllowingStateLoss();
         }
         else {
             notAvailable = new NotAvailable();
             notAvailable.setTitle("ta的轨迹");
             FragmentTransaction notTran = fragmentManager.beginTransaction();
             notTran.add(R.id.patient_content, notAvailable);
-            notTran.commit();
+            notTran.commitAllowingStateLoss();
         }
-    }
 
-    private void updateView() {
         String desc = MessageFormat.format("{0}  |  {1}",
-                                            statuses.get(patient.get("status").getAsInt()),
-                                            patient.get("h_name").getAsString());
+                Constants.statuses.get(patient.getStatus()),
+                patient.getH_name());
 
-        ((TextView)this.findViewById(R.id.patient_name)).setText(patient.get("username").getAsString());
+        ((TextView)this.findViewById(R.id.patient_name)).setText(patient.getUsername());
         ((TextView)this.findViewById(R.id.patient_desc)).setText(desc);
-    }
-
-
-
-    private void initData() {
-        Thread thread = getPatientInfo(this.id);
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private Thread getPatientInfo(int p_id) {
-        Map<String, String> args = new HashMap<>();
-        args.put("p_id", String.valueOf(p_id));
-        Thread thread = new Thread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        patient = DBConnector.getPatientById(args).get(0).getAsJsonObject();
-                        pStatus = DBConnector.getPStatusById(args);
-                        tracks = DBConnector.getPatientTrackById(args);
-                    }
-                });
-        thread.start();
-        return thread;
-    }
-
-    private void addTrackData(final JsonObject args){
-        new Thread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        DBConnector.addPatientTrack(args);
-                    }
-                }
-        ).start();
     }
 }
