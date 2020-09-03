@@ -17,6 +17,9 @@ import com.bupt.sse.group7.covid19.model.CurrentUser;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.google.gson.JsonObject;
 
+/**
+ * 主页
+ */
 public class HomeActivity extends AppCompatActivity {
     private CardView hospitalCard;
     private CardView authCard;

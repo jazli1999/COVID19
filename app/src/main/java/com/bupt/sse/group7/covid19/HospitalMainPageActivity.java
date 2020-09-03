@@ -27,6 +27,9 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 医院主页
+ */
 public class HospitalMainPageActivity extends AppCompatActivity {
     private JsonObject hospital;
     private JsonObject statusNumber;

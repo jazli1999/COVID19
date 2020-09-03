@@ -18,7 +18,10 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AuthPageCollection extends Fragment {
+/**
+ * 认证页面tab栏
+ */
+public class AuthPageCollectionFragment extends Fragment {
     private AuthPagerAdapter authPageAdapter;
     private ViewPager2 viewPager;
     private List<String> authTabLabels;

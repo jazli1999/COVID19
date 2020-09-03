@@ -20,6 +20,9 @@ import com.google.gson.JsonObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *  认证页面，医院认证
+ */
 public class HospitalAuthFragment extends Fragment {
     private EditText userView;
     private EditText passView;

@@ -17,6 +17,9 @@ import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * 编辑医院信息页面
+ */
 public class EditHospitalActivity extends AppCompatActivity {
     private Bundle bundle;
 

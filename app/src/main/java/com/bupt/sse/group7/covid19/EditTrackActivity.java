@@ -46,6 +46,9 @@ import com.google.gson.JsonPrimitive;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 病人打点页面
+ */
 public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCoderResultListener {
 
     int p_id= CurrentUser.getId();

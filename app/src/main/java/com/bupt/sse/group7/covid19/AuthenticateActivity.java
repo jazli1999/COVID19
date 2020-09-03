@@ -25,6 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 认证页面
+ */
 public class AuthenticateActivity extends AppCompatActivity {
 
     private List<String> tabIndicators;

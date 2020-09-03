@@ -13,7 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-
+/**
+ *  医院主页，联系方式卡片部分
+ */
 public class HospitalContactFragment extends Fragment {
     private View view;
     private String people;

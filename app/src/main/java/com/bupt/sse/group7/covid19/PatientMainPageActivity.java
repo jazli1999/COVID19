@@ -17,7 +17,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bupt.sse.group7.covid19.fragment.NotAvailable;
-import com.bupt.sse.group7.covid19.fragment.PatientTrackBlock;
+import com.bupt.sse.group7.covid19.fragment.PatientTrackBlockFragment;
 import com.bupt.sse.group7.covid19.fragment.StatusLineFragment;
 import com.bupt.sse.group7.covid19.model.CurrentUser;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
@@ -28,13 +28,16 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 病人主页
+ */
 public class PatientMainPageActivity extends AppCompatActivity {
 
     private int id;
     private JsonObject patient;
     private JsonArray pStatus;
     private StatusLineFragment statusLineFragment;
-    private PatientTrackBlock patientTrackBlock;
+    private PatientTrackBlockFragment patientTrackBlockFragment;
     private NotAvailable notAvailable;
     private JsonArray tracks;
 
@@ -106,10 +109,10 @@ public class PatientMainPageActivity extends AppCompatActivity {
         tranStatus.commit();
 
         if (this.tracks.size() > 0) {
-            patientTrackBlock = new PatientTrackBlock();
-            patientTrackBlock.setId(this.id);
+            patientTrackBlockFragment = new PatientTrackBlockFragment();
+            patientTrackBlockFragment.setId(this.id);
             FragmentTransaction trackTran = fragmentManager.beginTransaction();
-            trackTran.add(R.id.patient_content, patientTrackBlock);
+            trackTran.add(R.id.patient_content, patientTrackBlockFragment);
             trackTran.commit();
         }
         else {

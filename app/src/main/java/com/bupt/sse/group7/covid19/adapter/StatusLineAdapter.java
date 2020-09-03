@@ -16,7 +16,9 @@ import com.bupt.sse.group7.covid19.PatientMainPageActivity;
 import com.bupt.sse.group7.covid19.R;
 import com.google.gson.JsonArray;
 
-
+/**
+ * 病人状态轴的 RecyclerView Adapter
+ */
 public class StatusLineAdapter extends RecyclerView.Adapter<StatusLineAdapter.StatusHolder> {
 
     private JsonArray list;

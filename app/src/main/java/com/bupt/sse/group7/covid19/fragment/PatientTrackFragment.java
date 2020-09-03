@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 病人主页 -> 轨迹卡片部分 -> 地图显示
+ */
 public class PatientTrackFragment extends Fragment {
     private View view;
 

@@ -18,6 +18,9 @@ import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+/**
+ * 用户首次登录设置用户名页面
+ */
 public class SetUsernameActivity extends AppCompatActivity {
     private CardView submit;
     private EditText usernameView;

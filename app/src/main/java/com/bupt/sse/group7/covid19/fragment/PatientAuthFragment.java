@@ -1,4 +1,4 @@
-package com.bupt.sse.group7.covid19;
+package com.bupt.sse.group7.covid19.fragment;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.bupt.sse.group7.covid19.R;
+import com.bupt.sse.group7.covid19.SetUsernameActivity;
 import com.bupt.sse.group7.covid19.model.CurrentUser;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.google.gson.JsonObject;
@@ -21,6 +23,9 @@ import com.google.gson.JsonObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *  认证页面，个人用户认证
+ */
 public class PatientAuthFragment extends Fragment {
     private AlertDialog.Builder builder;
     private EditText patientNoView;

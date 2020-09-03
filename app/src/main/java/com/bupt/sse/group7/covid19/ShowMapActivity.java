@@ -38,6 +38,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 主页 -> 轨迹查看页面
+ */
 public class ShowMapActivity extends AppCompatActivity {
 
 

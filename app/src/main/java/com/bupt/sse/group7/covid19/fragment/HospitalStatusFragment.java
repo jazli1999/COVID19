@@ -14,6 +14,9 @@ import androidx.fragment.app.Fragment;
 
 import org.w3c.dom.Text;
 
+/**
+ *  医院主页，确诊情况卡片部分
+ */
 public class HospitalStatusFragment extends Fragment {
     private View view;
     private String severe;

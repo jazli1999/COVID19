@@ -18,7 +18,10 @@ import com.google.gson.JsonArray;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PatientTrackBlock extends Fragment {
+/**
+ * 病人主页，轨迹卡片部分
+ */
+public class PatientTrackBlockFragment extends Fragment {
     View view;
     PatientTrackFragment patientTrackFragment;
     TrackLineFragment trackLineFragment;

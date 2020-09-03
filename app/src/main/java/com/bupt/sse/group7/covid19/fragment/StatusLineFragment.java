@@ -15,6 +15,9 @@ import com.bupt.sse.group7.covid19.R;
 import com.bupt.sse.group7.covid19.adapter.StatusLineAdapter;
 import com.google.gson.JsonArray;
 
+/**
+ * 病人主页，状态轴部分
+ */
 public class StatusLineFragment extends Fragment {
 
     private JsonArray pStatus;

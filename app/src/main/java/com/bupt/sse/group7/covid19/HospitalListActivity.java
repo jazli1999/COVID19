@@ -12,14 +12,17 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bupt.sse.group7.covid19.adapter.RvAdapter;
+import com.bupt.sse.group7.covid19.adapter.HospitalListAdapter;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.google.gson.JsonArray;
 
+/**
+ * 医院列表页面
+ */
 public class HospitalListActivity extends AppCompatActivity {
     private JsonArray hospitals;
     private RecyclerView listView;
-    private RvAdapter adapter;
+    private HospitalListAdapter adapter;
     private LinearLayoutManager layoutManager;
 
     @Override
@@ -72,7 +75,7 @@ public class HospitalListActivity extends AppCompatActivity {
     private void initView() {
         listView = findViewById(R.id.hosp_list);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        adapter = new RvAdapter(hospitals, this);
+        adapter = new HospitalListAdapter(hospitals, this);
 
         listView.setLayoutManager(layoutManager);
         listView.setAdapter(adapter);

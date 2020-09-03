@@ -14,6 +14,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * 病人轨迹轴的 RecyclerView Adapter
+ */
 public class TrackLineAdapter extends RecyclerView.Adapter<TrackLineAdapter.TrackHolder> {
 
     private JsonArray list;

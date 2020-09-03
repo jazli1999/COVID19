@@ -12,6 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+/**
+ * 个人用户尚未完善信息时显示的"暂未上传”
+ */
 public class NotAvailable extends Fragment {
     private String title;
 

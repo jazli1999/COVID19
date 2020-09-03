@@ -14,12 +14,15 @@ import com.bupt.sse.group7.covid19.R;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
-public class RvAdapter extends RecyclerView.Adapter<RvAdapter.Holder> {
+/**
+ * 医院列表的RecyclerView Adapter，给每个医院信息数据绑定对应的视图
+ */
+public class HospitalListAdapter extends RecyclerView.Adapter<HospitalListAdapter.Holder> {
     private JsonArray list;
     private AdapterView.OnItemClickListener onItemClickListener;
     private HospitalListActivity context;
 
-    public RvAdapter(JsonArray list, HospitalListActivity context) {
+    public HospitalListAdapter(JsonArray list, HospitalListActivity context) {
         this.list = list;
         this.context = context;
     }

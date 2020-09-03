@@ -14,6 +14,9 @@ import androidx.fragment.app.Fragment;
 
 import org.w3c.dom.Text;
 
+/**
+ * 医院主页，物资情况卡片部分
+ */
 public class HospitalSuppliesFragment extends Fragment {
     private View view;
 
