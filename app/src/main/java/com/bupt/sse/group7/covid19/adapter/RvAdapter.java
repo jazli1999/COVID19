@@ -1,8 +1,5 @@
-package com.bupt.sse.group7.covid19;
+package com.bupt.sse.group7.covid19.adapter;
 
-import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bupt.sse.group7.covid19.HospitalListActivity;
+import com.bupt.sse.group7.covid19.R;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 public class RvAdapter extends RecyclerView.Adapter<RvAdapter.Holder> {
     private JsonArray list;

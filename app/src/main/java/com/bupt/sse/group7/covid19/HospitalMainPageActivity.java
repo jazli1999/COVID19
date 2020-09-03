@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +15,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bupt.sse.group7.covid19.fragment.HospitalContactFragment;
+import com.bupt.sse.group7.covid19.fragment.HospitalStatusFragment;
+import com.bupt.sse.group7.covid19.fragment.HospitalSuppliesFragment;
+import com.bupt.sse.group7.covid19.model.CurrentUser;
+import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 

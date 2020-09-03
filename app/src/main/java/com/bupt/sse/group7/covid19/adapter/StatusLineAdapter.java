@@ -1,8 +1,7 @@
-package com.bupt.sse.group7.covid19;
+package com.bupt.sse.group7.covid19.adapter;
 
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,9 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bupt.sse.group7.covid19.PatientMainPageActivity;
+import com.bupt.sse.group7.covid19.R;
 import com.google.gson.JsonArray;
-
-import java.util.List;
 
 
 public class StatusLineAdapter extends RecyclerView.Adapter<StatusLineAdapter.StatusHolder> {

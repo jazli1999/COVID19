@@ -4,12 +4,10 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.icu.util.BuddhistCalendar;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,6 +37,8 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.bupt.sse.group7.covid19.model.CurrentUser;
+import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -48,7 +48,7 @@ import java.util.List;
 
 public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCoderResultListener {
 
-    int p_id=CurrentUser.getId();
+    int p_id= CurrentUser.getId();
     //int p_id=5;
     private MapView mapView;
     private BaiduMap baiduMap;

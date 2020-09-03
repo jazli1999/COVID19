@@ -1,11 +1,10 @@
-package com.bupt.sse.group7.covid19;
+package com.bupt.sse.group7.covid19.adapter;
 
-import android.os.Bundle;
+import com.bupt.sse.group7.covid19.fragment.HospitalAuthFragment;
+import com.bupt.sse.group7.covid19.PatientAuthFragment;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class AuthPagerAdapter extends FragmentStateAdapter {

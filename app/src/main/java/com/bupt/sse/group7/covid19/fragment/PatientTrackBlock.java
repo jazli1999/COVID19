@@ -1,4 +1,4 @@
-package com.bupt.sse.group7.covid19;
+package com.bupt.sse.group7.covid19.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bupt.sse.group7.covid19.R;
+import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.google.gson.JsonArray;
 
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package com.bupt.sse.group7.covid19;
+package com.bupt.sse.group7.covid19.fragment;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.bupt.sse.group7.covid19.R;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

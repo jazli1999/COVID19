@@ -1,11 +1,9 @@
-package com.bupt.sse.group7.covid19;
+package com.bupt.sse.group7.covid19.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -14,6 +12,9 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.bupt.sse.group7.covid19.R;
+import com.bupt.sse.group7.covid19.model.CurrentUser;
+import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;

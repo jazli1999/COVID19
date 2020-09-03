@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/fragmenta"
-        android:name="com.bupt.sse.group7.covid19.AuthPageCollection"
+        android:name="com.bupt.sse.group7.covid19.fragment.AuthPageCollection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

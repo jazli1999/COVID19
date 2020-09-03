@@ -1,10 +1,8 @@
 package com.bupt.sse.group7.covid19;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,11 +13,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.gson.JsonElement;
+import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.google.gson.internal.JsonReaderInternalAccess;
 
 public class EditHospitalActivity extends AppCompatActivity {
     private Bundle bundle;

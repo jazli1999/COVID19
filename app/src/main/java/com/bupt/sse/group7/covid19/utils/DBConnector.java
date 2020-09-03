@@ -1,4 +1,4 @@
-package com.bupt.sse.group7.covid19;
+package com.bupt.sse.group7.covid19.utils;
 
 
 import android.util.Log;
