@@ -14,26 +14,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.sse.group7.covid19.PatientMainPageActivity;
 import com.bupt.sse.group7.covid19.R;
+import com.bupt.sse.group7.covid19.model.Status;
 import com.google.gson.JsonArray;
 import com.bupt.sse.group7.covid19.utils.Constants;
+
+import java.util.List;
+
 /**
  * 病人状态轴的 RecyclerView Adapter
  */
 public class StatusLineAdapter extends RecyclerView.Adapter<StatusLineAdapter.StatusHolder> {
 
-    private JsonArray list;
+    private List<Status> list;
     private Context context;
 
-    public StatusLineAdapter(JsonArray list, Context context) {
+    public StatusLineAdapter(List<Status> list, Context context) {
         this.list = list;
         this.context = context;
-
     }
 
     @NonNull
     @Override
     public StatusHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d("adapter", parent.getClass().toString());
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.status_line_item, null, false);
         StatusHolder holder = new StatusHolder(view);
         return holder;
@@ -41,14 +43,14 @@ public class StatusLineAdapter extends RecyclerView.Adapter<StatusLineAdapter.St
 
     @Override
     public void onBindViewHolder(@NonNull StatusHolder holder, int position) {
-        String[] date = list.get(position).getAsJsonObject().get("day").getAsString().split("-");
+        String[] date = list.get(position).getDay().split("-");
         String day = date[1] + "/" + date[2];
-        int status = list.get(position).getAsJsonObject().get("status").getAsInt();
+        String status = list.get(position).getStatus();
         GradientDrawable drawable = (GradientDrawable) holder.dotView.getBackground();
 
         holder.dateView.setText(day);
         holder.infoView.setText(PatientMainPageActivity.statuses.get(status));
-        switch(status) {
+        switch(Integer.parseInt(status)) {
             case Constants.HEALTHY:
                 drawable.setColor(context.getResources().getColor(R.color.healthy));
                 break;

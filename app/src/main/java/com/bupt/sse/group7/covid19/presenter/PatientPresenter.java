@@ -21,9 +21,9 @@ public class PatientPresenter {
     private List<IPatientViewCallBack> callBacks = new ArrayList<>();
 
     private Patient patient;
-    private JsonObject patientResult; //pre
-    private JsonArray pStatusResult; //pre
-    private JsonArray tracksResult; //pre
+    private JsonObject patientResult;
+    private JsonArray pStatusResult;
+    private JsonArray tracksResult;
 
 
     PatientPresenter() {
@@ -89,8 +89,7 @@ public class PatientPresenter {
         for (JsonElement je: pStatusResult) {
             this.patient.getStatuses().add(
                     new Status(je.getAsJsonObject().get("day").getAsString(),
-                            je.getAsJsonObject().get("status").getAsInt())
-            );
+                            je.getAsJsonObject().get("status").getAsString()));
         }
     }
 

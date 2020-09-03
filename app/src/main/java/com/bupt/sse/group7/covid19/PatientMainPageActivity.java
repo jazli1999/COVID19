@@ -131,12 +131,8 @@ public class PatientMainPageActivity extends AppCompatActivity {
 
         ((TextView)this.findViewById(R.id.patient_name)).setText(patient.get("username").getAsString());
         ((TextView)this.findViewById(R.id.patient_desc)).setText(desc);
-        updateStatusView();
     }
 
-    private void updateStatusView() {
-        statusLineFragment.setpStatus(pStatus);
-    }
 
 
     private void initData() {
