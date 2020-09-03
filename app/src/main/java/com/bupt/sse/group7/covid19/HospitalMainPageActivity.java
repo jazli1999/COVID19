@@ -151,7 +151,7 @@ public class HospitalMainPageActivity extends AppCompatActivity {
         contactFragment.setPeople(this.people);
     }
 
-    private void updateHospitalSupplies(){
+    private void updateHospitalSupplies() {
         suppliesFragment.setN95(getStringFromJsonObject(supplies, "n95"));
         suppliesFragment.setSurgeon(getStringFromJsonObject(supplies, "surgeon"));
         suppliesFragment.setVentilator(getStringFromJsonObject(supplies, "ventilator"));

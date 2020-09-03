@@ -3,8 +3,8 @@ package com.bupt.sse.group7.covid19.utils;
 
 import android.util.Log;
 
+import com.bupt.sse.group7.covid19.interfaces.DAO;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -17,8 +17,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
+
 public class DBConnector {
     private static String host = "http://47.103.5.100/";
+    private static Retrofit retrofit=new Retrofit.Builder()
+            .baseUrl("http://47.103.5.100/")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build();
+    public static DAO dao =retrofit.create(DAO.class);
+
+
 
     private static JsonArray executeGET(String url) {
         HttpURLConnection conn = null;
@@ -168,7 +178,7 @@ public class DBConnector {
         return executeGET(newURL);
     }
 
-    private static JsonArray parseInfo(InputStream in) throws IOException {
+    public static JsonArray parseInfo(InputStream in) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         StringBuilder sb = new StringBuilder();
         String line = null;
