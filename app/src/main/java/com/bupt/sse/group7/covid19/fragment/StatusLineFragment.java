@@ -33,7 +33,6 @@ public class StatusLineFragment extends Fragment {
     private StatusLineAdapter adapter;
     private LinearLayoutManager layoutManager;
     private View view;
-    private PatientPresenter patientPresenter = PatientPresenter.getInstance();
 
     @Nullable
     @Override

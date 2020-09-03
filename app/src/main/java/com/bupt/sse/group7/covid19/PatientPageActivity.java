@@ -66,21 +66,21 @@ public class PatientPageActivity extends AppCompatActivity implements IPatientVi
         statusLineFragment.setList(patient.getStatuses());
         FragmentTransaction tranStatus = fragmentManager.beginTransaction();
         tranStatus.add(R.id.patient_content, statusLineFragment);
-        tranStatus.commit();
+        tranStatus.commitAllowingStateLoss();
 
         if (patient.getTrackPoints().size() > 0) {
             patientTrackBlockFragment = new PatientTrackBlockFragment();
             patientTrackBlockFragment.setId(patient.getId());
             FragmentTransaction trackTran = fragmentManager.beginTransaction();
             trackTran.add(R.id.patient_content, patientTrackBlockFragment);
-            trackTran.commit();
+            trackTran.commitAllowingStateLoss();
         }
         else {
             notAvailable = new NotAvailable();
             notAvailable.setTitle("ta的轨迹");
             FragmentTransaction notTran = fragmentManager.beginTransaction();
             notTran.add(R.id.patient_content, notAvailable);
-            notTran.commit();
+            notTran.commitAllowingStateLoss();
         }
 
         String desc = MessageFormat.format("{0}  |  {1}",

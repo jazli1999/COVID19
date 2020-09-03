@@ -80,6 +80,8 @@ public class PatientPresenter {
         this.patient.setH_name(patientResult.get("h_name").getAsString());
         this.patient.setUsername(patientResult.get("username").getAsString());
         this.patient.setStatus(patientResult.get("status").getAsString());
+        this.patient.setStatuses(new ArrayList<>());
+        this.patient.setTrackPoints(new ArrayList<>());
         for(JsonElement je: tracksResult) {
             this.patient.getTrackPoints().add(
                     new TrackPoint(je.getAsJsonObject().get("date_time").getAsString(),
