@@ -77,8 +77,9 @@ public class PatientPresenter {
 
     private void processResults() {
         // parse data and assign
-        this.patient.setH_name(patientResult.get("status").getAsString());
+        this.patient.setH_name(patientResult.get("h_name").getAsString());
         this.patient.setUsername(patientResult.get("username").getAsString());
+        this.patient.setStatus(patientResult.get("status").getAsString());
         for(JsonElement je: tracksResult) {
             this.patient.getTrackPoints().add(
                     new TrackPoint(je.getAsJsonObject().get("date_time").getAsString(),

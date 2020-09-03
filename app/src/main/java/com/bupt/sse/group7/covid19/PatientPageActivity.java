@@ -62,11 +62,11 @@ public class PatientPageActivity extends AppCompatActivity implements IPatientVi
     @Override
     public void onPatientInfoReturned(Patient patient) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-//TODO 这里不设置Pstatus的话，在statuLineFragment里面new Adapter会有问题
-//        statusLineFragment = new StatusLineFragment();
-//        FragmentTransaction tranStatus = fragmentManager.beginTransaction();
-//        tranStatus.add(R.id.patient_content, statusLineFragment);
-//        tranStatus.commit();
+        //TODO 这里不设置Pstatus的话，在statuLineFragment里面new Adapter会有问题
+        //        statusLineFragment = new StatusLineFragment();
+        //        FragmentTransaction tranStatus = fragmentManager.beginTransaction();
+        //        tranStatus.add(R.id.patient_content, statusLineFragment);
+        //        tranStatus.commit();
 
         if (patient.getTrackPoints().size() > 0) {
             patientTrackBlockFragment = new PatientTrackBlockFragment();
@@ -85,7 +85,7 @@ public class PatientPageActivity extends AppCompatActivity implements IPatientVi
 
         List<Status> pStatus = patient.getStatuses();
         String desc = MessageFormat.format("{0}  |  {1}",
-                statuses.get(pStatus.get(pStatus.size() - 1)),
+                statuses.get(patient.getStatus()),
                 patient.getH_name());
 
         ((TextView)this.findViewById(R.id.patient_name)).setText(patient.getUsername());

@@ -7,6 +7,7 @@ public class Patient {
     private int id;
     private String h_name;
     private String username;
+    private String status;
     private List<Status> statuses = new ArrayList<>();
     private List<TrackPoint> trackPoints = new ArrayList<>();
 
@@ -16,6 +17,14 @@ public class Patient {
 
     public String getH_name() {
         return h_name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public void setH_name(String h_name) {
