@@ -24,6 +24,7 @@
     <string name="mild">轻症</string>
     <string name="cured">已治愈</string>
     <string name="dead">死亡</string>
+    <string name="confirmed">确诊</string>
 
     <string name="hospital_status">确诊情况</string>
 

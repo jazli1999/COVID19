@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bupt.sse.group7.covid19.PatientMainPageActivity;
 import com.bupt.sse.group7.covid19.R;
 import com.google.gson.JsonArray;
-
+import com.bupt.sse.group7.covid19.utils.Constants;
 /**
  * 病人状态轴的 RecyclerView Adapter
  */
@@ -49,19 +49,19 @@ public class StatusLineAdapter extends RecyclerView.Adapter<StatusLineAdapter.St
         holder.dateView.setText(day);
         holder.infoView.setText(PatientMainPageActivity.statuses.get(status));
         switch(status) {
-            case 0:
+            case Constants.HEALTHY:
                 drawable.setColor(context.getResources().getColor(R.color.healthy));
                 break;
-            case 1:
+            case Constants.CONFIRMED:
                 drawable.setColor(context.getResources().getColor(R.color.confirmed));
                 break;
-            case 2:
+            case Constants.MILD:
                 drawable.setColor(context.getResources().getColor(R.color.mild));
                 break;
-            case 3:
+            case Constants.SEVERE:
                 drawable.setColor(context.getResources().getColor(R.color.severe));
                 break;
-            case 4:
+            case Constants.DEAD:
                 drawable.setColor(context.getResources().getColor(R.color.dead));
                 break;
         }

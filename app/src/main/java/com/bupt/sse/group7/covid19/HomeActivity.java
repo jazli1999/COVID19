@@ -14,8 +14,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
 import com.bupt.sse.group7.covid19.model.CurrentUser;
+import com.bupt.sse.group7.covid19.presenter.PatientPresenter;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.google.gson.JsonObject;
+import com.bupt.sse.group7.covid19.utils.Constants;
+
 
 /**
  * 主页
@@ -25,6 +28,7 @@ public class HomeActivity extends AppCompatActivity {
     private CardView authCard;
     private CardView trackCard;
     private CardView pageCard;
+    private TextView mildTv, severeTv, curedTv, deadTv;
 
     private JsonObject statistics;
 
@@ -68,11 +72,11 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void updateStatusView() {
-        ((TextView) findViewById(R.id.mild_statistic)).setText(
-                    String.valueOf(statistics.get("1").getAsInt() + statistics.get("2").getAsInt()));
-        ((TextView) findViewById(R.id.severe_statistic)).setText(statistics.get("3").getAsString());
-        ((TextView) findViewById(R.id.dead_statistic)).setText(statistics.get("4").getAsString());
-        ((TextView) findViewById(R.id.cured_statistic)).setText(statistics.get("0").getAsString());
+        mildTv.setText(String.valueOf(statistics.get(Constants.CONFIRMED + "").getAsInt()
+                            + statistics.get(Constants.MILD + "").getAsInt()));
+        severeTv.setText(statistics.get(Constants.SEVERE + "").getAsString());
+        deadTv.setText(statistics.get(Constants.DEAD + "").getAsString());
+        curedTv.setText(statistics.get(Constants.HEALTHY + "").getAsString());
     }
 
     private void initView() {
@@ -80,6 +84,10 @@ public class HomeActivity extends AppCompatActivity {
         hospitalCard = findViewById(R.id.hospital_card);
         trackCard = findViewById(R.id.track_card);
         authCard = findViewById(R.id.auth_card);
+        curedTv = findViewById(R.id.cured_statistic);
+        deadTv = findViewById(R.id.dead_statistic);
+        severeTv = findViewById(R.id.severe_statistic);
+        mildTv = findViewById(R.id.mild_statistic);
 
         updateStatusView();
 
@@ -117,15 +125,18 @@ public class HomeActivity extends AppCompatActivity {
                     Toast.makeText(HomeActivity.this, "请先认证", Toast.LENGTH_LONG).show();
                 } else {
                     Class context;
+                    Intent intent;
                     if (CurrentUser.getLabel().equals("patient")) {
-                        context = PatientMainPageActivity.class;
+                        context = PatientPageActivity.class;
+                        PatientPresenter.getInstance().setPatientId(CurrentUser.getId());
+                        intent = new Intent(HomeActivity.this, context);
                     } else {
                         context = HospitalMainPageActivity.class;
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("id", CurrentUser.getId());
+                        intent = new Intent(HomeActivity.this, context);
+                        intent.putExtras(bundle);
                     }
-                    Intent intent = new Intent(HomeActivity.this, context);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("id", CurrentUser.getId());
-                    intent.putExtras(bundle);
                     startActivity(intent);
                 }
             }

@@ -34,12 +34,12 @@ import java.util.Map;
 public class PatientMainPageActivity extends AppCompatActivity {
 
     private int id;
-    private JsonObject patient;
-    private JsonArray pStatus;
+    private JsonObject patient; //pre
+    private JsonArray pStatus; //pre
     private StatusLineFragment statusLineFragment;
     private PatientTrackBlockFragment patientTrackBlockFragment;
     private NotAvailable notAvailable;
-    private JsonArray tracks;
+    private JsonArray tracks; //pre
 
     public static Map<Integer, String> statuses;
     static {
