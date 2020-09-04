@@ -1,6 +1,7 @@
 package com.bupt.sse.group7.covid19.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +12,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import com.bupt.sse.group7.covid19.R;
 import com.bupt.sse.group7.covid19.model.CurrentUser;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
+import com.bupt.sse.group7.covid19.utils.JsonUtils;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +31,7 @@ import java.util.Map;
  *  认证页面，医院认证
  */
 public class HospitalAuthFragment extends Fragment {
+    private static final String TAG = "HospitalAuthFragment";
     private EditText userView;
     private EditText passView;
     private JsonObject returnedInfo;
@@ -61,18 +69,10 @@ public class HospitalAuthFragment extends Fragment {
 
     public void submitHospitalAuth() {
         String username = userView.getText().toString();
-        String password = passView.getText().toString();
-
         Map<String, String> args = new HashMap<>();
         args.put("username", username);
 
-        Thread thread = getAuthInfo(args);
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        checkAuth(password);
+        getAuthInfo(args);
     }
 
     private void checkAuth(String password) {
@@ -91,16 +91,27 @@ public class HospitalAuthFragment extends Fragment {
         }
     }
 
-    private Thread getAuthInfo(Map<String, String> args) {
-        Thread thread = new Thread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        returnedInfo = DBConnector.getHospitalAuthInfo(args).get(0).getAsJsonObject();
-                    }
-                });
-        thread.start();
-        return thread;
+    private void getAuthInfo(Map<String, String> args) {
+        Call<ResponseBody> data = DBConnector.dao.getData("getHospitalAuthInfo.php",args);
+        data.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    returnedInfo= JsonUtils.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
+                    String password = passView.getText().toString();
+                    checkAuth(password);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.i(TAG, "getAuthInfoOnFailure");
+
+            }
+        });
+
     }
 
 

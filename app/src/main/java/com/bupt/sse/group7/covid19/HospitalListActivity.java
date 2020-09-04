@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -11,16 +12,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import com.bupt.sse.group7.covid19.adapter.HospitalListAdapter;
 import com.bupt.sse.group7.covid19.presenter.HospitalPresenter;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
+import com.bupt.sse.group7.covid19.utils.JsonUtils;
 import com.google.gson.JsonArray;
+
+import java.io.IOException;
 
 /**
  * 医院列表页面
  */
 public class HospitalListActivity extends AppCompatActivity {
+    private static final String TAG = "HospitalListActivity";
     private JsonArray hospitals;
     private RecyclerView listView;
     private HospitalListAdapter adapter;
@@ -39,8 +48,8 @@ public class HospitalListActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
-        initData();
         initView();
+        initData();
     }
 
     public void intoMainPage(int id) {
@@ -50,34 +59,39 @@ public class HospitalListActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        Thread thread = getHospitalList();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Call<ResponseBody> data = DBConnector.dao.getData("getHospitalList.php");
+        data.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    hospitals= JsonUtils.parseInfo(response.body().byteStream());
+                    updateView(hospitals);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.i(TAG, "HospitalListActivityOnFailure");
+
+            }
+        });
+
     }
 
-    private Thread getHospitalList() {
-        Thread thread = new Thread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        hospitals = DBConnector.getHospitalList();
-                    }
-                }
-        );
-        thread.start();
-        return thread;
+    private void updateView(JsonArray hospitals) {
+        adapter = new HospitalListAdapter(hospitals, this);
+
+        listView.setLayoutManager(layoutManager);
+        listView.setAdapter(adapter);
     }
 
     private void initView() {
         listView = findViewById(R.id.hosp_list);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        adapter = new HospitalListAdapter(hospitals, this);
 
-        listView.setLayoutManager(layoutManager);
-        listView.setAdapter(adapter);
     }
 
 }

@@ -21,13 +21,7 @@ import org.w3c.dom.Text;
 public class HospitalSuppliesFragment extends Fragment {
     private View view;
 
-    private String n95;
-    private String surgeon;
-    private String ventilator;
-    private String clothe;
-    private String glasses;
-    private String alcohol;
-    private String pants;
+    private TextView n95, surgeon, ventilator, clothe, glasses, alcohol, pants;
 
     @Nullable
     @Override
@@ -48,27 +42,26 @@ public class HospitalSuppliesFragment extends Fragment {
     }
 
     private void initView() {
-        ((TextView) view.findViewById(R.id.n95_view)).setText(n95);
-        ((TextView) view.findViewById(R.id.surgeon_view)).setText(surgeon);
-        ((TextView) view.findViewById(R.id.ventilator_view)).setText(ventilator);
-        ((TextView) view.findViewById(R.id.clothe_view)).setText(clothe);
-        ((TextView) view.findViewById(R.id.glasses_view)).setText(glasses);
-        ((TextView) view.findViewById(R.id.alcohol_view)).setText(alcohol);
-        ((TextView) view.findViewById(R.id.pants_view)).setText(pants);
+        n95 = view.findViewById(R.id.n95_view);
+        surgeon = view.findViewById(R.id.surgeon_view);
+        ventilator = view.findViewById(R.id.ventilator_view);
+        clothe = view.findViewById(R.id.clothe_view);
+        glasses = view.findViewById(R.id.glasses_view);
+        alcohol = view.findViewById(R.id.alcohol_view);
+        pants = view.findViewById(R.id.pants_view);
     }
 
-    public void setN95(String n95) {
-        this.n95 = n95;
+
+    public void updateView(Supplies supplies) {
+        n95.setText(supplies.getN95());
+        surgeon.setText(supplies.getSurgeon());
+        ventilator.setText(supplies.getVentilator());
+        clothe.setText(supplies.getClothe());
+        glasses.setText(supplies.getGlasses());
+        alcohol.setText(supplies.getAlcohol());
+        pants.setText(supplies.getPants());
+
     }
 
-    public void setSupplies(Supplies supplies) {
-        this.alcohol = supplies.getAlcohol() + "";
-        this.n95 = supplies.getN95() + "";
-        this.clothe = supplies.getClothe() + "";
-        this.glasses = supplies.getGlasses() + "";
-        this.pants = supplies.getPants() + "";
-        this.surgeon = supplies.getSurgeon() + "";
-        this.ventilator = supplies.getVentilator() + "";
-    }
 
 }

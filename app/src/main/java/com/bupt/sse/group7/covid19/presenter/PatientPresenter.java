@@ -8,6 +8,7 @@ import com.bupt.sse.group7.covid19.model.Patient;
 import com.bupt.sse.group7.covid19.model.Status;
 import com.bupt.sse.group7.covid19.model.TrackPoint;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
+import com.bupt.sse.group7.covid19.utils.JsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -24,6 +25,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PatientPresenter implements IDataBackCallBack {
+    private static final String TAG = "PatientPresenter";
     // TODO 添加数据获取失败时的处理
 
     private static PatientPresenter instance = new PatientPresenter();
@@ -58,7 +60,7 @@ public class PatientPresenter implements IDataBackCallBack {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    patientResult=DBConnector.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
+                    patientResult= JsonUtils.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
                     processPatientResult();
                     Log.i("hcccc","processPatientResultDOwn");
 
@@ -71,6 +73,7 @@ public class PatientPresenter implements IDataBackCallBack {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.i(TAG, "getHospitalResultOnFailure");
 
             }
         });
@@ -84,7 +87,7 @@ public class PatientPresenter implements IDataBackCallBack {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    pStatusResult=DBConnector.parseInfo(response.body().byteStream());
+                    pStatusResult=JsonUtils.parseInfo(response.body().byteStream());
                     processStatusResult();
                     Log.i("hcccc","processStatusResultDown");
 
@@ -110,7 +113,7 @@ public class PatientPresenter implements IDataBackCallBack {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    tracksResult=DBConnector.parseInfo(response.body().byteStream());
+                    tracksResult=JsonUtils.parseInfo(response.body().byteStream());
                     processTrackResults();
                     Log.i("hcccc","processTrackResultsDown");
 

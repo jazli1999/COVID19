@@ -28,6 +28,7 @@ import com.bupt.sse.group7.covid19.model.CurrentUser;
 import com.bupt.sse.group7.covid19.presenter.HospitalPresenter;
 import com.bupt.sse.group7.covid19.presenter.PatientPresenter;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
+import com.bupt.sse.group7.covid19.utils.JsonUtils;
 import com.google.gson.JsonObject;
 import com.bupt.sse.group7.covid19.utils.Constants;
 
@@ -72,7 +73,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    statistics = DBConnector.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
+                    statistics = JsonUtils.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
                     updateStatusView();
                 } catch (IOException e) {
                     e.printStackTrace();

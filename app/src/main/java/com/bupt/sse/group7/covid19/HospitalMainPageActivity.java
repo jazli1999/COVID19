@@ -100,12 +100,10 @@ public class HospitalMainPageActivity extends AppCompatActivity implements IHosp
         descTv.setText(MessageFormat.format("剩余床位  轻症 {0} | 重症 {1}",
                 hospital.getMildLeft(), hospital.getSevereLeft()));
 
-        contactFragment.setTel(hospital.getTel());
-        contactFragment.setAddress(hospital.getAddress());
-        contactFragment.setPeople(hospital.getPeople());
+        contactFragment.updateView(hospital.getTel(),hospital.getAddress(),hospital.getPeople());
 
-        statusFragment.setStatistics(hospital.getStatistics());
-        suppliesFragment.setSupplies(hospital.getSupplies());
+        statusFragment.updateView(hospital.getStatistics());
+        suppliesFragment.updateView(hospital.getSupplies());
     }
 
     /**

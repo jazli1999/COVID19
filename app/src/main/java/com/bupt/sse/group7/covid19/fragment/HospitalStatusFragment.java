@@ -20,10 +20,9 @@ import org.w3c.dom.Text;
  */
 public class HospitalStatusFragment extends Fragment {
     private View view;
-    private String severe;
-    private String mild;
-    private String cured;
-    private String dead;
+
+
+    TextView mild_view,severe_view,cured_view,dead_view;
 
     @Nullable
     @Override
@@ -34,26 +33,28 @@ public class HospitalStatusFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        initView();
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.view = view;
+        initView();
     }
 
     private void initView() {
-        ((TextView) view.findViewById(R.id.mild_view)).setText(mild);
-        ((TextView) view.findViewById(R.id.severe_view)).setText(severe);
-        ((TextView) view.findViewById(R.id.cured_view)).setText(cured);
-        ((TextView) view.findViewById(R.id.dead_view)).setText(dead);
+        mild_view=view.findViewById(R.id.mild_view);
+        severe_view=view.findViewById(R.id.severe_view);
+        cured_view= view.findViewById(R.id.cured_view);
+        dead_view=view.findViewById(R.id.dead_view);
+    }
+    public void updateView(Statistics statistics){
+        mild_view.setText(statistics.getMild());
+        severe_view.setText(statistics.getSevere());
+        cured_view.setText(statistics.getCured());
+        dead_view.setText(statistics.getDead());
+
     }
 
-    public void setStatistics(Statistics statistics) {
-        this.mild = statistics.getMild() + "";
-        this.severe = statistics.getSevere() + "";
-        this.cured = statistics.getCured() + "";
-        this.dead = statistics.getDead() + "";
-    }
 }
