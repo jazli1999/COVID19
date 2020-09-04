@@ -157,7 +157,7 @@ public class HomeActivity extends AppCompatActivity {
                     Class context;
                     Intent intent;
                     if (CurrentUser.getLabel().equals("patient")) {
-                        context = PatientPageActivity.class;
+                        context = PatientMainPageActivity.class;
                         PatientPresenter.getInstance().setPatientId(CurrentUser.getId());
                         intent = new Intent(HomeActivity.this, context);
                     } else {

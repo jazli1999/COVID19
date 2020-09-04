@@ -15,6 +15,14 @@ public class Patient {
         this.id = id;
     }
 
+    public void setStatuses(List<Status> statuses) {
+        this.statuses = statuses;
+    }
+
+    public void setTrackPoints(List<TrackPoint> trackPoints) {
+        this.trackPoints = trackPoints;
+    }
+
     public String getH_name() {
         return h_name;
     }
