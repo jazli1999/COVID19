@@ -80,26 +80,8 @@ public class HomeActivity extends AppCompatActivity {
 
            }
        });
-//        Thread thread = getStatistics();
-//        try {
-//            thread.join();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
     }
 
-    private Thread getStatistics() {
-        Thread thread = new Thread(
-            new Runnable() {
-                @Override
-                public void run() {
-                    statistics = DBConnector.getStatistics().get(0).getAsJsonObject();
-                }
-            }
-        );
-        thread.start();
-        return thread;
-    }
 
     private void updateStatusView() {
         mildTv.setText(String.valueOf(statistics.get(Constants.CONFIRMED + "").getAsInt()
