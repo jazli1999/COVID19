@@ -1,6 +1,9 @@
 package com.bupt.sse.group7.covid19;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,10 +12,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,33 +62,34 @@ public class HomeActivity extends AppCompatActivity {
         }
         initView();
         initData();
+        checkPermission();
     }
 
     private void initData() {
-        Log.i("hcccc","initdata");
-        Call<ResponseBody> data=DBConnector.dao.getData("getStatistics.php");
-       data.enqueue(new Callback<ResponseBody>() {
-           @Override
-           public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-               try {
-                   statistics=DBConnector.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
-                   updateStatusView();
-               } catch (IOException e) {
-                   e.printStackTrace();
-               }
-           }
+        Log.i("hcccc", "initdata");
+        Call<ResponseBody> data = DBConnector.dao.getData("getStatistics.php");
+        data.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    statistics = DBConnector.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
+                    updateStatusView();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
-           @Override
-           public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.i("hcccc","HomeActivityOnFailure");
-           }
-       });
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.i("hcccc", "HomeActivityOnFailure");
+            }
+        });
     }
 
 
     private void updateStatusView() {
         mildTv.setText(String.valueOf(statistics.get(Constants.CONFIRMED + "").getAsInt()
-                            + statistics.get(Constants.MILD + "").getAsInt()));
+                + statistics.get(Constants.MILD + "").getAsInt()));
         severeTv.setText(statistics.get(Constants.SEVERE + "").getAsString());
         deadTv.setText(statistics.get(Constants.DEAD + "").getAsString());
         curedTv.setText(statistics.get(Constants.HEALTHY + "").getAsString());
@@ -148,10 +155,77 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-}
+    }
 
+    /**
+     * 动态权限申请
+     */
+    public void checkPermission() {
+        int targetSdkVersion = 0;
+        String[] PermissionString = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION};
+        try {
+            final PackageInfo info = this.getPackageManager().getPackageInfo(this.getPackageName(), 0);
+            targetSdkVersion = info.applicationInfo.targetSdkVersion;//获取应用的Target版本
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+//            Log.e("err", "检查权限_err0");
+        }
 
-    public void intoHospitalList(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //Build.VERSION.SDK_INT是获取当前手机版本 Build.VERSION_CODES.M为6.0系统
+            //如果系统>=6.0
+            if (targetSdkVersion >= Build.VERSION_CODES.M) {
+                //第 1 步: 检查是否有相应的权限
+                boolean isAllGranted = checkPermissionAllGranted(PermissionString);
+                if (isAllGranted) {
+                    //Log.e("err","所有权限已经授权！");
+                    return;
+                }
+                // 一次请求多个权限, 如果其他有权限是已经授予的将会自动忽略掉
+                ActivityCompat.requestPermissions(this,
+                        PermissionString, 1);
+            }
+        }
+    }
 
+    /**
+     * 检查是否拥有指定的所有权限
+     */
+    private boolean checkPermissionAllGranted(String[] permissions) {
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                // 只要有一个权限没有被授予, 则直接返回 false
+                //Log.e("err","权限"+permission+"没有授权");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //申请权限结果返回处理
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            boolean isAllGranted = true;
+            // 判断是否所有的权限都已经授予了
+            for (int grant : grantResults) {
+                if (grant != PackageManager.PERMISSION_GRANTED) {
+                    isAllGranted = false;
+                    break;
+                }
+            }
+            if (isAllGranted) {
+                // 所有的权限都授予了
+                Log.e("err", "权限都授权了");
+            } else {
+                // 弹出对话框告诉用户需要权限的原因, 并引导用户去应用权限管理中手动打开权限按钮
+                //容易判断错
+                //MyDialog("提示", "某些权限未开启,请手动开启", 1) ;
+            }
+        }
     }
 }

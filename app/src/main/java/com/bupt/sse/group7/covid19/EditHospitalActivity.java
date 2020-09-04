@@ -33,7 +33,7 @@ public class EditHospitalActivity extends AppCompatActivity implements IHospital
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_hospital_activity);
+        setContentView(R.layout.activity_edit_hospital);
 
         Toolbar toolbar = findViewById(R.id.toolbar_edit);
         setSupportActionBar(toolbar);
