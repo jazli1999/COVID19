@@ -78,7 +78,7 @@
                             style="@style/home_card_desc"
                             android:textColor="@color/textGrey"
                             android:textSize="16sp"
-                            android:text="7"
+                            android:text="0"
                             android:layout_marginLeft="15dp"/>
 
                         <TextView
@@ -92,7 +92,7 @@
                         <TextView
                             android:id="@+id/severe_statistic"
                             style="@style/home_card_desc"
-                            android:text="4"
+                            android:text="0"
                             android:textSize="16sp"
                             android:textColor="@color/textGrey"
                             android:layout_marginLeft="15dp"/>
@@ -109,7 +109,7 @@
                             android:id="@+id/cured_statistic"
                             style="@style/home_card_desc"
                             android:textSize="16sp"
-                            android:text="3"
+                            android:text="0"
                             android:textColor="@color/textGrey"
                             android:layout_marginLeft="15dp"/>
 

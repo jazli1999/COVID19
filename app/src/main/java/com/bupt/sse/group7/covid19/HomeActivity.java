@@ -53,12 +53,8 @@ public class HomeActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
-
+        initView();
         initData();
-        Log.i("hcccc","initViewDown");
-
-
-
     }
 
     private void initData() {
@@ -69,7 +65,7 @@ public class HomeActivity extends AppCompatActivity {
            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                try {
                    statistics=DBConnector.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
-                   initView();
+                   updateStatusView();
                } catch (IOException e) {
                    e.printStackTrace();
                }
@@ -77,7 +73,7 @@ public class HomeActivity extends AppCompatActivity {
 
            @Override
            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                Log.i("hcccc","HomeActivityOnFailure");
            }
        });
     }
@@ -101,7 +97,6 @@ public class HomeActivity extends AppCompatActivity {
         severeTv = findViewById(R.id.severe_statistic);
         mildTv = findViewById(R.id.mild_statistic);
 
-        updateStatusView();
 
         hospitalCard.setOnClickListener(new View.OnClickListener() {
             @Override

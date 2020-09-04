@@ -250,7 +250,7 @@ public class ShowMapActivity extends AppCompatActivity {
                 Bundle bundle=polyline.getExtraInfo();
                 int p_id=bundle.getInt("p_id");
                 Intent intent=new Intent(ShowMapActivity.this, PatientMainPageActivity.class);
-                intent.putExtra("id",p_id);
+                PatientPresenter.getInstance().setPatientId(p_id);
                 startActivity(intent);
                 return false;
             }

@@ -1,5 +1,8 @@
 package com.bupt.sse.group7.covid19.presenter;
 
+import android.util.Log;
+
+import com.bupt.sse.group7.covid19.interfaces.IDataBackCallBack;
 import com.bupt.sse.group7.covid19.interfaces.IPatientViewCallBack;
 import com.bupt.sse.group7.covid19.model.Patient;
 import com.bupt.sse.group7.covid19.model.Status;
@@ -9,21 +12,30 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PatientPresenter {
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class PatientPresenter implements IDataBackCallBack {
     // TODO 添加数据获取失败时的处理
 
     private static PatientPresenter instance = new PatientPresenter();
-    private List<IPatientViewCallBack> callBacks = new ArrayList<>();
+    private List<IPatientViewCallBack> patientViewCallBacks = new ArrayList<>();
 
     private Patient patient;
     private JsonObject patientResult;
     private JsonArray pStatusResult;
     private JsonArray tracksResult;
+
+    private final int dataCount=3;
+    private int dataSize=0;
 
 
     PatientPresenter() {
@@ -31,56 +43,127 @@ public class PatientPresenter {
     }
 
     public void getPatientInfo() {
-        Thread thread = getPatientInfo(this.patient.getId());
-        try {
-            thread.join();
-            processResults();
-            handlePatientInfoResult();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        dataSize=0;
+        getPatientResult();
+        getTrackResult();
+        getStatusResult();
+
     }
 
+    private void getPatientResult(){
+        Map<String, String> args = new HashMap<>();
+        args.put("p_id", String.valueOf(patient.getId()));
+        Call<ResponseBody> data=DBConnector.dao.getData("getPatientById.php",args);
+        data.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    patientResult=DBConnector.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
+                    processPatientResult();
+                    Log.i("hcccc","processPatientResultDOwn");
+
+                    onAllDataBack();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+
+    }
+    private void getStatusResult(){
+        Map<String, String> args = new HashMap<>();
+        args.put("p_id", String.valueOf(patient.getId()));
+        Call<ResponseBody> data=DBConnector.dao.getData("getPStatusById.php",args);
+        data.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    pStatusResult=DBConnector.parseInfo(response.body().byteStream());
+                    processStatusResult();
+                    Log.i("hcccc","processStatusResultDown");
+
+                    onAllDataBack();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+
+    }
+    private void getTrackResult(){
+        Map<String, String> args = new HashMap<>();
+        args.put("p_id", String.valueOf(patient.getId()));
+        Call<ResponseBody> data=DBConnector.dao.getData("getPatientTrackById.php",args);
+        data.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    tracksResult=DBConnector.parseInfo(response.body().byteStream());
+                    processTrackResults();
+                    Log.i("hcccc","processTrackResultsDown");
+
+                    onAllDataBack();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+
+    }
     private void handlePatientInfoResult() {
-        for (IPatientViewCallBack callBack : callBacks) {
+        Log.i("hcccc","handlePatientInfoResult");
+        for (IPatientViewCallBack callBack : patientViewCallBacks) {
             callBack.onPatientInfoReturned(this.patient);
         }
     }
 
     public void registerCallBack(IPatientViewCallBack callBack) {
-        if (callBacks != null && !callBacks.contains(callBack)) {
-            callBacks.add(callBack);
+        if (patientViewCallBacks != null && !patientViewCallBacks.contains(callBack)) {
+            patientViewCallBacks.add(callBack);
         }
     }
 
     public void unregisterCallBack(IPatientViewCallBack callBack) {
-        if (callBacks != null) {
-            callBacks.remove(callBack);
+        if (patientViewCallBacks != null) {
+            patientViewCallBacks.remove(callBack);
         }
     }
 
-    private Thread getPatientInfo(int p_id) {
-        Map<String, String> args = new HashMap<>();
-        args.put("p_id", String.valueOf(p_id));
-        Thread thread = new Thread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        patientResult = DBConnector.getPatientById(args).get(0).getAsJsonObject();
-                        pStatusResult = DBConnector.getPStatusById(args);
-                        tracksResult = DBConnector.getPatientTrackById(args);
-                    }
-                });
-        thread.start();
-        return thread;
-    }
 
-    private void processResults() {
-        // parse data and assign
+    private void processPatientResult(){
         this.patient.setH_name(patientResult.get("h_name").getAsString());
         this.patient.setUsername(patientResult.get("username").getAsString());
         this.patient.setStatus(patientResult.get("status").getAsString());
+
+    }
+    private void processStatusResult(){
         this.patient.setStatuses(new ArrayList<>());
+        for (JsonElement je: pStatusResult) {
+            this.patient.getStatuses().add(
+                    new Status(je.getAsJsonObject().get("day").getAsString(),
+                            je.getAsJsonObject().get("status").getAsString()));
+        }
+
+    }
+    private void processTrackResults() {
+        // parse data and assign
         this.patient.setTrackPoints(new ArrayList<>());
         for(JsonElement je: tracksResult) {
             this.patient.getTrackPoints().add(
@@ -88,11 +171,7 @@ public class PatientPresenter {
                             je.getAsJsonObject().get("location").getAsString(),
                             je.getAsJsonObject().get("description").getAsString()));
         }
-        for (JsonElement je: pStatusResult) {
-            this.patient.getStatuses().add(
-                    new Status(je.getAsJsonObject().get("day").getAsString(),
-                            je.getAsJsonObject().get("status").getAsString()));
-        }
+
     }
 
     public static PatientPresenter getInstance() {
@@ -101,6 +180,15 @@ public class PatientPresenter {
 
     public void setPatientId(int id) {
         this.patient.setId(id);
+    }
+
+    @Override
+    public void onAllDataBack() {
+        dataSize++;
+        if(dataSize==dataCount){
+            handlePatientInfoResult();
+
+        }
     }
 }
 
