@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.sse.group7.covid19.adapter.HospitalListAdapter;
+import com.bupt.sse.group7.covid19.presenter.HospitalPresenter;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.google.gson.JsonArray;
 
@@ -43,10 +44,8 @@ public class HospitalListActivity extends AppCompatActivity {
     }
 
     public void intoMainPage(int id) {
+        HospitalPresenter.getInstance().setID(id);
         Intent intent = new Intent(this, HospitalMainPageActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt("id", id);
-        intent.putExtras(bundle);
         startActivity(intent);
     }
 

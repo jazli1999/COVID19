@@ -18,40 +18,25 @@ import androidx.fragment.app.FragmentTransaction;
 import com.bupt.sse.group7.covid19.fragment.HospitalContactFragment;
 import com.bupt.sse.group7.covid19.fragment.HospitalStatusFragment;
 import com.bupt.sse.group7.covid19.fragment.HospitalSuppliesFragment;
+import com.bupt.sse.group7.covid19.interfaces.IHospitalViewCallBack;
 import com.bupt.sse.group7.covid19.model.CurrentUser;
-import com.bupt.sse.group7.covid19.utils.DBConnector;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.bupt.sse.group7.covid19.model.Hospital;
+import com.bupt.sse.group7.covid19.presenter.HospitalPresenter;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Map;
 
-/**
- * 医院主页
- */
-public class HospitalMainPageActivity extends AppCompatActivity {
-    private JsonObject hospital;
-    private JsonObject statusNumber;
-    private JsonObject supplies;
+public class HospitalMainPageActivity extends AppCompatActivity implements IHospitalViewCallBack {
+
     private HospitalContactFragment contactFragment;
     private HospitalStatusFragment statusFragment;
     private HospitalSuppliesFragment suppliesFragment;
-    private int id;
-    private String name;
-    private String people;
-    private String address;
-    private String tel;
-    private String mild;
-    private String severe;
 
-    private String n95;
-    private String surgeon;
-    private String ventilator;
-    private String clothe;
-    private String glasses;
-    private String alcohol;
-    private String pants;
+    private HospitalPresenter hospitalPresenter;
+
+    private TextView nameTv;
+    private TextView descTv;
+
+    private Hospital hospital;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,15 +51,12 @@ public class HospitalMainPageActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
-        Bundle bundle = this.getIntent().getExtras();
-        this.id = bundle.getInt("id");
-
         initView();
-        initData();
 
-        updateView();
+        hospitalPresenter = HospitalPresenter.getInstance();
+        hospitalPresenter.registerCallBack(this);
+        hospitalPresenter.getHospitalDetails();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -83,152 +65,76 @@ public class HospitalMainPageActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        initData();
-        updateView();
-    }
-
-    private void initData() {
-        Thread thread = getHospitalInfo(this.id);
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void updateView() {
-        this.name = getStringFromJsonObject(hospital, "name");
-        this.address = getStringFromJsonObject(hospital, "address");
-        this.people = getStringFromJsonObject(hospital, "contact");
-        this.tel = getStringFromJsonObject(hospital, "tel");
-        this.mild = getStringFromJsonObject(hospital, "mild_left");
-        this.severe = getStringFromJsonObject(hospital, "severe_left");
-
-
-        if(this.supplies == null){//如果没有物资信息，则所有的物资都展示‘-’
-            supplies  = new JsonObject();
-        }
-        this.n95 = getStringFromJsonObject(supplies, "n95");
-        this.surgeon =getStringFromJsonObject(supplies, "surgeon");
-        this.ventilator=getStringFromJsonObject(supplies, "ventilator");
-        this.clothe = getStringFromJsonObject(supplies, "clothe");
-        this.glasses= getStringFromJsonObject(supplies, "glasses");
-        this.alcohol = getStringFromJsonObject(supplies, "alcohol");
-        this.pants = getStringFromJsonObject(supplies, "pants");
-
-
-        ((TextView)this.findViewById(R.id.hospital_name)).setText(name);
-        ((TextView)this.findViewById(R.id.hospital_desc)).setText(MessageFormat.format("剩余床位  轻症 {0} | 重症 {1}",
-                this.mild, this.severe));
-        updateHospitalContact();
-        updateHospitalStatus();
-        updateHospitalSupplies();
-    }
-
-    private String getStringFromJsonObject(JsonObject obj, String arg) {
-        if (obj.get(arg) == null || obj.get(arg).isJsonNull()) {
-            return "-";
-        }
-        else {
-            return obj.get(arg).getAsString();
-        }
-    }
-
-    private void updateHospitalStatus() {
-        statusFragment.setMild(getStringFromJsonObject(statusNumber, "mild"));
-        statusFragment.setSevere(getStringFromJsonObject(statusNumber, "severe"));
-        statusFragment.setCured(getStringFromJsonObject(statusNumber, "cured"));
-        statusFragment.setDead(getStringFromJsonObject(statusNumber, "dead"));
-    }
-
-
-    private void updateHospitalContact() {
-        contactFragment.setTel(this.tel);
-        contactFragment.setAddress(this.address);
-        contactFragment.setPeople(this.people);
-    }
-
-    private void updateHospitalSupplies() {
-        suppliesFragment.setN95(getStringFromJsonObject(supplies, "n95"));
-        suppliesFragment.setSurgeon(getStringFromJsonObject(supplies, "surgeon"));
-        suppliesFragment.setVentilator(getStringFromJsonObject(supplies, "ventilator"));
-        suppliesFragment.setClothe(getStringFromJsonObject(supplies, "clothe"));
-        suppliesFragment.setGlasses(getStringFromJsonObject(supplies, "glasses"));
-        suppliesFragment.setAlcohol(getStringFromJsonObject(supplies, "alcohol"));
-        suppliesFragment.setPants(getStringFromJsonObject(supplies, "pants"));
-    }
-
-    private Thread getHospitalInfo(int h_id) {
-        Map<String, String> args = new HashMap<>();
-        args.put("h_id", String.valueOf(h_id));
-        Thread thread = new Thread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        hospital = DBConnector.getHospitalById(args).get(0).getAsJsonObject();
-                        statusNumber = DBConnector.getStatusNumberById(args).get(0).getAsJsonObject();
-                        JsonArray temp = DBConnector.getSuppliesById(args);
-                        if (temp != null && temp.size() > 0) {//如果该医院有物资信息，如果没有的话supplies始终为空
-                            supplies = temp.get(0).getAsJsonObject();//返回supplies的json对象
-                        }
-                    }
-                }
-        );
-        thread.start();
-        return thread;
-    }
-
     private void initView() {
+        nameTv = findViewById(R.id.hospital_name);
+        descTv = findViewById(R.id.hospital_desc);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         if (this.statusFragment == null) {
             statusFragment = new HospitalStatusFragment();
             FragmentTransaction tranStatus = fragmentManager.beginTransaction();
             tranStatus.add(R.id.hosp_main_content, statusFragment);
-            tranStatus.commit();
+            tranStatus.commitAllowingStateLoss();
         }
 
         if (this.contactFragment == null) {
             contactFragment = new HospitalContactFragment();
             FragmentTransaction tran = fragmentManager.beginTransaction();
             tran.add(R.id.hosp_main_content, contactFragment);
-            tran.commit();
+            tran.commitAllowingStateLoss();
         }
 
         if (this.suppliesFragment == null) {
             suppliesFragment = new HospitalSuppliesFragment();
             FragmentTransaction tranSupplies = fragmentManager.beginTransaction();
             tranSupplies.add(R.id.hosp_main_content, suppliesFragment);
-            tranSupplies.commit();
+            tranSupplies.commitAllowingStateLoss();
         }
     }
 
+    @Override
+    public void onHospitalInfoReturned(Hospital hospital) {
+        this.hospital = hospital;
+        nameTv.setText(hospital.getName());
+        descTv.setText(MessageFormat.format("剩余床位  轻症 {0} | 重症 {1}",
+                hospital.getMildLeft(), hospital.getSevereLeft()));
 
+        contactFragment.setTel(hospital.getTel());
+        contactFragment.setAddress(hospital.getAddress());
+        contactFragment.setPeople(hospital.getPeople());
+
+        statusFragment.setStatistics(hospital.getStatistics());
+        suppliesFragment.setSupplies(hospital.getSupplies());
+    }
+
+    /**
+     * TODO 重构Edit后修改此函数
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_edit:
-                if(CurrentUser.getLabel().equals("hospital") && CurrentUser.getId() == this.id) {
+                if(CurrentUser.getLabel().equals("hospital") && CurrentUser.getId() == hospital.getId()) {
                     Intent intent = new Intent(this, EditHospitalActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putInt("id", this.id);
-                    bundle.putString("name", this.name);
-                    bundle.putString("address", this.address);
-                    bundle.putString("people", this.people);
-                    bundle.putString("tel", this.tel);
-                    bundle.putString("mild", this.mild);
-                    bundle.putString("severe", this.severe);
+                    bundle.putInt("id", hospital.getId());
+                    bundle.putString("name", hospital.getName());
+                    bundle.putString("address", hospital.getAddress());
+                    bundle.putString("people", hospital.getPeople());
+                    bundle.putString("tel", hospital.getTel());
+                    bundle.putString("mild", hospital.getStatistics().getMild());
+                    bundle.putString("severe", hospital.getStatistics().getSevere());
 
-                    bundle.putString("n95",this.n95);
-                    bundle.putString("surgeon",this.surgeon);
-                    bundle.putString("ventilator",this.ventilator);
-                    bundle.putString("clothe",this.clothe);
-                    bundle.putString("glasses",this.glasses);
-                    bundle.putString("alcohol",this.alcohol);
-                    bundle.putString("pants",this.pants);
+                    bundle.putString("n95", hospital.getSupplies().getN95());
+                    bundle.putString("surgeon", hospital.getSupplies().getSurgeon());
+                    bundle.putString("ventilator",hospital.getSupplies().getVentilator());
+                    bundle.putString("clothe",hospital.getSupplies().getClothe());
+                    bundle.putString("glasses",hospital.getSupplies().getGlasses());
+                    bundle.putString("alcohol",hospital.getSupplies().getAlcohol());
+                    bundle.putString("pants",hospital.getSupplies().getPants());
 
                     intent.putExtras(bundle);
                     startActivity(intent);
@@ -241,5 +147,4 @@ public class HospitalMainPageActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }
