@@ -26,7 +26,7 @@ public class EditHospitalActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_hospital_activity);
+        setContentView(R.layout.activity_edit_hospital);
 
         this.bundle = this.getIntent().getExtras();
 
