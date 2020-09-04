@@ -13,22 +13,27 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.bupt.sse.group7.covid19.utils.DBConnector;
+import com.bupt.sse.group7.covid19.interfaces.IHospitalViewCallBack;
+import com.bupt.sse.group7.covid19.model.Hospital;
+import com.bupt.sse.group7.covid19.presenter.HospitalPresenter;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 /**
  * 编辑医院信息页面
  */
-public class EditHospitalActivity extends AppCompatActivity {
-    private Bundle bundle;
+public class EditHospitalActivity extends AppCompatActivity implements IHospitalViewCallBack {
+    private int id;
+    private HospitalPresenter hospitalPresenter = HospitalPresenter.getInstance();
+
+    private TextView nameTv;
+    private EditText mildTv, severeTv, inChargeTv, addrTv, n95Tv, surgeonTv, ventTv,
+            clotheTv, glassesTv, telTv, alcoholTv, pantsTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_hospital_activity);
-
-        this.bundle = this.getIntent().getExtras();
 
         Toolbar toolbar = findViewById(R.id.toolbar_edit);
         setSupportActionBar(toolbar);
@@ -39,6 +44,8 @@ public class EditHospitalActivity extends AppCompatActivity {
         }
 
         initView();
+        hospitalPresenter.registerCallBack(this);
+        hospitalPresenter.getHospitalDetails();
     }
 
     @Override
@@ -60,21 +67,21 @@ public class EditHospitalActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        ((TextView) findViewById(R.id.hospital_name_edit)).setText(this.bundle.getString("name"));
-        ((EditText) findViewById(R.id.set_mild)).setText(this.bundle.getString("mild"));
-        ((EditText) findViewById(R.id.set_severe)).setText(this.bundle.getString("severe"));
-        ((EditText) findViewById(R.id.set_inCharge)).setText(this.bundle.getString("people"));
-        ((EditText) findViewById(R.id.set_address)).setText(this.bundle.getString("address"));
-        ((EditText) findViewById(R.id.set_tel)).setText(this.bundle.getString("tel"));
+        nameTv = (TextView) findViewById(R.id.hospital_name_edit);
+        mildTv = (EditText) findViewById(R.id.set_mild);
+        severeTv = (EditText) findViewById(R.id.set_severe);
+        inChargeTv = (EditText) findViewById(R.id.set_inCharge);
+        addrTv = (EditText) findViewById(R.id.set_address);
+        telTv = (EditText) findViewById(R.id.set_tel);
 
         //初始化物资框为主页显示
-        ((EditText) findViewById(R.id.set_n95)).setText(this.bundle.getString("n95"));
-        ((EditText) findViewById(R.id.set_surgeon)).setText(this.bundle.getString("surgeon"));
-        ((EditText) findViewById(R.id.set_ventilator)).setText(this.bundle.getString("ventilator"));
-        ((EditText) findViewById(R.id.set_clothe)).setText(this.bundle.getString("clothe"));
-        ((EditText) findViewById(R.id.set_glasses)).setText(this.bundle.getString("glasses"));
-        ((EditText) findViewById(R.id.set_alcohol)).setText(this.bundle.getString("alcohol"));
-        ((EditText) findViewById(R.id.set_pants)).setText(this.bundle.getString("pants"));
+        n95Tv = (EditText) findViewById(R.id.set_n95);
+        surgeonTv = (EditText) findViewById(R.id.set_surgeon);
+        ventTv = (EditText) findViewById(R.id.set_ventilator);
+        clotheTv = (EditText) findViewById(R.id.set_clothe);
+        glassesTv = (EditText) findViewById(R.id.set_glasses);
+        alcoholTv = (EditText) findViewById(R.id.set_alcohol);
+        pantsTv = (EditText) findViewById(R.id.set_pants);
     }
 
     public void submit() {
@@ -88,10 +95,8 @@ public class EditHospitalActivity extends AppCompatActivity {
         addValueFromInput(info, "mild_left", R.id.set_mild);
         addValueFromInput(info, "severe_left", R.id.set_severe);
 
-        args.add("id", new JsonPrimitive(this.bundle.getInt("id")));
+        args.add("id", new JsonPrimitive(this.id));
         args.add("row", info);
-
-
 
         JsonObject args2 = new JsonObject();
         JsonObject supplies = new JsonObject();
@@ -104,10 +109,10 @@ public class EditHospitalActivity extends AppCompatActivity {
         addValueFromInput(supplies, "alcohol", R.id.set_alcohol);
         addValueFromInput(supplies, "pants", R.id.set_pants);
 
-        args2.add("id", new JsonPrimitive(this.bundle.getInt("id")));
+        args2.add("id", new JsonPrimitive(this.id));
         args2.add("row", supplies);
 
-        updateData(args, args2);
+        hospitalPresenter.updateData(args, args2);
 
         Toast.makeText(this, "已提交",Toast.LENGTH_SHORT).show();
         finish();
@@ -120,16 +125,21 @@ public class EditHospitalActivity extends AppCompatActivity {
         }
     }
 
-    //第二个参数中包含supplies的所有信息
-    private void updateData(JsonObject args,JsonObject args2) {
-        new Thread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        DBConnector.editHospitalById(args);
-                        DBConnector.editSuppliesById(args2);
-                    }
-                }
-        ).start();
+    @Override
+    public void onHospitalInfoReturned(Hospital hospital) {
+        id = hospital.getId();
+        nameTv.setText(hospital.getName());
+        mildTv.setText(hospital.getMildLeft());
+        severeTv.setText(hospital.getSevereLeft());
+        inChargeTv.setText(hospital.getPeople());
+        telTv.setText(hospital.getTel());
+        addrTv.setText(hospital.getAddress());
+        n95Tv.setText(hospital.getSupplies().getN95());
+        surgeonTv.setText(hospital.getSupplies().getSurgeon());
+        ventTv.setText(hospital.getSupplies().getVentilator());
+        clotheTv.setText(hospital.getSupplies().getClothe());
+        alcoholTv.setText(hospital.getSupplies().getAlcohol());
+        glassesTv.setText(hospital.getSupplies().getGlasses());
+        pantsTv.setText(hospital.getSupplies().getPants());
     }
 }

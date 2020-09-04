@@ -119,24 +119,6 @@ public class HospitalMainPageActivity extends AppCompatActivity implements IHosp
             case R.id.action_edit:
                 if(CurrentUser.getLabel().equals("hospital") && CurrentUser.getId() == hospital.getId()) {
                     Intent intent = new Intent(this, EditHospitalActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("id", hospital.getId());
-                    bundle.putString("name", hospital.getName());
-                    bundle.putString("address", hospital.getAddress());
-                    bundle.putString("people", hospital.getPeople());
-                    bundle.putString("tel", hospital.getTel());
-                    bundle.putString("mild", hospital.getStatistics().getMild());
-                    bundle.putString("severe", hospital.getStatistics().getSevere());
-
-                    bundle.putString("n95", hospital.getSupplies().getN95());
-                    bundle.putString("surgeon", hospital.getSupplies().getSurgeon());
-                    bundle.putString("ventilator",hospital.getSupplies().getVentilator());
-                    bundle.putString("clothe",hospital.getSupplies().getClothe());
-                    bundle.putString("glasses",hospital.getSupplies().getGlasses());
-                    bundle.putString("alcohol",hospital.getSupplies().getAlcohol());
-                    bundle.putString("pants",hospital.getSupplies().getPants());
-
-                    intent.putExtras(bundle);
                     startActivity(intent);
                 } else {
                     Toast.makeText(this, "请先认证本医院账号", Toast.LENGTH_SHORT).show();

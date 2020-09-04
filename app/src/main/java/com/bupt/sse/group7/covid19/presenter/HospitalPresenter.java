@@ -108,4 +108,24 @@ public class HospitalPresenter {
         thread.start();
         return thread;
     }
+
+    //第二个参数中包含supplies的所有信息
+    public void updateData(JsonObject args,JsonObject args2) {
+        Thread thread = new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        DBConnector.editHospitalById(args);
+                        DBConnector.editSuppliesById(args2);
+                    }
+                }
+        );
+        try {
+            thread.start();
+            thread.join();
+            getHospitalDetails();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
