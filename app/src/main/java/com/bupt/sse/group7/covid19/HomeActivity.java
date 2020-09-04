@@ -14,6 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
 import com.bupt.sse.group7.covid19.model.CurrentUser;
+import com.bupt.sse.group7.covid19.presenter.HospitalPresenter;
 import com.bupt.sse.group7.covid19.presenter.PatientPresenter;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.google.gson.JsonObject;
@@ -132,10 +133,8 @@ public class HomeActivity extends AppCompatActivity {
                         intent = new Intent(HomeActivity.this, context);
                     } else {
                         context = HospitalMainPageActivity.class;
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("id", CurrentUser.getId());
+                        HospitalPresenter.getInstance().setID(CurrentUser.getId());
                         intent = new Intent(HomeActivity.this, context);
-                        intent.putExtras(bundle);
                     }
                     startActivity(intent);
                 }

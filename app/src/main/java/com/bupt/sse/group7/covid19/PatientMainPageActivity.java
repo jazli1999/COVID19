@@ -17,14 +17,10 @@ import com.bupt.sse.group7.covid19.fragment.PatientTrackBlockFragment;
 import com.bupt.sse.group7.covid19.fragment.StatusLineFragment;
 import com.bupt.sse.group7.covid19.interfaces.IPatientViewCallBack;
 import com.bupt.sse.group7.covid19.model.Patient;
-import com.bupt.sse.group7.covid19.model.Status;
 import com.bupt.sse.group7.covid19.presenter.PatientPresenter;
 import com.bupt.sse.group7.covid19.utils.Constants;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class PatientMainPageActivity extends AppCompatActivity implements IPatientViewCallBack {
     private PatientPresenter patientPresenter;
@@ -47,7 +43,7 @@ public class PatientMainPageActivity extends AppCompatActivity implements IPatie
 
         patientPresenter = PatientPresenter.getInstance();
         patientPresenter.registerCallBack(this);
-        patientPresenter.getPatientInfo();
+        patientPresenter.getPatientDetails();
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bupt.sse.group7.covid19.R;
+import com.bupt.sse.group7.covid19.model.Supplies;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,27 +61,14 @@ public class HospitalSuppliesFragment extends Fragment {
         this.n95 = n95;
     }
 
-    public void setSurgeon(String surgeon) {
-        this.surgeon = surgeon;
+    public void setSupplies(Supplies supplies) {
+        this.alcohol = supplies.getAlcohol() + "";
+        this.n95 = supplies.getN95() + "";
+        this.clothe = supplies.getClothe() + "";
+        this.glasses = supplies.getGlasses() + "";
+        this.pants = supplies.getPants() + "";
+        this.surgeon = supplies.getSurgeon() + "";
+        this.ventilator = supplies.getVentilator() + "";
     }
 
-    public void setVentilator(String ventilator) {
-        this.ventilator = ventilator;
-    }
-
-    public void setClothe(String clothe) {
-        this.clothe = clothe;
-    }
-
-    public void setGlasses(String glasses) {
-        this.glasses = glasses;
-    }
-
-    public void setAlcohol(String alcohol) {
-        this.alcohol = alcohol;
-    }
-
-    public void setPants(String pants) {
-        this.pants = pants;
-    }
 }

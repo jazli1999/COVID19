@@ -30,8 +30,8 @@ public class PatientPresenter {
         patient = new Patient();
     }
 
-    public void getPatientInfo() {
-        Thread thread = getPatientInfo(this.patient.getId());
+    public void getPatientDetails() {
+        Thread thread = getPatientDetails(this.patient.getId());
         try {
             thread.join();
             processResults();
@@ -59,7 +59,7 @@ public class PatientPresenter {
         }
     }
 
-    private Thread getPatientInfo(int p_id) {
+    private Thread getPatientDetails(int p_id) {
         Map<String, String> args = new HashMap<>();
         args.put("p_id", String.valueOf(p_id));
         Thread thread = new Thread(
