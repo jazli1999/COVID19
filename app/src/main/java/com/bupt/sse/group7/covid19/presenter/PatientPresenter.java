@@ -24,6 +24,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PatientPresenter implements IDataBackCallBack {
+    private static final String TAG = "PatientPresenter";
     // TODO 添加数据获取失败时的处理
 
     private static PatientPresenter instance = new PatientPresenter();
@@ -71,6 +72,7 @@ public class PatientPresenter implements IDataBackCallBack {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.i(TAG, "getHospitalResultOnFailure");
 
             }
         });

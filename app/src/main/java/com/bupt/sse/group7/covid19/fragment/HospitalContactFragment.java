@@ -18,9 +18,9 @@ import androidx.fragment.app.Fragment;
  */
 public class HospitalContactFragment extends Fragment {
     private View view;
-    private String people;
-    private String tel;
-    private String address;
+
+
+    TextView hosp_tel,hosp_address,hosp_inCharge;
 
 
     @Override
@@ -42,21 +42,16 @@ public class HospitalContactFragment extends Fragment {
     }
 
     private void initView() {
-        ((TextView) view.findViewById(R.id.hosp_tel)).setText(tel);
-        ((TextView) view.findViewById(R.id.hosp_address)).setText(address);
-        ((TextView) view.findViewById(R.id.hosp_inCharge)).setText(people);
+        hosp_tel=view.findViewById(R.id.hosp_tel);
+        hosp_address=view.findViewById(R.id.hosp_address);
+        hosp_inCharge= view.findViewById(R.id.hosp_inCharge);
     }
 
+    public void updateView(String tel,String address,String people){
+        hosp_tel.setText(tel);
+        hosp_address.setText(address);
+        hosp_inCharge.setText(people);
 
-    public void setPeople(String people) {
-        this.people = people;
     }
 
-    public void setTel(String tel) {
-        this.tel = tel;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
 }
