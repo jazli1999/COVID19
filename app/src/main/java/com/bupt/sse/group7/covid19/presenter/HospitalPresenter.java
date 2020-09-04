@@ -66,7 +66,7 @@ public class HospitalPresenter {
         hospital.setMildLeft(safeGet(hospitalResult, "mild_left"));
         hospital.setSevereLeft(safeGet(hospitalResult, "severe_left"));
         hospital.setName(safeGet(hospitalResult, "name"));
-        hospital.setPeople(safeGet(hospitalResult, "people"));
+        hospital.setPeople(safeGet(hospitalResult, "contact"));
 
         hospital.setStatistics(new Statistics(safeGet(statisticsResult, "mild"),
                 safeGet(statisticsResult, "severe"),
