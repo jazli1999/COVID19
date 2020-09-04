@@ -8,6 +8,7 @@ import com.bupt.sse.group7.covid19.model.Hospital;
 import com.bupt.sse.group7.covid19.model.Statistics;
 import com.bupt.sse.group7.covid19.model.Supplies;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
+import com.bupt.sse.group7.covid19.utils.JsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -56,7 +57,7 @@ public class HospitalPresenter implements IDataBackCallBack {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    hospitalResult=DBConnector.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
+                    hospitalResult= JsonUtils.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
                     onAllDataBack();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -79,7 +80,7 @@ public class HospitalPresenter implements IDataBackCallBack {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    statisticsResult=DBConnector.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
+                    statisticsResult=JsonUtils.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
                     onAllDataBack();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -101,7 +102,7 @@ public class HospitalPresenter implements IDataBackCallBack {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    JsonArray temp=DBConnector.parseInfo(response.body().byteStream());
+                    JsonArray temp=JsonUtils.parseInfo(response.body().byteStream());
                     if (temp != null && temp.size() > 0) {
                         //如果该医院有物资信息，如果没有的话supplies始终为空
                         suppliesResult = temp.get(0).getAsJsonObject();
@@ -128,15 +129,6 @@ public class HospitalPresenter implements IDataBackCallBack {
         getHospitalResult();
         getStatisticsResult();
         getSuppliesResult();
-
-//        Thread thread = getHospitalInfo(this.hospital.getId());
-//        try {
-//            thread.join();
-//            processResults();
-//            handlePatientInfoResults();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
     }
 
     private void handlePatientInfoResults() {
@@ -178,29 +170,6 @@ public class HospitalPresenter implements IDataBackCallBack {
         hospital.setId(id);
     }
 
-    private Thread getHospitalInfo(int h_id) {
-        Map<String, String> args = new HashMap<>();
-        args.put("h_id", String.valueOf(h_id));
-        Thread thread = new Thread(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        hospitalResult = DBConnector.getHospitalById(args).get(0).getAsJsonObject();
-                        statisticsResult = DBConnector.getStatusNumberById(args).get(0).getAsJsonObject();
-                        JsonArray temp = DBConnector.getSuppliesById(args);
-                        if (temp != null && temp.size() > 0) {
-                            //如果该医院有物资信息，如果没有的话supplies始终为空
-                            suppliesResult = temp.get(0).getAsJsonObject();
-                            //返回supplies的json对象
-                        } else {
-                            suppliesResult = new JsonObject();
-                        }
-                    }
-                }
-        );
-        thread.start();
-        return thread;
-    }
 
     //第二个参数中包含supplies的所有信息
     public void updateData(JsonObject args,JsonObject args2) {

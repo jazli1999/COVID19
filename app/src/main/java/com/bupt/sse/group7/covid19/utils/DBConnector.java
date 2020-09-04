@@ -27,10 +27,6 @@ public class DBConnector {
             .addConverterFactory(ScalarsConverterFactory.create())
             .build();
     public static DAO dao =retrofit.create(DAO.class);
-    //sql对应的php文件
-    public static String getStatistics="getStatistics.php";
-
-
 
     private static JsonArray executeGET(String url) {
         HttpURLConnection conn = null;
@@ -42,7 +38,7 @@ public class DBConnector {
             conn.setRequestMethod("GET");
             if(conn.getResponseCode() == 200) {
                 info = conn.getInputStream();
-                return parseInfo(info);
+                return JsonUtils.parseInfo(info);
             }
         } catch(IOException e) {
             e.printStackTrace();
@@ -96,21 +92,6 @@ public class DBConnector {
         return executeGET(newURL);
     }
 
-    public static JsonArray getSuppliesById(Map<String, String> args) {
-        String newURL = encapParamURL(host + "getSuppliesById.php", args);
-        return executeGET(newURL);
-    }
-
-    public static JsonArray getPatientAuthInfo(Map<String, String> args) {
-        String newURL = encapParamURL(host + "getPatientAuthInfo.php", args);
-        return executeGET(newURL);
-    }
-
-    public static JsonArray getHospitalAuthInfo(Map<String, String> args) {
-        String newURL = encapParamURL(host + "getHospitalAuthInfo.php", args);
-        return executeGET(newURL);
-    }
-
     public static JsonArray getTrackIds() {
         return executeGET(host + "getTrackIds.php");
     }
@@ -127,9 +108,7 @@ public class DBConnector {
         executePost(host + "setPatientUsername.php", args);
     }
 
-    public static JsonArray getAllTrackStarts() {
-        return executeGET(host + "getAllTrackStarts.php");
-    }
+
 
     public static void editHospitalById(JsonObject args) {
         executePost(host + "editHospitalById.php", args);
@@ -149,46 +128,6 @@ public class DBConnector {
         return executeGET(newURL);
     }
 
-    public static JsonArray getPatientById(Map<String, String> args) {
-        String newURL = encapParamURL(host + "getPatientById.php", args);
-        return executeGET(newURL);
-    }
 
-    public static JsonArray getPStatusById(Map<String, String> args) {
-        String newURL = encapParamURL(host + "getPStatusById.php", args);
-        return executeGET(newURL);
-    }
-
-    public static JsonArray getStatusNumberById(Map<String, String> args) {
-        String newURL = encapParamURL(host + "getStatusNumberById.php", args);
-        return executeGET(newURL);
-    }
-
-    public static JsonArray getHospitalList() {
-        return executeGET(host + "getHospitalList.php");
-    }
-
-    public static JsonArray getAllHospitals() {
-        return executeGET(host + "getAllHospitals.php");
-    }
-
-    public static JsonArray getHospitalById(Map<String, String> args) {
-        String newURL = encapParamURL(host + "getHospitalById.php", args);
-        return executeGET(newURL);
-    }
-
-    public static JsonArray parseInfo(InputStream in) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = br.readLine()) != null) {
-            sb.append(line).append("\n");
-        }
-
-        JsonObject outline = (JsonObject) JsonParser.parseString(sb.toString());
-        JsonArray rows = (JsonArray) outline.get("rows");
-        Log.d("lyjDBData", rows.toString());
-        return rows;
-    }
 
 }
