@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bupt.sse.group7.covid19.R;
+import com.bupt.sse.group7.covid19.model.Statistics;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,19 +50,10 @@ public class HospitalStatusFragment extends Fragment {
         ((TextView) view.findViewById(R.id.dead_view)).setText(dead);
     }
 
-    public void setSevere(String severe) {
-        this.severe = severe;
-    }
-
-    public void setMild(String mild) {
-        this.mild = mild;
-    }
-
-    public void setCured(String cured) {
-        this.cured = cured;
-    }
-
-    public void setDead(String dead) {
-        this.dead = dead;
+    public void setStatistics(Statistics statistics) {
+        this.mild = statistics.getMild() + "";
+        this.severe = statistics.getSevere() + "";
+        this.cured = statistics.getCured() + "";
+        this.dead = statistics.getDead() + "";
     }
 }
