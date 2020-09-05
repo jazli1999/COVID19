@@ -49,7 +49,6 @@ public class PatientMainPageActivity extends AppCompatActivity implements IPatie
     @Override
     public void onPatientInfoReturned(Patient patient) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        //TODO 这里不设置Pstatus的话，在statuLineFragment里面new Adapter会有问题
         statusLineFragment = new StatusLineFragment();
         statusLineFragment.setList(patient.getStatuses());
         FragmentTransaction tranStatus = fragmentManager.beginTransaction();

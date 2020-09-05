@@ -106,11 +106,6 @@ public class HospitalMainPageActivity extends AppCompatActivity implements IHosp
         suppliesFragment.updateView(hospital.getSupplies());
     }
 
-    /**
-     * TODO 重构Edit后修改此函数
-     * @param item
-     * @return
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

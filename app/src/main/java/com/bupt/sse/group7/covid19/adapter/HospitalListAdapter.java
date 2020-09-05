@@ -11,18 +11,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.sse.group7.covid19.HospitalListActivity;
 import com.bupt.sse.group7.covid19.R;
+import com.bupt.sse.group7.covid19.model.HospitalBrief;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+
+import java.util.List;
 
 /**
  * 医院列表的RecyclerView Adapter，给每个医院信息数据绑定对应的视图
  */
 public class HospitalListAdapter extends RecyclerView.Adapter<HospitalListAdapter.Holder> {
-    private JsonArray list;
+    private List<HospitalBrief> list;
     private AdapterView.OnItemClickListener onItemClickListener;
     private HospitalListActivity context;
 
-    public HospitalListAdapter(JsonArray list, HospitalListActivity context) {
+    public HospitalListAdapter(List<HospitalBrief> list, HospitalListActivity context) {
         this.list = list;
         this.context = context;
     }
@@ -45,15 +48,15 @@ public class HospitalListAdapter extends RecyclerView.Adapter<HospitalListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull Holder holder, int position) {
-        holder.nameView.setText(list.get(position).getAsJsonObject().get("name").getAsString());
-        JsonElement addrElement = list.get(position).getAsJsonObject().get("address");
-        if (!addrElement.isJsonNull()) {
-            holder.addressView.setText(addrElement.getAsString());
+        holder.nameView.setText(list.get(position).getName());
+        String addrElement = list.get(position).getAddress();
+        if (addrElement != null) {
+            holder.addressView.setText(addrElement);
         }
         else {
             holder.addressView.setText("暂无地址");
         }
-        holder.noView.setText(list.get(position).getAsJsonObject().get("h_id").getAsString());
+        holder.noView.setText((position+1) + "");
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
