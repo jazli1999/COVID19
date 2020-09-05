@@ -3,6 +3,7 @@ package com.bupt.sse.group7.covid19;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,21 +13,34 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeOption;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.bupt.sse.group7.covid19.fragment.NotAvailable;
 import com.bupt.sse.group7.covid19.fragment.PatientTrackBlockFragment;
 import com.bupt.sse.group7.covid19.fragment.StatusLineFragment;
 import com.bupt.sse.group7.covid19.interfaces.IPatientViewCallBack;
 import com.bupt.sse.group7.covid19.model.Patient;
+import com.bupt.sse.group7.covid19.model.TrackPoint;
 import com.bupt.sse.group7.covid19.presenter.PatientPresenter;
 import com.bupt.sse.group7.covid19.utils.Constants;
 
 import java.text.MessageFormat;
 
 public class PatientMainPageActivity extends AppCompatActivity implements IPatientViewCallBack {
+    private static final String TAG = "PatientMainPageActivity";
     private PatientPresenter patientPresenter;
     private StatusLineFragment statusLineFragment;
     private PatientTrackBlockFragment patientTrackBlockFragment;
     private NotAvailable notAvailable;
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,10 +55,16 @@ public class PatientMainPageActivity extends AppCompatActivity implements IPatie
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
+
         patientPresenter = PatientPresenter.getInstance();
         patientPresenter.registerCallBack(this);
         patientPresenter.getPatientInfo();
+
+
     }
+
+
+
 
     @Override
     public void onPatientInfoReturned(Patient patient) {
@@ -57,10 +77,12 @@ public class PatientMainPageActivity extends AppCompatActivity implements IPatie
 
         if (patient.getTrackPoints().size() > 0) {
             patientTrackBlockFragment = new PatientTrackBlockFragment();
+            // TODO 这里改成把patient的track传进去不用再查询了，一层一层的改！
             patientTrackBlockFragment.setId(patient.getId());
             FragmentTransaction trackTran = fragmentManager.beginTransaction();
             trackTran.add(R.id.patient_content, patientTrackBlockFragment);
             trackTran.commitAllowingStateLoss();
+
         }
         else {
             notAvailable = new NotAvailable();

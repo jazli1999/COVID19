@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.graphics.Color;
+import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,12 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.Polyline;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeOption;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.bupt.sse.group7.covid19.presenter.PatientPresenter;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.bupt.sse.group7.covid19.utils.DrawMarker;
@@ -54,6 +61,7 @@ public class ShowMapActivity extends AppCompatActivity {
 
     private final String TAG="ShowMapActivity";
 
+    private final float mZoom=15.0f;
     private MapView mapView;
     private BaiduMap baiduMap;
     private List<JsonArray> alltracklist=new ArrayList<>();
@@ -77,6 +85,8 @@ public class ShowMapActivity extends AppCompatActivity {
     private boolean isFirstLoc=true;
     private LocationClient locationClient;
     private MyLocationListener myLocationListener;
+
+    private GeoCoder mCoder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +112,7 @@ public class ShowMapActivity extends AppCompatActivity {
                         initTrackInfo(pid, tv_start.getText().toString(), end);
 
                     }
-                    if(baiduMap.getMapStatus().zoom>=15){
+                    if(baiduMap.getMapStatus().zoom>mZoom){
                         drawMarker.drawAllDetail(alltracklist);
 
                     }
@@ -116,6 +126,10 @@ public class ShowMapActivity extends AppCompatActivity {
 
                 else {
                     tracklist=new ArrayList<>();
+                    //TODO 这里改成和市区选择对应
+                    mCoder.geocode(new GeoCodeOption()
+                    .city("北京")
+                    .address(district_Sp.getSelectedItem().toString()));
 
                     for (int j = 0; j < allpatientId.size(); j++) {
                         JsonObject object = allpatientId.get(j).getAsJsonObject();
@@ -125,7 +139,7 @@ public class ShowMapActivity extends AppCompatActivity {
 
                     }
 
-                    if(baiduMap.getMapStatus().zoom>=15){
+                    if(baiduMap.getMapStatus().zoom>mZoom){
                         drawMarker.drawAllDetail(tracklist);
 
                     }
@@ -218,7 +232,7 @@ public class ShowMapActivity extends AppCompatActivity {
                 float zoom=mapStatus.zoom;
 
                 //小于200米
-                if(zoom>=15){
+                if(zoom>mZoom){
                     if(district_Sp.getSelectedItem().toString().equals("全部")){
                         drawMarker.drawAllDetail(alltracklist);
                     }
@@ -291,7 +305,7 @@ public class ShowMapActivity extends AppCompatActivity {
                 LatLng latLng=new LatLng(mCurrentLoc.getLatitude(),mCurrentLoc.getLongitude());
                 Log.i(TAG,"longitude:"+mCurrentLoc.getLongitude()+"   lantitude:"+mCurrentLoc.getLatitude());
                 MapStatus.Builder builder=new MapStatus.Builder();
-                builder.target(latLng).zoom(18.0f);
+                builder.target(latLng).zoom(mZoom);
                 baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
             }
         });
@@ -334,6 +348,37 @@ public class ShowMapActivity extends AppCompatActivity {
         //开始定位
         locationClient.start();
 
+        //根据选择区域定位
+        mCoder= GeoCoder.newInstance();
+        OnGetGeoCoderResultListener listener=new OnGetGeoCoderResultListener() {
+            @Override
+            public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+                if (null != geoCodeResult && null != geoCodeResult.getLocation()) {
+                    if (geoCodeResult == null || geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
+                        //没有检索到结果
+                        Log.i(TAG,"onGetGeoCodeResult没有检索到结果");
+                        return;
+                    } else {
+                        //定位到选择的区域
+                        double latitude = geoCodeResult.getLocation().latitude;
+                        double longitude = geoCodeResult.getLocation().longitude;
+                        Log.i(TAG,"onGetGeoCodeResult:latitude "+latitude+" longitude: "+longitude);
+                        MapStatus.Builder builder=new MapStatus.Builder();
+                        builder.target(new LatLng(latitude,longitude)).zoom(mZoom);
+                        baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+
+            }
+
+        };
+        mCoder.setOnGetGeoCodeResultListener(listener);
 
     }
     /**
@@ -354,7 +399,7 @@ public class ShowMapActivity extends AppCompatActivity {
                 LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
                 Log.i(TAG,"longitude:"+location.getLongitude()+"   lantitude:"+location.getLatitude());
                 MapStatus.Builder builder=new MapStatus.Builder();
-                builder.target(latLng).zoom(18.0f);
+                builder.target(latLng).zoom(mZoom);
                 baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
                 isFirstLoc=false;
             }
@@ -378,41 +423,6 @@ public class ShowMapActivity extends AppCompatActivity {
 
         }
     }
-//    /**
-//     * 定位监听
-//     */
-//    public class MyLocationListener implements BDLocationListener{
-//
-//        @Override
-//        public void onReceiveLocation(BDLocation location) {
-//            if(location==null||mapView==null){
-//                return;
-//            }
-//            if(isFirstLoc){
-//                isFirstLoc=false;
-//                LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
-//                MapStatus.Builder builder=new MapStatus.Builder();
-//                builder.target(latLng).zoom(18.0f);
-//                baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-//            }
-//            mCurrentLoc=location;
-//            if (location.getLocType() == BDLocation.TypeGpsLocation) {
-//                // Log.e("Tag","GPS");
-//            } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {
-//                // Log.e("Tag","网络");
-//            } else if (location.getLocType() == BDLocation.TypeOffLineLocation){
-//                Log.e(TAG,"离线定位成功，离线定位结果也是有效的");
-//            } else if (location.getLocType() == BDLocation.TypeServerError){
-//                Log.e(TAG,"服务端网络定位失败,错误代码："+location.getLocType());
-//            } else if (location.getLocType() == BDLocation.TypeNetWorkException){
-//                Log.e(TAG,"网络不通导致定位失败，请检查网络是否通畅");
-//            } else if (location.getLocType() == BDLocation.TypeCriteriaException){
-//                Log.e(TAG,"无法获取有效定位依据导致定位失败");
-//            } else {
-//                Log.e(TAG,"未知原因，请向百度地图SDK论坛求助，location.getLocType()错误代码："+location.getLocType());
-//            }
-//        }
-//    }
 
     //获取某一天的后一天
     private String getDayAfter(String specifiedDay){
