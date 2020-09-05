@@ -1,11 +1,15 @@
 package com.bupt.sse.group7.covid19;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +30,7 @@ import com.bupt.sse.group7.covid19.fragment.NotAvailable;
 import com.bupt.sse.group7.covid19.fragment.PatientTrackBlockFragment;
 import com.bupt.sse.group7.covid19.fragment.StatusLineFragment;
 import com.bupt.sse.group7.covid19.interfaces.IPatientViewCallBack;
+import com.bupt.sse.group7.covid19.model.CurrentUser;
 import com.bupt.sse.group7.covid19.model.Patient;
 import com.bupt.sse.group7.covid19.model.TrackPoint;
 import com.bupt.sse.group7.covid19.presenter.PatientPresenter;
@@ -39,8 +44,7 @@ public class PatientMainPageActivity extends AppCompatActivity implements IPatie
     private StatusLineFragment statusLineFragment;
     private PatientTrackBlockFragment patientTrackBlockFragment;
     private NotAvailable notAvailable;
-
-
+    private int id;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,19 +59,38 @@ public class PatientMainPageActivity extends AppCompatActivity implements IPatie
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
-
         patientPresenter = PatientPresenter.getInstance();
         patientPresenter.registerCallBack(this);
         patientPresenter.getPatientInfo();
-
-
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_update_track:
+                if(CurrentUser.getLabel().equals("patient") && CurrentUser.getId() == this.id) {
+                    Intent intent = new Intent(PatientMainPageActivity.this, EditTrackActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(this, "请先认证本用户账号", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_patient_main, menu);
+        return true;
+    }
 
     @Override
     public void onPatientInfoReturned(Patient patient) {
+        this.id = patient.getId();
         FragmentManager fragmentManager = getSupportFragmentManager();
         statusLineFragment = new StatusLineFragment();
         statusLineFragment.setList(patient.getStatuses());
