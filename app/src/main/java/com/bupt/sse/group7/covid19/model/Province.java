@@ -1,4 +1,17 @@
 package com.bupt.sse.group7.covid19.model;
 
-public class Province {
+import java.util.List;
+
+public class Province extends District {
+
+    private List<City> cities;
+
+    public List<City> getCities() {
+        return cities;
+    }
+
+    public void setCities(List<City> cities) {
+        this.cities = cities;
+    }
+
 }
