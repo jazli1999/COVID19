@@ -55,7 +55,7 @@ public class PatientPresenter implements IDataBackCallBack {
     private void getPatientResult(){
         Map<String, String> args = new HashMap<>();
         args.put("p_id", String.valueOf(patient.getId()));
-        Call<ResponseBody> data=DBConnector.dao.getData("getPatientById.php",args);
+        Call<ResponseBody> data=DBConnector.dao.executeGet("getPatientById.php",args);
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -82,7 +82,7 @@ public class PatientPresenter implements IDataBackCallBack {
     private void getStatusResult(){
         Map<String, String> args = new HashMap<>();
         args.put("p_id", String.valueOf(patient.getId()));
-        Call<ResponseBody> data=DBConnector.dao.getData("getPStatusById.php",args);
+        Call<ResponseBody> data=DBConnector.dao.executeGet("getPStatusById.php",args);
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -108,7 +108,7 @@ public class PatientPresenter implements IDataBackCallBack {
     private void getTrackResult(){
         Map<String, String> args = new HashMap<>();
         args.put("p_id", String.valueOf(patient.getId()));
-        Call<ResponseBody> data=DBConnector.dao.getData("getPatientTrackById.php",args);
+        Call<ResponseBody> data=DBConnector.dao.executeGet("getPatientTrackById.php",args);
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

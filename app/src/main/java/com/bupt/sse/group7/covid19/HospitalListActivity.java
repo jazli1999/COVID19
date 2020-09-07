@@ -26,6 +26,9 @@ import com.bupt.sse.group7.covid19.model.Province;
 import com.bupt.sse.group7.covid19.presenter.HospitalListPresenter;
 import com.bupt.sse.group7.covid19.presenter.HospitalPresenter;
 
+import com.google.gson.JsonArray;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +37,6 @@ import java.util.List;
  */
 public class HospitalListActivity extends AppCompatActivity implements IHospitalListCallBack {
     private static final String TAG = "HospitalListActivity";
-    private List<HospitalBrief> hospitals;
     private RecyclerView listView;
     private HospitalListAdapter adapter;
     private LinearLayoutManager layoutManager;
@@ -173,7 +175,7 @@ public class HospitalListActivity extends AppCompatActivity implements IHospital
         listView.setAdapter(adapter);
     }
 
-    private void initView() {
+    private void initView(){
         filterButton = findViewById(R.id.hosp_list_filter);
         spinnerP = findViewById(R.id.spinner_P);
         spinnerC = findViewById(R.id.spinner_C);

@@ -15,6 +15,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.bupt.sse.group7.covid19.interfaces.IHospitalViewCallBack;
 import com.bupt.sse.group7.covid19.model.Hospital;
+import com.bupt.sse.group7.covid19.model.Statistics;
+import com.bupt.sse.group7.covid19.model.Supplies;
 import com.bupt.sse.group7.covid19.presenter.HospitalPresenter;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -29,6 +31,7 @@ public class EditHospitalActivity extends AppCompatActivity implements IHospital
     private TextView nameTv;
     private EditText mildTv, severeTv, inChargeTv, addrTv, n95Tv, surgeonTv, ventTv,
             clotheTv, glassesTv, telTv, alcoholTv, pantsTv;
+    private Hospital mHospital;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,39 +88,30 @@ public class EditHospitalActivity extends AppCompatActivity implements IHospital
     }
 
     public void submit() {
-        JsonObject args = new JsonObject();
-        JsonObject info = new JsonObject();
+        //TODO 封装hospital
 
+        Supplies supplies=new Supplies(n95Tv.getText().toString(),
+                surgeonTv.getText().toString(),
+                ventTv.getText().toString(),
+                clotheTv.getText().toString(),
+                glassesTv.getText().toString(),
+                alcoholTv.getText().toString(),
+                pantsTv.getText().toString());
 
-        addValueFromInput(info, "address", R.id.set_address);
-        addValueFromInput(info, "tel", R.id.set_tel);
-        addValueFromInput(info, "contact", R.id.set_inCharge);
-        addValueFromInput(info, "mild_left", R.id.set_mild);
-        addValueFromInput(info, "severe_left", R.id.set_severe);
+        mHospital.setSupplies(supplies);
+        mHospital.setPeople(inChargeTv.getText().toString());
+        mHospital.setTel(telTv.getText().toString());
+        mHospital.setAddress(addrTv.getText().toString());
+        mHospital.setMildLeft(mildTv.getText().toString());
+        mHospital.setSevereLeft(severeTv.getText().toString());
 
-        args.add("id", new JsonPrimitive(this.id));
-        args.add("row", info);
-
-        JsonObject args2 = new JsonObject();
-        JsonObject supplies = new JsonObject();
-
-        addValueFromInput(supplies, "n95", R.id.set_n95);
-        addValueFromInput(supplies, "surgeon", R.id.set_surgeon);
-        addValueFromInput(supplies, "ventilator", R.id.set_ventilator);
-        addValueFromInput(supplies, "clothe", R.id.set_clothe);
-        addValueFromInput(supplies, "glasses", R.id.set_glasses);
-        addValueFromInput(supplies, "alcohol", R.id.set_alcohol);
-        addValueFromInput(supplies, "pants", R.id.set_pants);
-
-        args2.add("id", new JsonPrimitive(this.id));
-        args2.add("row", supplies);
-
-        hospitalPresenter.updateData(args, args2);
+        hospitalPresenter.updateData(mHospital);
 
         Toast.makeText(this, "已提交",Toast.LENGTH_SHORT).show();
         finish();
     }
 
+    //TODO
     private void addValueFromInput(JsonObject obj, String arg, int id) {
         String text = ((EditText)findViewById(id)).getText().toString();
         if (!text.equals("-")) {
@@ -127,6 +121,7 @@ public class EditHospitalActivity extends AppCompatActivity implements IHospital
 
     @Override
     public void onHospitalInfoReturned(Hospital hospital) {
+        this.mHospital=hospital;
         id = hospital.getId();
         nameTv.setText(hospital.getName());
         mildTv.setText(hospital.getMildLeft());

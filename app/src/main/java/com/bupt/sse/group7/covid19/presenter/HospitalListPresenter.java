@@ -65,11 +65,11 @@ public class HospitalListPresenter {
         if (areaId.length() == 4) {
             args.put("city", areaId);
             Log.d(TAG, "initData: " + areaId);
-            data = DBConnector.dao.getData("getHospitalListByCity.php", args);
+            data = DBConnector.dao.executeGet("getHospitalListByCity.php", args);
         } else {
             args.put("district", areaId);
             Log.d(TAG, "initData: " + areaId);
-            data = DBConnector.dao.getData("getHospitalListByDistrict.php", args);
+            data = DBConnector.dao.executeGet("getHospitalListByDistrict.php", args);
         }
         data.enqueue(new Callback<ResponseBody>() {
             @Override

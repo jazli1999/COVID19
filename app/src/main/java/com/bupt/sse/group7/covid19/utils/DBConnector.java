@@ -108,16 +108,8 @@ public class DBConnector {
         executePost(host + "setPatientUsername.php", args);
     }
 
-
-
-    public static void editHospitalById(JsonObject args) {
-        executePost(host + "editHospitalById.php", args);
-    }
-
     //----add----
-    public static void editSuppliesById(JsonObject args) {
-        executePost(host + "editSuppliesById.php", args);
-    }
+
 
     public static void addPatientTrack(JsonObject args) {
         executePost(host + "addPatientTrack.php", args);

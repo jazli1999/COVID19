@@ -33,8 +33,6 @@ import com.google.gson.JsonObject;
 import com.bupt.sse.group7.covid19.utils.Constants;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -68,7 +66,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void initData() {
         Log.i("hcccc", "initdata");
-        Call<ResponseBody> data = DBConnector.dao.getData("getStatistics.php");
+        Call<ResponseBody> data = DBConnector.dao.executeGet("getStatistics.php");
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
