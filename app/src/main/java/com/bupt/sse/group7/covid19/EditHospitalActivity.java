@@ -70,12 +70,12 @@ public class EditHospitalActivity extends AppCompatActivity implements IHospital
     }
 
     private void initView() {
-        nameTv = (TextView) findViewById(R.id.hospital_name_edit);
-        mildTv = (EditText) findViewById(R.id.set_mild);
-        severeTv = (EditText) findViewById(R.id.set_severe);
-        inChargeTv = (EditText) findViewById(R.id.set_inCharge);
-        addrTv = (EditText) findViewById(R.id.set_address);
-        telTv = (EditText) findViewById(R.id.set_tel);
+        nameTv = findViewById(R.id.hospital_name_edit);
+        mildTv = findViewById(R.id.set_mild);
+        severeTv = findViewById(R.id.set_severe);
+        inChargeTv = findViewById(R.id.set_inCharge);
+        addrTv = findViewById(R.id.set_address);
+        telTv = findViewById(R.id.set_tel);
 
         //初始化物资框为主页显示
         n95Tv = (EditText) findViewById(R.id.set_n95);

@@ -29,6 +29,8 @@ import java.util.List;
 
 import androidx.annotation.ContentView;
 
+import static com.baidu.mapapi.map.PolylineDottedLineType.DOTTED_LINE_SQUARE;
+
 public class DrawMarker {
     private List<OverlayOptions> optionsList;//存访标志的集合
     BaiduMap baiduMap;
@@ -39,177 +41,170 @@ public class DrawMarker {
     TextView tv_time;
     TextView tv_desc;
     Context context;
-    public DrawMarker(BaiduMap baiduMap,Context context){
-       geo_bitmap= BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
-        this.baiduMap=baiduMap;
-        inflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view=inflater.inflate(R.layout.marker_item, null);
-        tv_time=view.findViewById(R.id.tv_time);
-        tv_desc=view.findViewById(R.id.tv_desc);
-        this.context=context;
 
-
+    public DrawMarker(BaiduMap baiduMap, Context context) {
+        geo_bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
+        this.baiduMap = baiduMap;
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        view = inflater.inflate(R.layout.marker_item, null);
+        tv_time = view.findViewById(R.id.tv_time);
+        tv_desc = view.findViewById(R.id.tv_desc);
+        this.context = context;
     }
 
     //展示所有人详细的轨迹
-    public void drawAllDetail(List<JsonArray> tracklist){
+    public void drawAllDetail(List<JsonArray> tracklist) {
         baiduMap.clear();
-        if(tracklist==null||tracklist.size()==0)
+        if (tracklist == null || tracklist.size() == 0)
             return;
-        optionsList=new ArrayList<>();
-        for(int j=0;j<tracklist.size();j++){
-            JsonArray track=tracklist.get(j);
+        optionsList = new ArrayList<>();
+        for (int j = 0; j < tracklist.size(); j++) {
+            JsonArray track = tracklist.get(j);
 
-            Bundle bundle=null;
-            List<LatLng> points=new ArrayList<>();
+            Bundle bundle = null;
+            List<LatLng> points = new ArrayList<>();
 
-            for(int i=0;i<track.size();i++){
+            for (int i = 0; i < track.size(); i++) {
 
-                JsonObject object=track.get(i).getAsJsonObject();
-                int id=object.get("p_id").getAsInt();
-                double curLng= object.get("longitude").getAsDouble();
-                double curLan= object.get("latitude").getAsDouble();
-                String date=object.get("date_time").getAsString();
+                JsonObject object = track.get(i).getAsJsonObject();
+                int id = object.get("p_id").getAsInt();
+                double curLng = object.get("longitude").getAsDouble();
+                double curLan = object.get("latitude").getAsDouble();
+                String date = object.get("date_time").getAsString();
                 String descrip = "";
                 JsonElement descObj = object.get("description");
                 if (!descObj.isJsonNull()) {
                     descrip = descObj.getAsString();
                 }
 
-                LatLng currLatLng=new LatLng(curLan,curLng);
-                //添加文字
-//                OverlayOptions textOption = new TextOptions()
-//                        //                    .bgColor(0xAAFFFF00)
-//                        .fontSize(36)
-//                        .fontColor(Color.BLACK)
-//                        .text(date+" "+descrip)
-//                        .position(currLatLng)
-//
-//                        ;
-//
-//                optionsList.add(textOption);
+                LatLng currLatLng = new LatLng(curLan, curLng);
 
-                tv_time.setText(date);
+                tv_time.setText(date.substring(0, date.length()-3));
                 tv_desc.setText(descrip);
 
                 BitmapDescriptor bitmap = BitmapDescriptorFactory.fromBitmap(getBitmapFromView(view));
                 //添加Marker
-                OverlayOptions option=new MarkerOptions().position(currLatLng).icon(bitmap);
-                Marker marker= (Marker) baiduMap.addOverlay(option);
+                OverlayOptions option = new MarkerOptions().position(currLatLng).icon(bitmap);
+                Marker marker = (Marker) baiduMap.addOverlay(option);
+                marker.setToTop();
                 //Marker上绑定id信息用于界面跳转
-                bundle=new Bundle();
-                bundle.putInt("p_id",id);
+                bundle = new Bundle();
+                bundle.putInt("p_id", id);
                 marker.setExtraInfo(bundle);
                 points.add(currLatLng);
             }
-            //添加line
-            if(points.size()>1) {
-                OverlayOptions ooPolyline = new PolylineOptions().width(10).color(0xAAFF0000).points(points);
-                Polyline polyline= (Polyline) baiduMap.addOverlay(ooPolyline);
+            // 添加line
+            if (points.size() > 1) {
+                //dottedLine(true).dottedLineType(DOTTED_LINE_SQUARE)
+                OverlayOptions ooPolyline = new PolylineOptions().width(8).dottedLine(true).dottedLineType(DOTTED_LINE_SQUARE).color(0xffff941d).points(points);
+                Polyline polyline = (Polyline) baiduMap.addOverlay(ooPolyline);
                 polyline.setExtraInfo(bundle);
             }
-            points=new ArrayList<>();
+            points = new ArrayList<>();
         }
         baiduMap.addOverlays(optionsList);
     }
 
     //展示所有人详细的轨迹,不包括描述
-    public void drawAllDetailWithoutDes(List<JsonArray> tracklist){
+    public void drawAllDetailWithoutDes(List<JsonArray> tracklist) {
         baiduMap.clear();
-        if(tracklist==null||tracklist.size()==0)
+        if (tracklist == null || tracklist.size() == 0)
             return;
-        optionsList=new ArrayList<>();
-        for(int j=0;j<tracklist.size();j++){
-            JsonArray track=tracklist.get(j);
+        optionsList = new ArrayList<>();
+        for (int j = 0; j < tracklist.size(); j++) {
+            JsonArray track = tracklist.get(j);
 
-            Bundle bundle=null;
-            List<LatLng> points=new ArrayList<>();
+            Bundle bundle = null;
+            List<LatLng> points = new ArrayList<>();
 
-            for(int i=0;i<track.size();i++){
+            for (int i = 0; i < track.size(); i++) {
 
-                JsonObject object=track.get(i).getAsJsonObject();
-                int id=object.get("p_id").getAsInt();
-                double curLng= object.get("longitude").getAsDouble();
-                double curLan= object.get("latitude").getAsDouble();
+                JsonObject object = track.get(i).getAsJsonObject();
+                int id = object.get("p_id").getAsInt();
+                double curLng = object.get("longitude").getAsDouble();
+                double curLan = object.get("latitude").getAsDouble();
 
 
-                LatLng currLatLng=new LatLng(curLan,curLng);
+                LatLng currLatLng = new LatLng(curLan, curLng);
 
                 //添加Marker
-                OverlayOptions option=new MarkerOptions().position(currLatLng).icon(geo_bitmap);
-                Marker marker= (Marker) baiduMap.addOverlay(option);
+                OverlayOptions option = new MarkerOptions().position(currLatLng).icon(geo_bitmap);
+                Marker marker = (Marker) baiduMap.addOverlay(option);
+                marker.setToTop();
                 //Marker上绑定id信息用于界面跳转
-                bundle=new Bundle();
-                bundle.putInt("p_id",id);
+                bundle = new Bundle();
+                bundle.putInt("p_id", id);
                 marker.setExtraInfo(bundle);
                 points.add(currLatLng);
             }
             //添加line
-            if(points.size()>1) {
-                OverlayOptions ooPolyline = new PolylineOptions().width(10).color(0xAAFF0000).points(points);
-                Polyline polyline= (Polyline) baiduMap.addOverlay(ooPolyline);
+            if (points.size() > 1) {
+                OverlayOptions ooPolyline = new PolylineOptions().width(8).dottedLine(true).dottedLineType(DOTTED_LINE_SQUARE).color(0xffff941d).points(points);
+                Polyline polyline = (Polyline) baiduMap.addOverlay(ooPolyline);
                 polyline.setExtraInfo(bundle);
             }
-            points=new ArrayList<>();
+            points = new ArrayList<>();
         }
         baiduMap.addOverlays(optionsList);
     }
+
     //展示所有人的粗略轨迹,不包括描述
-    public void drawAllRoughWithoutDes(List<JsonArray> tracklist){
+    public void drawAllRoughWithoutDes(List<JsonArray> tracklist) {
         baiduMap.clear();
 
-        if(tracklist==null||tracklist.size()==0)
+        if (tracklist == null || tracklist.size() == 0)
             return;
-        optionsList=new ArrayList<>();
-        List<Marker> markerList=new ArrayList<>();
-        for(int j=0;j<tracklist.size();j++){
-            JsonArray track=tracklist.get(j);
-            if(track.size()==0)
+        optionsList = new ArrayList<>();
+        List<Marker> markerList = new ArrayList<>();
+        for (int j = 0; j < tracklist.size(); j++) {
+            JsonArray track = tracklist.get(j);
+            if (track.size() == 0)
                 continue;
-            Bundle bundle=null;
-            JsonObject object=track.get(0).getAsJsonObject();//获取起点
-            int id=object.get("p_id").getAsInt();
-            double curLng= object.get("longitude").getAsDouble();
-            double curLan= object.get("latitude").getAsDouble();
+            Bundle bundle = null;
+            JsonObject object = track.get(0).getAsJsonObject();//获取起点
+            int id = object.get("p_id").getAsInt();
+            double curLng = object.get("longitude").getAsDouble();
+            double curLan = object.get("latitude").getAsDouble();
 
-            LatLng currLatLng=new LatLng(curLan,curLng);
+            LatLng currLatLng = new LatLng(curLan, curLng);
 
             //添加Marker
-            OverlayOptions option=new MarkerOptions().position(currLatLng).icon(geo_bitmap);
-            Marker marker= (Marker) baiduMap.addOverlay(option);
-
+            OverlayOptions option = new MarkerOptions().position(currLatLng).icon(geo_bitmap);
+            Marker marker = (Marker) baiduMap.addOverlay(option);
+            marker.setToTop();
             //Marker上绑定id信息用于界面跳转
-            bundle=new Bundle();
-            bundle.putInt("p_id",id);
+            bundle = new Bundle();
+            bundle.putInt("p_id", id);
             marker.setExtraInfo(bundle);
         }
         baiduMap.addOverlays(optionsList);
     }
+
     //展示所有人的粗略轨迹
-    public void drawAllRough(List<JsonArray> tracklist){
+    public void drawAllRough(List<JsonArray> tracklist) {
         baiduMap.clear();
 
-        if(tracklist==null||tracklist.size()==0)
+        if (tracklist == null || tracklist.size() == 0)
             return;
-        optionsList=new ArrayList<>();
-        List<Marker> markerList=new ArrayList<>();
-        for(int j=0;j<tracklist.size();j++){
-            JsonArray track=tracklist.get(j);
-            if(track.size()==0)
+        optionsList = new ArrayList<>();
+        List<Marker> markerList = new ArrayList<>();
+        for (int j = 0; j < tracklist.size(); j++) {
+            JsonArray track = tracklist.get(j);
+            if (track.size() == 0)
                 continue;
-            Bundle bundle=null;
-            JsonObject object=track.get(0).getAsJsonObject();//获取起点
-            int id=object.get("p_id").getAsInt();
-            double curLng= object.get("longitude").getAsDouble();
-            double curLan= object.get("latitude").getAsDouble();
-            String date=object.get("date_time").getAsString();
+            Bundle bundle = null;
+            JsonObject object = track.get(0).getAsJsonObject();//获取起点
+            int id = object.get("p_id").getAsInt();
+            double curLng = object.get("longitude").getAsDouble();
+            double curLan = object.get("latitude").getAsDouble();
+            String date = object.get("date_time").getAsString();
             String descrip = "";
             JsonElement descObj = object.get("description");
             if (!descObj.isJsonNull()) {
                 descrip = descObj.getAsString();
             }
-            LatLng currLatLng=new LatLng(curLan,curLng);
-            tv_time.setText(date);
+            LatLng currLatLng = new LatLng(curLan, curLng);
+            tv_time.setText(date.substring(0, date.length()-3));
             tv_desc.setText(descrip);
             BitmapDescriptor bitmap = BitmapDescriptorFactory.fromBitmap(getBitmapFromView(view));
             //添加文字
@@ -222,12 +217,12 @@ public class DrawMarker {
 //            optionsList.add(textOption);
 
             //添加Marker
-            OverlayOptions option=new MarkerOptions().position(currLatLng).icon(bitmap);
-            Marker marker= (Marker) baiduMap.addOverlay(option);
-
+            OverlayOptions option = new MarkerOptions().position(currLatLng).icon(bitmap);
+            Marker marker = (Marker) baiduMap.addOverlay(option);
+            marker.setToTop();
             //Marker上绑定id信息用于界面跳转
-            bundle=new Bundle();
-            bundle.putInt("p_id",id);
+            bundle = new Bundle();
+            bundle.putInt("p_id", id);
             marker.setExtraInfo(bundle);
         }
         baiduMap.addOverlays(optionsList);
