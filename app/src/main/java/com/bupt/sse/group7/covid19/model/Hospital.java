@@ -2,7 +2,9 @@ package com.bupt.sse.group7.covid19.model;
 
 public class Hospital {
     private int id;
+    //医院名称
     private String name;
+    //负责人
     private String people;
     private String address;
     private String tel;
@@ -12,7 +14,19 @@ public class Hospital {
 
     private String mildLeft;
     private String severeLeft;
+    public Hospital(int id, String name, String people, String address, String tel, Statistics statistics, Supplies supplies, String mildLeft, String severeLeft) {
+        this.id = id;
+        this.name = name;
+        this.people = people;
+        this.address = address;
+        this.tel = tel;
+        this.statistics = statistics;
+        this.supplies = supplies;
+        this.mildLeft = mildLeft;
+        this.severeLeft = severeLeft;
+    }
 
+    public Hospital(){}
     public String getTel() {
         return tel;
     }

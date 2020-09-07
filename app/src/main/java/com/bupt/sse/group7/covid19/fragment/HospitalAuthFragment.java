@@ -92,7 +92,7 @@ public class HospitalAuthFragment extends Fragment {
     }
 
     private void getAuthInfo(Map<String, String> args) {
-        Call<ResponseBody> data = DBConnector.dao.getData("getHospitalAuthInfo.php",args);
+        Call<ResponseBody> data = DBConnector.dao.executeGet("getHospitalAuthInfo.php",args);
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

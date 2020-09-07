@@ -59,7 +59,7 @@ public class HospitalListActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        Call<ResponseBody> data = DBConnector.dao.getData("getHospitalList.php");
+        Call<ResponseBody> data = DBConnector.dao.executeGet("getHospitalList.php");
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

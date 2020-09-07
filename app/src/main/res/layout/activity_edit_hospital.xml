@@ -109,6 +109,7 @@
                 android:paddingStart="5dp"
                 android:background="@drawable/rec_tangle"
                 android:paddingBottom="0dp"
+                android:inputType="number"
                 android:layout_marginTop="7dp"
                 android:layout_marginStart="12dp"/>
 
@@ -129,6 +130,7 @@
                 android:textSize="14sp"
                 android:background="@drawable/rec_tangle"
                 android:paddingBottom="0dp"
+                android:inputType="number"
                 android:layout_marginTop="7dp"
                 android:layout_marginStart="12dp"/>
         </LinearLayout>
@@ -200,6 +202,7 @@
                 android:layout_marginStart="27dp"
                 android:layout_marginTop="7dp"
                 android:background="@drawable/rec_tangle"
+                android:inputType="number"
                 android:paddingStart="5dp"
                 android:paddingBottom="0dp"
                 android:textSize="14sp" />
