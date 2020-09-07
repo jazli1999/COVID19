@@ -113,12 +113,12 @@ public class ShowMapActivity extends AppCompatActivity {
 
                     }
                     if(baiduMap.getMapStatus().zoom>mZoom){
-                        drawMarker.drawAllDetail(alltracklist);
+                        drawMarker.drawAllDetailWithoutDes(alltracklist);
 
                     }
                     else {
 
-                        drawMarker.drawAllRough(alltracklist);
+                        drawMarker.drawAllRoughWithoutDes(alltracklist);
 
                     }
 
@@ -140,12 +140,12 @@ public class ShowMapActivity extends AppCompatActivity {
                     }
 
                     if(baiduMap.getMapStatus().zoom>mZoom){
-                        drawMarker.drawAllDetail(tracklist);
+                        drawMarker.drawAllDetailWithoutDes(tracklist);
 
                     }
                     else {
 
-                        drawMarker.drawAllRough(tracklist);
+                        drawMarker.drawAllRoughWithoutDes(tracklist);
 
                     }
                 }
@@ -234,20 +234,20 @@ public class ShowMapActivity extends AppCompatActivity {
                 //小于200米
                 if(zoom>mZoom){
                     if(district_Sp.getSelectedItem().toString().equals("全部")){
-                        drawMarker.drawAllDetail(alltracklist);
+                        drawMarker.drawAllDetailWithoutDes(alltracklist);
                     }
                     else {
-                        drawMarker.drawAllDetail(tracklist);
+                        drawMarker.drawAllDetailWithoutDes(tracklist);
 
                     }
 
                 }
                 else {
                     if(district_Sp.getSelectedItem().toString().equals("全部")){
-                        drawMarker.drawAllRough(alltracklist);
+                        drawMarker.drawAllRoughWithoutDes(alltracklist);
                     }
                     else {
-                        drawMarker.drawAllRough(tracklist);
+                        drawMarker.drawAllRoughWithoutDes(tracklist);
 
                     }
                 }
@@ -288,7 +288,7 @@ public class ShowMapActivity extends AppCompatActivity {
 
         initPatientInfo();
         drawMarker=new DrawMarker(baiduMap,this);
-        drawMarker.drawAllRough(alltracklist);
+        drawMarker.drawAllRoughWithoutDes(alltracklist);
         initView();
         initLocationOption();
 

@@ -79,7 +79,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     Marker marker;
     List<Marker> markerList = new ArrayList<>();
 
-    private Button btn_end, btn_cancel;
+    private  Button btn_cancel;
 
     //时间选择
     private DatePicker datePickerStart;
@@ -128,7 +128,6 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         initLocation();
         initMap();
 
-        btn_end = findViewById(R.id.btn_end);
         //确认单个marker
         btn_confirm = findViewById(R.id.btn_confirm);
 
@@ -275,20 +274,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
                 geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(currLatLng));
             }
         });
-        //结束上报，提交到数据库
-        btn_end.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submit();
-                Bundle bundle = new Bundle();
-                bundle.putInt("id", p_id);
-                Intent intent = new Intent(EditTrackActivity.this, PatientMainPageActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                finish();
 
-            }
-        });
         geoCoder = GeoCoder.newInstance();
         geoCoder.setOnGetGeoCodeResultListener(this);
         mHandler = new Handler(new Handler.Callback() {
@@ -369,7 +355,11 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_done:
+                //完成打点并提交到数据库
                 submit();
+                Intent intent = new Intent(EditTrackActivity.this, PatientMainPageActivity.class);
+                startActivity(intent);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
