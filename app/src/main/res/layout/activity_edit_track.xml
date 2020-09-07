@@ -63,6 +63,7 @@
                 app:cardCornerRadius="30dp">
 
                 <ImageView
+                    android:id="@+id/locationIv"
                     style="@style/fab_img"
                     android:src="@drawable/locate"/>
 
