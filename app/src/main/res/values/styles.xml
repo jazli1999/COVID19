@@ -125,4 +125,18 @@
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
+    <style name="fab_card">
+        <item name="android:layout_width">46dp</item>
+        <item name="android:layout_height">46dp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_marginTop">7dp</item>
+        <item name="android:layout_marginBottom">7dp</item>
+    </style>
+
+    <style name="fab_img">
+        <item name="android:layout_width">32dp</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:layout_margin">7dp</item>
+    </style>
+
 </resources>

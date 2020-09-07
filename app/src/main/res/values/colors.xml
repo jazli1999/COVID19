@@ -19,4 +19,5 @@
     <color name="cardLightBlue">#00BDBA</color>
     <color name="cardPurple">#6C6BA8</color>
     <color name="dead">#555555</color>
+    <color name="polyline">#ff941d</color>
 </resources>
