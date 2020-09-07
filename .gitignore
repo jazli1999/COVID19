@@ -16,3 +16,5 @@ local.properties
 screenshot/.DS_Store
 app/build
 gradle.properties
+app/src/main/AndroidManifest.xml
+app/build.gradle
