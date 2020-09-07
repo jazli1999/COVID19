@@ -22,13 +22,20 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TimePicker;
 
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
@@ -60,6 +67,7 @@ import static com.baidu.mapapi.map.PolylineDottedLineType.DOTTED_LINE_SQUARE;
  */
 public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCoderResultListener {
 
+    private static final String TAG = "EditTrackActivity";
     int p_id = CurrentUser.getId();
     //int p_id=5;
     private MapView mapView;
@@ -71,7 +79,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     Marker marker;
     List<Marker> markerList = new ArrayList<>();
 
-    private Button btn_end, btn_cancel;
+    private  Button btn_cancel;
 
     //时间选择
     private DatePicker datePickerStart;
@@ -92,6 +100,15 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     private AlertDialog desDialog;
     private List<String> descriptionList = new ArrayList<>();
 
+    //定位
+    private ImageView locationIv;
+    private BDLocation mCurrentLoc;
+    private boolean isFirstLoc = true;
+    private LocationClient locationClient;
+    private MyLocationListener myLocationListener;
+    private final float mZoom = 15.0f;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +124,10 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
 
-        btn_end = findViewById(R.id.btn_end);
+        initView();
+        initLocation();
+        initMap();
+
         //确认单个marker
         btn_confirm = findViewById(R.id.btn_confirm);
 
@@ -135,9 +155,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             }
         });
 
-        mapView = findViewById(R.id.mapView);
-        baiduMap = mapView.getMap();
-        baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+
 
         //marker图标
         final BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
@@ -256,20 +274,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
                 geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(currLatLng));
             }
         });
-        //结束上报，提交到数据库
-        btn_end.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submit();
-                Bundle bundle = new Bundle();
-                bundle.putInt("id", p_id);
-                Intent intent = new Intent(EditTrackActivity.this, PatientMainPageActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                finish();
 
-            }
-        });
         geoCoder = GeoCoder.newInstance();
         geoCoder.setOnGetGeoCodeResultListener(this);
         mHandler = new Handler(new Handler.Callback() {
@@ -286,6 +291,59 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
     }
 
+    private void initMap() {
+        mapView = findViewById(R.id.mapView);
+        baiduMap = mapView.getMap();
+        baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+        //开启定位图层
+        baiduMap.setMyLocationEnabled(true);
+
+    }
+
+    private void initView() {
+        locationIv = findViewById(R.id.locationIv);
+
+    }
+
+    private void initLocation() {
+        //定位参数
+        locationClient = new LocationClient(getApplicationContext());
+//声明LocationClient类实例并配置定位参数
+        LocationClientOption locationOption = new LocationClientOption();
+        myLocationListener = new MyLocationListener();
+//注册监听函数
+        locationClient.registerLocationListener(myLocationListener);
+//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        locationOption.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+//可选，默认gcj02，设置返回的定位结果坐标系，如果配合百度地图使用，建议设置为bd09ll;
+        locationOption.setCoorType("bd09ll");
+//可选，默认0，即仅定位一次，设置发起连续定位请求的间隔需要大于等于1000ms才是有效的
+        locationOption.setScanSpan(1000);
+//可选，设置是否需要设备方向结果
+        locationOption.setNeedDeviceDirect(false);
+//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        locationOption.setIgnoreKillProcess(true);
+//可选，默认false，设置是否开启Gps定位
+        locationOption.setOpenGps(true);
+//需将配置好的LocationClientOption对象，通过setLocOption方法传递给LocationClient对象使用
+        locationClient.setLocOption(locationOption);
+        //开始定位
+        locationClient.start();
+        //初始化定位
+        locationIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "locationTvOnClicked");
+                LatLng latLng = new LatLng(mCurrentLoc.getLatitude(), mCurrentLoc.getLongitude());
+                Log.i(TAG, "longitude:" + mCurrentLoc.getLongitude() + "   lantitude:" + mCurrentLoc.getLatitude());
+                MapStatus.Builder builder = new MapStatus.Builder();
+                builder.target(latLng).zoom(mZoom);
+                baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+            }
+        });
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -297,12 +355,20 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_done:
+                //完成打点并提交到数据库
                 submit();
+                Intent intent = new Intent(EditTrackActivity.this, PatientMainPageActivity.class);
+                startActivity(intent);
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
+    //定位
+
 
     //提交到数据库
     private void submit() {
@@ -425,4 +491,45 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
 
     }
+
+    public class MyLocationListener extends BDAbstractLocationListener {
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
+            //以下只列举部分获取经纬度相关（常用）的结果信息
+            //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
+
+            //获取纬度信息
+            double latitude = location.getLatitude();
+            //获取经度信息
+            double longitude = location.getLongitude();
+            if (isFirstLoc) {
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                Log.i(TAG, "longitude:" + location.getLongitude() + "   lantitude:" + location.getLatitude());
+                MapStatus.Builder builder = new MapStatus.Builder();
+                builder.target(latLng).zoom(mZoom);
+                baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+                isFirstLoc = false;
+            }
+            mCurrentLoc = location;
+            locationClient.stop();
+            if (location.getLocType() == BDLocation.TypeGpsLocation) {
+                Log.e(TAG, "GPS");
+            } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {
+                Log.e(TAG, "网络");
+            } else if (location.getLocType() == BDLocation.TypeOffLineLocation) {
+                Log.e(TAG, "离线定位成功，离线定位结果也是有效的");
+            } else if (location.getLocType() == BDLocation.TypeServerError) {
+                Log.e(TAG, "服务端网络定位失败,错误代码：" + location.getLocType());
+            } else if (location.getLocType() == BDLocation.TypeNetWorkException) {
+                Log.e(TAG, "网络不通导致定位失败，请检查网络是否通畅");
+            } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
+                Log.e(TAG, "无法获取有效定位依据导致定位失败");
+            } else {
+                Log.e(TAG, "未知原因，请向百度地图SDK论坛求助，location.getLocType()错误代码：" + location.getLocType());
+            }
+
+        }
+    }
+
 }

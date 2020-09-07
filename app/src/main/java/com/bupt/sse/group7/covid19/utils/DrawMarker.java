@@ -207,14 +207,6 @@ public class DrawMarker {
             tv_time.setText(date.substring(0, date.length()-3));
             tv_desc.setText(descrip);
             BitmapDescriptor bitmap = BitmapDescriptorFactory.fromBitmap(getBitmapFromView(view));
-            //添加文字
-//            OverlayOptions textOption = new TextOptions()
-//                    //                    .bgColor(0xAAFFFF00)
-//                    .fontSize(36)
-//                    .fontColor(Color.BLACK)
-//                    .text(date+" "+descrip)
-//                    .position(currLatLng);
-//            optionsList.add(textOption);
 
             //添加Marker
             OverlayOptions option = new MarkerOptions().position(currLatLng).icon(bitmap);
