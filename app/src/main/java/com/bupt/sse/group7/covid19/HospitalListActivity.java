@@ -30,7 +30,7 @@ import java.io.IOException;
  */
 public class HospitalListActivity extends AppCompatActivity {
     private static final String TAG = "HospitalListActivity";
-    private JsonArray hospitals;
+    private JsonArray hospitalsJA;
     private RecyclerView listView;
     private HospitalListAdapter adapter;
     private LinearLayoutManager layoutManager;
@@ -64,8 +64,8 @@ public class HospitalListActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    hospitals= JsonUtils.parseInfo(response.body().byteStream());
-                    updateView(hospitals);
+                    hospitalsJA = JsonUtils.parseInfo(response.body().byteStream());
+                    updateView(hospitalsJA);
 
                 } catch (IOException e) {
                     e.printStackTrace();
