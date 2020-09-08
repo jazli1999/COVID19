@@ -43,14 +43,29 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.map.TextOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.busline.BusLineResult;
+import com.baidu.mapapi.search.busline.BusLineSearch;
+import com.baidu.mapapi.search.busline.BusLineSearchOption;
+import com.baidu.mapapi.search.busline.OnGetBusLineSearchResultListener;
+import com.baidu.mapapi.search.core.PoiInfo;
+import com.baidu.mapapi.search.core.RouteLine;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
+import com.baidu.mapapi.search.poi.PoiCitySearchOption;
+import com.baidu.mapapi.search.poi.PoiDetailResult;
+import com.baidu.mapapi.search.poi.PoiDetailSearchResult;
+import com.baidu.mapapi.search.poi.PoiIndoorResult;
+import com.baidu.mapapi.search.poi.PoiResult;
+import com.baidu.mapapi.search.poi.PoiSearch;
+import com.baidu.mapapi.utils.DistanceUtil;
 import com.bupt.sse.group7.covid19.model.CurrentUser;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
+import com.bupt.sse.group7.covid19.utils.overlayutil.BusLineOverlay;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -65,7 +80,7 @@ import static com.baidu.mapapi.map.PolylineDottedLineType.DOTTED_LINE_SQUARE;
  * TODO 重复添加信息bug
  * TODO Marker使用最新Layout
  */
-public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCoderResultListener {
+public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCoderResultListener, OnGetPoiSearchResultListener, OnGetBusLineSearchResultListener {
 
     private static final String TAG = "EditTrackActivity";
     int p_id = CurrentUser.getId();
@@ -79,7 +94,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     Marker marker;
     List<Marker> markerList = new ArrayList<>();
 
-    private  Button btn_cancel;
+    private Button btn_cancel;
 
     //时间选择
     private DatePicker datePickerStart;
@@ -108,6 +123,12 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     private MyLocationListener myLocationListener;
     private final float mZoom = 15.0f;
 
+    //公交
+    private String busLineId;
+    private BusLineSearch mBusLineSearch;
+    //获取到的所有的公交站
+    private List<String> allBusStations = new ArrayList<>();
+    private ImageView bus_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +148,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         initView();
         initLocation();
         initMap();
+
 
         //确认单个marker
         btn_confirm = findViewById(R.id.btn_confirm);
@@ -154,7 +176,6 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
             }
         });
-
 
 
         //marker图标
@@ -302,6 +323,13 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
     private void initView() {
         locationIv = findViewById(R.id.locationIv);
+        bus_btn=findViewById(R.id.bus_btn);
+        bus_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                busService();
+            }
+        });
 
     }
 
@@ -418,24 +446,6 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             }
         }
 
-//        Field[] datePickerFields = datePicker.getClass().getDeclaredFields();
-//        for (Field field : datePickerFields) {
-//            // 其中mYearSpinner为DatePicker中为“年”定义的变量名
-//            if (field.getName().equals("mYearPicker")
-//                    || field.getName().equals("mYearSpinner")) {
-//                Log.i("hcccc","myearspinner found");
-//                field.setAccessible(true);
-//                Object dayPicker = new Object();
-//                try {
-//                    dayPicker = field.get(datePicker);
-//                } catch (IllegalAccessException e) {
-//                    e.printStackTrace();
-//                } catch (IllegalArgumentException e) {
-//                    e.printStackTrace();
-//                }
-//                ((View) dayPicker).setVisibility(View.GONE);
-//            }
-//        }
     }
 
     @Override
@@ -492,6 +502,77 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
     }
 
+    @Override
+    public void onGetPoiResult(PoiResult poiResult) {
+        if (poiResult == null || poiResult.error != SearchResult.ERRORNO.NO_ERROR) {
+            Log.i(TAG, "onGetPoiResult error");
+            return;
+        }
+        //遍历所有POI，找到类型为公交线路的POI
+        for (PoiInfo poi : poiResult.getAllPoi()) {
+            Log.i(TAG, "poi:" + poi.toString());
+            //TODO 这里搜出来的是公交和地铁线路
+            if (poi.getPoiDetailInfo().getTag().equals("公交线路")) {
+                //获取该条公交路线POI的UID
+
+                searchBus(poi.uid);
+                break;
+            }
+        }
+    }
+
+
+    private void searchBus(String busLineId) {
+        // TODO 改city
+        mBusLineSearch.searchBusLine(new BusLineSearchOption()
+                .city("北京")
+                .uid(busLineId));
+    }
+
+    @Override
+    public void onGetPoiDetailResult(PoiDetailResult poiDetailResult) {
+
+    }
+
+    @Override
+    public void onGetPoiDetailResult(PoiDetailSearchResult poiDetailSearchResult) {
+
+    }
+
+    @Override
+    public void onGetPoiIndoorResult(PoiIndoorResult poiIndoorResult) {
+
+    }
+
+    @Override
+    public void onGetBusLineResult(BusLineResult busLineResult) {
+        if (busLineResult == null || busLineResult.error != SearchResult.ERRORNO.NO_ERROR) {
+            Log.i(TAG, "onGetBusLineResult : error");
+            return;
+        }
+        Log.i(TAG, "onGetBusLineResult");
+        BusLineOverlay overlay = new BusLineOverlay(baiduMap);
+        allBusStations.clear();
+
+        for (BusLineResult.BusStation busStation : busLineResult.getStations()) {
+            allBusStations.add(busStation.getTitle());
+        }
+
+        overlay.setData(getChosenStations(getStartStation(), getEndStation(), busLineResult));
+        overlay.addToMap();
+        overlay.zoomToSpan();
+
+    }
+    //TODO 改终点名字
+    private String getEndStation() {
+        return "成府路口南";
+    }
+
+    //TODO 改起点名字
+    private String getStartStation() {
+        return "明光桥南";
+    }
+
     public class MyLocationListener extends BDAbstractLocationListener {
         @Override
         public void onReceiveLocation(BDLocation location) {
@@ -514,22 +595,97 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             mCurrentLoc = location;
             locationClient.stop();
             if (location.getLocType() == BDLocation.TypeGpsLocation) {
-                Log.e(TAG, "GPS");
+                Log.i(TAG, "GPS");
             } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {
-                Log.e(TAG, "网络");
+                Log.i(TAG, "网络位置");
             } else if (location.getLocType() == BDLocation.TypeOffLineLocation) {
-                Log.e(TAG, "离线定位成功，离线定位结果也是有效的");
+                Log.i(TAG, "离线定位成功，离线定位结果也是有效的");
             } else if (location.getLocType() == BDLocation.TypeServerError) {
-                Log.e(TAG, "服务端网络定位失败,错误代码：" + location.getLocType());
+                Log.i(TAG, "服务端网络定位失败,错误代码：" + location.getLocType());
             } else if (location.getLocType() == BDLocation.TypeNetWorkException) {
-                Log.e(TAG, "网络不通导致定位失败，请检查网络是否通畅");
+                Log.i(TAG, "网络不通导致定位失败，请检查网络是否通畅");
             } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
-                Log.e(TAG, "无法获取有效定位依据导致定位失败");
+                Log.i(TAG, "无法获取有效定位依据导致定位失败");
             } else {
-                Log.e(TAG, "未知原因，请向百度地图SDK论坛求助，location.getLocType()错误代码：" + location.getLocType());
+                Log.i(TAG, "未知原因，请向百度地图SDK论坛求助，location.getLocType()错误代码：" + location.getLocType());
             }
 
         }
+    }
+
+    //TODO 改城市
+    public void busService() {
+        mBusLineSearch = BusLineSearch.newInstance();
+        mBusLineSearch.setOnGetBusLineSearchResultListener(this);
+        PoiSearch mPoiSearch = PoiSearch.newInstance();
+        mPoiSearch.setOnGetPoiSearchResultListener(this);
+        mPoiSearch.searchInCity(new PoiCitySearchOption()
+                .city("北京")
+                .keyword(getBusNumber())
+                .scope(2));
+
+
+    }
+
+    //TODO 改公交的线路
+    private String getBusNumber() {
+        return "632";
+    }
+
+    public BusLineResult getChosenStations(String start, String end, BusLineResult busLineResult) {
+        BusLineResult mBusLineResult = busLineResult;
+        int indexStart = 0;
+        int indexEnd = allBusStations.size();
+        for (int i = 0; i < allBusStations.size(); i++) {
+            if (start.equals(allBusStations.get(i))) {
+                indexStart = i;
+            }
+            if (end.equals(allBusStations.get(i))) {
+                indexEnd = i;
+            }
+        }
+        if(indexStart>indexEnd){
+            int temp=indexStart;
+            indexStart=indexEnd;
+            indexEnd=temp;
+        }
+
+        List<BusLineResult.BusStation> busStations = busLineResult.getStations().subList(indexStart, indexEnd);
+        List<BusLineResult.BusStep> busSteps = getChosenSteps(busStations, busLineResult.getSteps().get(0));
+        mBusLineResult.setStations(busStations);
+        mBusLineResult.setSteps(busSteps);
+
+        return mBusLineResult;
+    }
+
+    private List<BusLineResult.BusStep> getChosenSteps(List<BusLineResult.BusStation> busStations, BusLineResult.BusStep busStep) {
+        if (busStations == null) {
+            return null;
+        }
+        List<LatLng> wayPoints=busStep.getWayPoints();
+        LatLng start = busStations.get(0).getLocation();
+        LatLng end = busStations.get(busStations.size() - 1).getLocation();
+        int indexS=0,indexE=wayPoints.size()-1;
+        double width=50;
+        for (int i=0;i<wayPoints.size();i++) {
+            double dis = DistanceUtil.getDistance(start, wayPoints.get(i));
+            if (dis < width) {
+                indexS=i;
+                break;
+            }
+        }
+        for (int i=wayPoints.size()-1;i>=0;i--) {
+            double dis = DistanceUtil.getDistance(end, wayPoints.get(i));
+            if (dis < width) {
+                indexE=i;
+                break;
+            }
+        }
+        List<BusLineResult.BusStep> busSteps=new ArrayList<>();
+        busStep.setWayPoints(wayPoints.subList(indexS,indexE));
+        busSteps.add(busStep);
+        return busSteps;
+
     }
 
 }
