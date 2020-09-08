@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -15,15 +16,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
@@ -33,6 +38,7 @@ import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -83,6 +89,7 @@ import static com.baidu.mapapi.map.PolylineDottedLineType.DOTTED_LINE_SQUARE;
  */
 public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCoderResultListener, OnGetPoiSearchResultListener, OnGetBusLineSearchResultListener {
 
+    private Context mContext=this;
     private static final String TAG = "EditTrackActivity";
     int p_id = CurrentUser.getId();
     //int p_id=5;
@@ -257,17 +264,43 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             }
         });
 
+        //点击marker进行删除和编辑
+        baiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                View view=View.inflate(mContext,R.layout.window_marker_click,null);
+                Button edit=view.findViewById(R.id.btn_edit);
+                Button dele=view.findViewById(R.id.btn_dele);
+                final InfoWindow mInfoWindow=new InfoWindow(view,marker.getPosition(),47);
+                baiduMap.showInfoWindow(mInfoWindow);
+                edit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.i(TAG,"edit");
+                    }
+                });
+                dele.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.i(TAG,"dele");
+
+                    }
+                });
+                return true;
+            }
+        });
+
         baiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
 
             //点击地图标点
             @Override
             public void onMapClick(LatLng latLng) {
+                baiduMap.hideInfoWindow();
                 baiduMap.clear();
                 currLatLng = latLng;
                 double latitude = latLng.latitude;
                 double longitude = latLng.longitude;
                 Log.i("hccc", latitude + "," + longitude);
-                //LatLng point=new LatLng(latitude,longitude);
                 options = new MarkerOptions().position(latLng).icon(bitmap);
                 marker = (Marker) baiduMap.addOverlay(options);
                 marker.setToTop();
@@ -333,6 +366,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
                 busService();
             }
         });
+
 
     }
 
