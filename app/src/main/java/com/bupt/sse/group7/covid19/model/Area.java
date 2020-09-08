@@ -11,7 +11,7 @@ public class Area {
         this.district = district;
     }
 
-    public String getListAreaId() {
+    public String getAreaId() {
         if (city.getDistricts().get(0) == district) {
             return city.getId();
         }

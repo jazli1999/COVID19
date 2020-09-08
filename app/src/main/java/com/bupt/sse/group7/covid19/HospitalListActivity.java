@@ -61,7 +61,7 @@ public class HospitalListActivity extends AppCompatActivity implements IHospital
 
     @Override
     public void onAreaSelected(Area area) {
-        listPresenter.setAreaId(area.getListAreaId());
+        listPresenter.setAreaId(area.getAreaId());
         listPresenter.initData();
     }
 
