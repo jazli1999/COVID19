@@ -48,7 +48,6 @@ import com.baidu.mapapi.search.busline.BusLineSearch;
 import com.baidu.mapapi.search.busline.BusLineSearchOption;
 import com.baidu.mapapi.search.busline.OnGetBusLineSearchResultListener;
 import com.baidu.mapapi.search.core.PoiInfo;
-import com.baidu.mapapi.search.core.RouteLine;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
@@ -71,7 +70,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.baidu.mapapi.map.PolylineDottedLineType.DOTTED_LINE_SQUARE;
 
@@ -124,11 +125,13 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     private final float mZoom = 15.0f;
 
     //公交
-    private String busLineId;
+    private Map<String,String> busLines;
+    private Map<String,String> subwayLines;
     private BusLineSearch mBusLineSearch;
     //获取到的所有的公交站
     private List<String> allBusStations = new ArrayList<>();
     private ImageView bus_btn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -508,21 +511,28 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             Log.i(TAG, "onGetPoiResult error");
             return;
         }
+        busLines=new HashMap<>();
+        subwayLines=new HashMap<>();
         //遍历所有POI，找到类型为公交线路的POI
         for (PoiInfo poi : poiResult.getAllPoi()) {
             Log.i(TAG, "poi:" + poi.toString());
-            //TODO 这里搜出来的是公交和地铁线路
             if (poi.getPoiDetailInfo().getTag().equals("公交线路")) {
                 //获取该条公交路线POI的UID
+                busLines.put(poi.name,poi.uid);
+                //searchBusOrSubway(poi.uid);
 
-                searchBus(poi.uid);
-                break;
+                // TODO 更改下拉框adpater
             }
+            else if(poi.getPoiDetailInfo().getTag().equals("地铁线路")){
+                subwayLines.put(poi.name,poi.uid);
+            }
+
         }
     }
 
 
-    private void searchBus(String busLineId) {
+    private void searchBusOrSubway(String busLineId) {
+
         // TODO 改city
         mBusLineSearch.searchBusLine(new BusLineSearchOption()
                 .city("北京")
@@ -650,7 +660,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             indexEnd=temp;
         }
 
-        List<BusLineResult.BusStation> busStations = busLineResult.getStations().subList(indexStart, indexEnd);
+        List<BusLineResult.BusStation> busStations = busLineResult.getStations().subList(indexStart, indexEnd+1);
         List<BusLineResult.BusStep> busSteps = getChosenSteps(busStations, busLineResult.getSteps().get(0));
         mBusLineResult.setStations(busStations);
         mBusLineResult.setSteps(busSteps);
@@ -682,7 +692,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             }
         }
         List<BusLineResult.BusStep> busSteps=new ArrayList<>();
-        busStep.setWayPoints(wayPoints.subList(indexS,indexE));
+        busStep.setWayPoints(wayPoints.subList(indexS,indexE+1));
         busSteps.add(busStep);
         return busSteps;
 
