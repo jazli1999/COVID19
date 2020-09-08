@@ -40,6 +40,7 @@ public class DrawMarker {
     View view;
     TextView tv_time;
     TextView tv_desc;
+    TextView tv_number;
     Context context;
 
     public DrawMarker(BaiduMap baiduMap, Context context) {
@@ -216,6 +217,52 @@ public class DrawMarker {
             bundle = new Bundle();
             bundle.putInt("p_id", id);
             marker.setExtraInfo(bundle);
+        }
+        baiduMap.addOverlays(optionsList);
+    }
+
+    public void drawAllWithNumber(List<JsonArray> tracklist) {
+        baiduMap.clear();
+        if (tracklist == null || tracklist.size() == 0)
+            return;
+        optionsList = new ArrayList<>();
+        for (int j = 0; j < tracklist.size(); j++) {
+            JsonArray track = tracklist.get(j);
+
+            Bundle bundle = null;
+            List<LatLng> points = new ArrayList<>();
+
+            for (int i = 0; i < track.size(); i++) {
+
+                JsonObject object = track.get(i).getAsJsonObject();
+                int id = object.get("p_id").getAsInt();
+                double curLng = object.get("longitude").getAsDouble();
+                double curLan = object.get("latitude").getAsDouble();
+
+
+                LatLng currLatLng = new LatLng(curLan, curLng);
+
+                //添加Marker
+                View numberView = inflater.inflate(R.layout.number_marker, null);
+                tv_number = numberView.findViewById(R.id.marker_number);
+                tv_number.setText((i+1) + "");
+                BitmapDescriptor bitmap = BitmapDescriptorFactory.fromBitmap(getBitmapFromView(numberView));
+                OverlayOptions option = new MarkerOptions().position(currLatLng).icon(bitmap);
+                Marker marker = (Marker) baiduMap.addOverlay(option);
+                marker.setToTop();
+                //Marker上绑定id信息用于界面跳转
+                bundle = new Bundle();
+                bundle.putInt("p_id", id);
+                marker.setExtraInfo(bundle);
+                points.add(currLatLng);
+            }
+            //添加line
+            if (points.size() > 1) {
+                OverlayOptions ooPolyline = new PolylineOptions().width(8).dottedLine(true).dottedLineType(DOTTED_LINE_SQUARE).color(0xffff941d).points(points);
+                Polyline polyline = (Polyline) baiduMap.addOverlay(ooPolyline);
+                polyline.setExtraInfo(bundle);
+            }
+            points = new ArrayList<>();
         }
         baiduMap.addOverlays(optionsList);
     }

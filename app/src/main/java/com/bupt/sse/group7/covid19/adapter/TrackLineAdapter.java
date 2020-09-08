@@ -47,6 +47,7 @@ public class TrackLineAdapter extends RecyclerView.Adapter<TrackLineAdapter.Trac
         holder.timeView.setText(dateTime[1].substring(0, 5));
         holder.locationView.setText(location);
         holder.desView.setText(descrip);
+        holder.numberView.setText((position + 1) + "");
     }
 
     @Override
@@ -59,6 +60,7 @@ public class TrackLineAdapter extends RecyclerView.Adapter<TrackLineAdapter.Trac
         TextView timeView;
         TextView locationView;
         TextView desView;
+        TextView numberView;
 
         public TrackHolder(View itemView) {
             super(itemView);
@@ -66,6 +68,7 @@ public class TrackLineAdapter extends RecyclerView.Adapter<TrackLineAdapter.Trac
             timeView = itemView.findViewById(R.id.track_time);
             locationView = itemView.findViewById(R.id.track_location);
             desView=itemView.findViewById(R.id.track_des);
+            numberView = itemView.findViewById(R.id.track_number);
         }
     }
 }
