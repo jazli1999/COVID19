@@ -46,13 +46,12 @@ public class PatientTrackFragment extends Fragment {
     BaiduMap baiduMap;
     BitmapDescriptor bitmap;
     private DrawMarker drawMarker;
-    private List<JsonArray> tracklist=new ArrayList<>();
+    private List<JsonArray> tracklist = new ArrayList<>();
     //定位
     private GeoCoder mCoder;
-    private final float mZoom=15.0f;
+    private final float mZoom = 15.0f;
     private ImageView locationIv;
     private LatLng initialLoc;
-
 
 
     @Nullable
@@ -79,42 +78,40 @@ public class PatientTrackFragment extends Fragment {
         mapView = view.findViewById(R.id.mapView);
         baiduMap = mapView.getMap();
         baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
-        locationIv=view.findViewById(R.id.locationIv);
+        locationIv = view.findViewById(R.id.locationIv);
         locationIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(TAG,"locationTvOnClicked");
-                LatLng latLng=new LatLng(initialLoc.latitude,initialLoc.longitude);
-                Log.i(TAG,"longitude:"+initialLoc.latitude+"   lantitude:"+initialLoc.longitude);
-                MapStatus.Builder builder=new MapStatus.Builder();
+                Log.i(TAG, "locationTvOnClicked");
+                LatLng latLng = new LatLng(initialLoc.latitude, initialLoc.longitude);
+                Log.i(TAG, "longitude:" + initialLoc.latitude + "   lantitude:" + initialLoc.longitude);
+                MapStatus.Builder builder = new MapStatus.Builder();
                 builder.target(latLng).zoom(mZoom);
                 baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
             }
         });
 
         //marker图标
-       // bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
-        drawMarker=new DrawMarker(baiduMap,getActivity().getApplicationContext());
-        //drawMarker.drawAllRough(tracklist);
+        drawMarker = new DrawMarker(baiduMap, getActivity().getApplicationContext());
         initData(mp_id);
-       drawMarker.drawAllDetailWithoutDes(tracklist);
-        //drawMarker.drawAllRough(tracklist);
+        drawMarker.drawAllWithNumber(tracklist);
         initLocation();
         //TODO 这里改成和市区选择对应
         mCoder.geocode(new GeoCodeOption()
-        .city("北京")
-        .address("海淀区"));
+                .city("北京")
+                .address("海淀区"));
 
     }
 
-    private void initData(int p_id){
-        Thread thread=getTrackInfo(p_id);
+    private void initData(int p_id) {
+        Thread thread = getTrackInfo(p_id);
         try {
             thread.join();
-        }catch (InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
+
     //初始化定位
     private void initLocation() {
         mCoder = GeoCoder.newInstance();
@@ -130,12 +127,11 @@ public class PatientTrackFragment extends Fragment {
                         //定位到选择的区域
                         double latitude = geoCodeResult.getLocation().latitude;
                         double longitude = geoCodeResult.getLocation().longitude;
-                        initialLoc=new LatLng(latitude,longitude);
+                        initialLoc = new LatLng(latitude, longitude);
                         Log.i(TAG, "onGetGeoCodeResult:latitude " + latitude + " longitude: " + longitude);
                         MapStatus.Builder builder = new MapStatus.Builder();
                         builder.target(initialLoc).zoom(mZoom);
                         baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-
                     }
                 }
 
@@ -150,11 +146,11 @@ public class PatientTrackFragment extends Fragment {
         mCoder.setOnGetGeoCodeResultListener(listener);
     }
 
-        //get all track by p_id
-    private Thread getTrackInfo(int p_id){
-        final Map<String,String> args=new HashMap<>();
-        args.put("p_id",p_id+"");
-        Thread thread=new Thread(
+    //get all track by p_id
+    private Thread getTrackInfo(int p_id) {
+        final Map<String, String> args = new HashMap<>();
+        args.put("p_id", p_id + "");
+        Thread thread = new Thread(
                 new Runnable() {
                     @Override
                     public void run() {
@@ -165,7 +161,6 @@ public class PatientTrackFragment extends Fragment {
         thread.start();
         return thread;
     }
-
 
 
     public void setMp_id(int mp_id) {

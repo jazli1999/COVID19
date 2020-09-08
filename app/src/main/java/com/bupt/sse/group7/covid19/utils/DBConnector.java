@@ -6,7 +6,6 @@ import android.util.Log;
 import com.bupt.sse.group7.covid19.interfaces.DAO;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -103,11 +102,6 @@ public class DBConnector {
         }
         return newURL.substring(0, newURL.length()-1);
     }
-
-    public static void setUsername(JsonObject args) {
-        executePost(host + "setPatientUsername.php", args);
-    }
-
     //----add----
 
 
@@ -120,6 +114,15 @@ public class DBConnector {
         return executeGET(newURL);
     }
 
+    public static JsonArray getTrackByDateAndCity(Map<String, String> args) {
+        String newURL = encapParamURL(host + "getTrackByDateAndCity.php", args);
+        Log.d("lyjdb", newURL);
+        return executeGET(newURL);
+    }
 
+    public static JsonArray getTrackByDateAndDistrict(Map<String, String> args) {
+        String newURL = encapParamURL(host + "getTrackByDateAndDistrict.php", args);
+        return executeGET(newURL);
+    }
 
 }

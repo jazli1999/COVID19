@@ -7,6 +7,16 @@
     android:orientation="horizontal"
     android:background="@color/colorPrimary">
 
+    <TextView
+        android:id="@+id/track_number"
+        android:layout_width="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="match_parent"
+        android:textColor="#515151"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:text="1" />
+
     <LinearLayout
         android:layout_width="80dp"
         android:layout_height="wrap_content"
