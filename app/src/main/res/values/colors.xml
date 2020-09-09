@@ -20,4 +20,5 @@
     <color name="cardPurple">#6C6BA8</color>
     <color name="dead">#555555</color>
     <color name="polyline">#ff941d</color>
+    <color name="chosen">#c6e8e4</color>
 </resources>

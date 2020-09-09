@@ -98,7 +98,6 @@ public class PatientAuthFragment extends Fragment {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.i(TAG, "getAuthInfoOnFailure");
-
             }
         });
     }
