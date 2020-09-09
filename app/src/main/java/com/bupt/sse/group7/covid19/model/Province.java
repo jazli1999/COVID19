@@ -6,7 +6,6 @@ import java.util.Map;
 public class Province extends District {
 
     private List<City> cities;
-    private Map<String, City> cityMap;
 
     public List<City> getCities() {
         return cities;

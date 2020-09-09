@@ -67,6 +67,7 @@ import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.bupt.sse.group7.covid19.model.CurrentUser;
 import com.bupt.sse.group7.covid19.presenter.AreaSelectionPresenter;
+import com.bupt.sse.group7.covid19.presenter.TrackAreaPresenter;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.bupt.sse.group7.covid19.utils.overlayutil.BusLineOverlay;
 import com.google.gson.JsonArray;
@@ -596,7 +597,11 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         String address = component.street + component.streetNumber;
         String district = component.district;
         district = district.substring(0, district.length() - 1);
-        //TODO 这里的district,ctiy改成地域编号
+        TrackAreaPresenter areaPresenter = TrackAreaPresenter.getInstance();
+        if (areaPresenter.getPList(getResources().getXml(R.xml.cities)) != null) {
+            district = areaPresenter.dMap.get(district).getId();
+            city = areaPresenter.cMap.get(city).getId();
+        }
         Log.i("hcccc", "address:" + address);
 
 

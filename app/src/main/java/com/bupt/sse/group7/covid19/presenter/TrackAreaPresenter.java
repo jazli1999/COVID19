@@ -9,7 +9,9 @@ import com.bupt.sse.group7.covid19.model.District;
 import com.bupt.sse.group7.covid19.model.Province;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TrackAreaPresenter {
     private Area area;
@@ -17,6 +19,10 @@ public class TrackAreaPresenter {
     private List<IAreaSelectionCallBack> callBacks = new ArrayList<>();
 
     private List<Province> pList = null;
+
+    public Map<String, Province> pMap = new HashMap<>();
+    public Map<String, City> cMap = new HashMap<>();
+    public Map<String, District> dMap = new HashMap<>();
 
     public static TrackAreaPresenter getInstance() {
         return instance;
@@ -118,6 +124,7 @@ public class TrackAreaPresenter {
                             }
                             district.setName(parser.nextText());
                             dList.add(district);
+                            dMap.put(district.getName(), district);
                         }
                         break;
                     case XmlResourceParser.END_TAG:
@@ -125,10 +132,12 @@ public class TrackAreaPresenter {
                             dList.get(0).setName("全部");
                             city.setDistricts(dList);
                             cList.add(city);
+                            cMap.put(city.getName(), city);
                         }
                         if ("p".equals(tag)) {
                             province.setCities(cList);
                             pList.add(province);
+                            pMap.put(province.getName(), province);
                         }
                         break;
                     default:
