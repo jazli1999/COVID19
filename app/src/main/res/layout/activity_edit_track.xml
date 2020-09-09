@@ -49,6 +49,7 @@
                 app:cardCornerRadius="28dp">
 
                 <ImageView
+                    android:id="@+id/bus_btn"
                     style="@style/fab_img"
                     android:src="@drawable/bus"/>
 

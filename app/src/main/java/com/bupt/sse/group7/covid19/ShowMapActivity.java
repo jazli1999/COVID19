@@ -125,7 +125,16 @@ public class ShowMapActivity extends AppCompatActivity implements IAreaSelection
 
     private void updateView() {
         drawMarker = new DrawMarker(baiduMap, this);
-        drawMarker.drawAllRoughWithoutDes(trackList);
+
+        if(baiduMap.getMapStatus().zoom>mZoom){
+            drawMarker.drawAllDetailWithoutDes(trackList);
+
+        }
+        else {
+
+            drawMarker.drawAllRoughWithoutDes(trackList);
+
+        }
     }
 
     private void initView() {
