@@ -1,6 +1,7 @@
 package com.bupt.sse.group7.covid19.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class BusBaseFragment extends Fragment {
+    private static final String TAG = "BusBaseFragment";
     View view;
     CardView submitBtn;
     BusStationsRvAdapter startAdapter, endAdapter;
@@ -71,7 +73,8 @@ public abstract class BusBaseFragment extends Fragment {
         startView.setLayoutManager(startManager);
     }
 
-    void updateBusLineView(Map<String, String> busLineList, BusBaseFragment context) {
+    public void updateBusLineView(Map<String, String> busLineList, BusBaseFragment context) {
+        Log.i(TAG,busLineList.keySet().toString());
         busLineAdapter = new BusLineRvAdapter(busLineList, context);
         busLineView.setAdapter(busLineAdapter);
         busLineView.setLayoutManager(busLineManager);

@@ -19,13 +19,11 @@ public class BusFragment extends BusBaseFragment {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("lyj", "clicked");
                 String keyword = searchField.getText().toString();
-
+                ((EditTrackActivity) getActivity()).setBusFragment(_this);
+                ((EditTrackActivity) getActivity()).busService(keyword);
                 // TODO 获取公交线路的map，替换fakeData
-                Map<String, String> fakeData = new HashMap<>();
-                fakeData.put("3路", "1");
-                fakeData.put("开发区3路", "2");
-                updateBusLineView(fakeData, _this);
             }
         });
 

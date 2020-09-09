@@ -65,6 +65,8 @@ import com.baidu.mapapi.search.poi.PoiIndoorResult;
 import com.baidu.mapapi.search.poi.PoiResult;
 import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.utils.DistanceUtil;
+import com.bupt.sse.group7.covid19.fragment.BusBaseFragment;
+import com.bupt.sse.group7.covid19.fragment.BusFragment;
 import com.bupt.sse.group7.covid19.model.CurrentUser;
 import com.bupt.sse.group7.covid19.presenter.AreaSelectionPresenter;
 import com.bupt.sse.group7.covid19.presenter.TrackAreaPresenter;
@@ -89,7 +91,6 @@ import static com.baidu.mapapi.map.PolylineDottedLineType.DOTTED_LINE_SQUARE;
 public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCoderResultListener, OnGetPoiSearchResultListener, OnGetBusLineSearchResultListener {
     //marker图标
     BitmapDescriptor bitmap;
-
     private Context mContext = this;
     private static final String TAG = "EditTrackActivity";
     int p_id = CurrentUser.getId();
@@ -114,6 +115,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     private AlertDialog bus_picker;
     private CardView btn_confirmTime, btn_edit, btn_bus;
     List<String> datelist = new ArrayList<>();
+    private BusBaseFragment fragment;
 
     //将坐标转换为地址
     private Handler mHandler;
@@ -634,6 +636,9 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             }
 
         }
+        Log.i(TAG,"buslines"+busLines.keySet().toString());
+        fragment.updateBusLineView(busLines, fragment);
+
     }
 
 
@@ -685,6 +690,10 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         return "成府路口南";
     }
 
+    public void setBusFragment(BusBaseFragment fragment) {
+        this.fragment = fragment;
+    }
+
     //TODO 改起点名字
     private String getStartStation() {
         return "明光桥南";
@@ -731,14 +740,14 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     }
 
     //TODO 改城市
-    public void busService() {
+    public void busService(String keyword) {
         mBusLineSearch = BusLineSearch.newInstance();
         mBusLineSearch.setOnGetBusLineSearchResultListener(this);
         PoiSearch mPoiSearch = PoiSearch.newInstance();
         mPoiSearch.setOnGetPoiSearchResultListener(this);
         mPoiSearch.searchInCity(new PoiCitySearchOption()
                 .city("北京")
-                .keyword(getBusNumber())
+                .keyword(keyword)
                 .scope(2));
 
 
