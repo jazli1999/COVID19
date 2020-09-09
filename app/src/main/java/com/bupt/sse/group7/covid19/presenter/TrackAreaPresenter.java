@@ -23,6 +23,10 @@ public class TrackAreaPresenter {
     public Map<String, Province> pMap = new HashMap<>();
     public Map<String, City> cMap = new HashMap<>();
     public Map<String, District> dMap = new HashMap<>();
+    public Map<String, Province> pNameMap = new HashMap<>();
+    public Map<String, City> cNameMap = new HashMap<>();
+    public Map<String, District> dNameMap = new HashMap<>();
+
 
     public static TrackAreaPresenter getInstance() {
         return instance;
@@ -125,6 +129,7 @@ public class TrackAreaPresenter {
                             district.setName(parser.nextText());
                             dList.add(district);
                             dMap.put(district.getName(), district);
+                            dNameMap.put(district.getId(), district);
                         }
                         break;
                     case XmlResourceParser.END_TAG:
@@ -133,11 +138,13 @@ public class TrackAreaPresenter {
                             city.setDistricts(dList);
                             cList.add(city);
                             cMap.put(city.getName(), city);
+                            cNameMap.put(city.getId(), city);
                         }
                         if ("p".equals(tag)) {
                             province.setCities(cList);
                             pList.add(province);
                             pMap.put(province.getName(), province);
+                            pMap.put(province.getId(), province);
                         }
                         break;
                     default:

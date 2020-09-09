@@ -25,9 +25,14 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.bupt.sse.group7.covid19.R;
+import com.bupt.sse.group7.covid19.model.District;
+import com.bupt.sse.group7.covid19.presenter.TrackAreaPresenter;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.bupt.sse.group7.covid19.utils.DrawMarker;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,14 +98,39 @@ public class PatientTrackFragment extends Fragment {
 
         //marker图标
         drawMarker = new DrawMarker(baiduMap, getActivity().getApplicationContext());
+        initLocation();
+
         initData(mp_id);
         drawMarker.drawAllWithNumber(tracklist);
-        initLocation();
-        //TODO 这里改成和市区选择对应
-        mCoder.geocode(new GeoCodeOption()
-                .city("北京")
-                .address("海淀区"));
 
+        locate();
+
+
+    }
+
+    private void locate() {
+        if (tracklist == null || tracklist.size() == 0)
+            return;
+        JsonArray track = tracklist.get(0);
+        if (track.size() == 0) {
+            return;
+        }
+        JsonObject object = track.get(0).getAsJsonObject();
+        String city = object.get("city").getAsString();
+        String district = object.get("district").getAsString();
+        String address="";
+        TrackAreaPresenter areaPresenter = TrackAreaPresenter.getInstance();
+        if (areaPresenter.getPList(getResources().getXml(R.xml.cities)) != null) {
+            city = areaPresenter.cNameMap.get(city).getName();
+            district = areaPresenter.dNameMap.get(district).getName();
+            address=city+district+object.get("location");
+        }
+
+        Log.i(TAG, "city:" + city + "address" + address);
+
+        mCoder.geocode(new GeoCodeOption()
+                .city(city)
+                .address(address));
     }
 
     private void initData(int p_id) {

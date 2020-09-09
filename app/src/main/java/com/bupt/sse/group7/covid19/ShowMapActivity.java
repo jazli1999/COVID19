@@ -89,7 +89,6 @@ public class ShowMapActivity extends AppCompatActivity implements IAreaSelection
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_show_map);
 
         presenter.registerCallBack(this);
