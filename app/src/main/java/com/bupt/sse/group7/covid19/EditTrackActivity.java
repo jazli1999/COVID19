@@ -87,9 +87,9 @@ import static com.baidu.mapapi.map.PolylineDottedLineType.DOTTED_LINE_SQUARE;
  */
 public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCoderResultListener, OnGetPoiSearchResultListener, OnGetBusLineSearchResultListener {
     //marker图标
-    final  BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
+    BitmapDescriptor bitmap;
 
-    private Context mContext=this;
+    private Context mContext = this;
     private static final String TAG = "EditTrackActivity";
     int p_id = CurrentUser.getId();
     //int p_id=5;
@@ -103,8 +103,8 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     //Map<Integer,Marker> markerList = new HashMap<>();
 
     private Button btn_cancel;
-//所有记录了的Marker
-    private List<MyMarker> allMarkers=new ArrayList<>();
+    //所有记录了的Marker
+    private List<MyMarker> allMarkers = new ArrayList<>();
     private MyMarker curMyMarker;
     //时间选择
     private DatePicker datePickerStart;
@@ -137,8 +137,8 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     private final float mZoom = 15.0f;
 
     //公交
-    private Map<String,String> busLines;
-    private Map<String,String> subwayLines;
+    private Map<String, String> busLines;
+    private Map<String, String> subwayLines;
     private BusLineSearch mBusLineSearch;
     //获取到的所有的公交站
     private List<String> allBusStations = new ArrayList<>();
@@ -159,7 +159,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
-
+        bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_geo);
         initView();
         initLocation();
         initMap();
@@ -185,7 +185,6 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
             }
         });
-
 
 
         // 公交
@@ -218,7 +217,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
-                                MyMarker myMarker=new MyMarker();
+                                MyMarker myMarker = new MyMarker();
 
                                 description = et_des.getText().toString();
                                 Log.i("hcccc", "输入的description" + description);
@@ -254,7 +253,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
                                 myMarker.setTextOverlay(baiduMap.addOverlay(textOptions));
 
-                                curMyMarker=myMarker;
+                                curMyMarker = myMarker;
                                 geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(currLatLng));
 
                                 allMarkers.add(myMarker);
@@ -279,25 +278,25 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         baiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker thismarker) {
-                boolean flag=false;
-                for(MyMarker myMarker:allMarkers){
-                    if(myMarker.marker==thismarker){
-                        flag=true;
+                boolean flag = false;
+                for (MyMarker myMarker : allMarkers) {
+                    if (myMarker.marker == thismarker) {
+                        flag = true;
                     }
                 }
-                if(!flag){
+                if (!flag) {
                     return true;
                 }
-                Log.i(TAG,"onMarkerClick");
-                View view=View.inflate(mContext,R.layout.window_marker_click,null);
-                Button edit=view.findViewById(R.id.btn_edit);
-                Button dele=view.findViewById(R.id.btn_dele);
-                final InfoWindow mInfoWindow=new InfoWindow(view,thismarker.getPosition(),100);
+                Log.i(TAG, "onMarkerClick");
+                View view = View.inflate(mContext, R.layout.window_marker_click, null);
+                Button edit = view.findViewById(R.id.btn_edit);
+                Button dele = view.findViewById(R.id.btn_dele);
+                final InfoWindow mInfoWindow = new InfoWindow(view, thismarker.getPosition(), 100);
                 baiduMap.showInfoWindow(mInfoWindow);
                 edit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.i(TAG,"edit");
+                        Log.i(TAG, "edit");
                         editMarker();
 
                     }
@@ -306,24 +305,23 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
                     @Override
                     public void onClick(View view) {
                         baiduMap.hideInfoWindow();
-                        Log.i(TAG,"dele");
-                        int index=allMarkers.size();
-                        for(int i=0;i<allMarkers.size();i++){
-                            if(allMarkers.get(i).marker==thismarker){
-                                index=i;
+                        Log.i(TAG, "dele");
+                        int index = allMarkers.size();
+                        for (int i = 0; i < allMarkers.size(); i++) {
+                            if (allMarkers.get(i).marker == thismarker) {
+                                index = i;
                                 break;
                             }
                         }
-                        if(index<allMarkers.size()){
+                        if (index < allMarkers.size()) {
 
-                            MyMarker deleMarker=allMarkers.remove(index);
+                            MyMarker deleMarker = allMarkers.remove(index);
                             deleMarker.marker.remove();
                             deleMarker.textOverlay.remove();
 
                         }
 
                         drawLines();
-
 
 
                     }
@@ -342,17 +340,16 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
                 double latitude = latLng.latitude;
                 double longitude = latLng.longitude;
                 Log.i("hccc", latitude + "," + longitude);
-                if(curMyMarker!=null&&!curMyMarker.isRecord()){
+                if (curMyMarker != null && !curMyMarker.isRecord()) {
                     curMyMarker.getMarker().remove();
                 }
 
-                curMyMarker=new MyMarker();
+                curMyMarker = new MyMarker();
                 MarkerOptions markerOptions = new MarkerOptions().position(latLng).icon(bitmap);
                 currMarker = (Marker) baiduMap.addOverlay(markerOptions);
                 currMarker.setToTop();
                 curMyMarker.setMarker(currMarker);
                 curMyMarker.setRecord(false);
-
 
 
             }
@@ -371,15 +368,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             }
         });
 
-        btn_bus = findViewById(R.id.bus_button);
-        btn_bus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Window dialogWindow = bus_picker.getWindow();
-                dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
-                bus_picker.show();
-            }
-        });
+
 
         geoCoder = GeoCoder.newInstance();
         geoCoder.setOnGetGeoCodeResultListener(this);
@@ -399,20 +388,20 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
     //画线和描述
     private void drawLines() {
-        if(LineOption!=null){
+        if (LineOption != null) {
             LineOption.remove();
 
         }
 
-        List<LatLng> points=new ArrayList<>();
+        List<LatLng> points = new ArrayList<>();
         //TODO 这里添加排序/分时段
-        for(int i=0;i<allMarkers.size();i++){
+        for (int i = 0; i < allMarkers.size(); i++) {
             points.add(allMarkers.get(i).getLocation());
         }
 
         if (points.size() > 1) {
             OverlayOptions ooPolyline = new PolylineOptions().width(8).dottedLine(true).dottedLineType(DOTTED_LINE_SQUARE).color(0xffff941d).points(points);
-            LineOption=baiduMap.addOverlay(ooPolyline);
+            LineOption = baiduMap.addOverlay(ooPolyline);
         }
     }
 
@@ -427,14 +416,23 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
     private void initView() {
         locationIv = findViewById(R.id.locationIv);
-        bus_btn=findViewById(R.id.bus_btn);
-        bus_btn.setOnClickListener(new View.OnClickListener() {
+//        bus_btn = findViewById(R.id.bus_button);
+//        bus_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                busService();
+//            }
+//        });
+
+        btn_bus = findViewById(R.id.bus_button);
+        btn_bus.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                busService();
+            public void onClick(View v) {
+                Window dialogWindow = bus_picker.getWindow();
+                dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
+                bus_picker.show();
             }
         });
-
     }
 
     private void initLocation() {
@@ -512,7 +510,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             return;
         for (int i = 0; i < allMarkers.size(); i++) {
             JsonObject info = new JsonObject();
-            MyMarker myMarker=allMarkers.get(i);
+            MyMarker myMarker = allMarkers.get(i);
             info.add("date_time", new JsonPrimitive(myMarker.getDate()));
             info.add("longitude", new JsonPrimitive(myMarker.getLocation().longitude));
             info.add("latitude", new JsonPrimitive(myMarker.getLocation().latitude));
@@ -520,6 +518,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             info.add("district", new JsonPrimitive(myMarker.getDistrict()));
             info.add("p_id", new JsonPrimitive(p_id + ""));
             info.add("description", new JsonPrimitive(myMarker.getDescription()));
+            info.add("city",new JsonPrimitive(myMarker.getCity()));
             jsonArray.add(info);
         }
         args.add("rows", jsonArray);
@@ -592,21 +591,16 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         }
         ReverseGeoCodeResult.AddressComponent component = reverseGeoCodeResult.getAddressDetail();
 
+        String city=component.city;
+        city=city.substring(0, city.length() - 1);
         String address = component.street + component.streetNumber;
         String district = component.district;
-        district=district.substring(0,district.length()-1);
-
-        //AreaSelectionPresenter.getInstance()
+        district = district.substring(0, district.length() - 1);
+        //TODO 这里的district,ctiy改成地域编号
         Log.i("hcccc", "address:" + address);
-//        Message message = new Message();
-//        message.what = 1;
-//        //message.obj=address;
-//        Bundle bundle = new Bundle();
-//        bundle.putString("address", address);
-//        bundle.putString("district", district);
-//        message.setData(bundle);
-//        mHandler.sendMessage(message);
 
+
+        curMyMarker.setCity(city);
         curMyMarker.setAddress(address);
         curMyMarker.setDistrict(district);
 
@@ -619,20 +613,19 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             Log.i(TAG, "onGetPoiResult error");
             return;
         }
-        busLines=new HashMap<>();
-        subwayLines=new HashMap<>();
+        busLines = new HashMap<>();
+        subwayLines = new HashMap<>();
         //遍历所有POI，找到类型为公交线路的POI
         for (PoiInfo poi : poiResult.getAllPoi()) {
             Log.i(TAG, "poi:" + poi.toString());
             if (poi.getPoiDetailInfo().getTag().equals("公交线路")) {
                 //获取该条公交路线POI的UID
-                busLines.put(poi.name,poi.uid);
+                busLines.put(poi.name, poi.uid);
                 //searchBusOrSubway(poi.uid);
 
                 // TODO 更改下拉框adpater
-            }
-            else if(poi.getPoiDetailInfo().getTag().equals("地铁线路")){
-                subwayLines.put(poi.name,poi.uid);
+            } else if (poi.getPoiDetailInfo().getTag().equals("地铁线路")) {
+                subwayLines.put(poi.name, poi.uid);
             }
 
         }
@@ -681,6 +674,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         overlay.zoomToSpan();
 
     }
+
     //TODO 改终点名字
     private String getEndStation() {
         return "成府路口南";
@@ -762,13 +756,13 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
                 indexEnd = i;
             }
         }
-        if(indexStart>indexEnd){
-            int temp=indexStart;
-            indexStart=indexEnd;
-            indexEnd=temp;
+        if (indexStart > indexEnd) {
+            int temp = indexStart;
+            indexStart = indexEnd;
+            indexEnd = temp;
         }
 
-        List<BusLineResult.BusStation> busStations = busLineResult.getStations().subList(indexStart, indexEnd+1);
+        List<BusLineResult.BusStation> busStations = busLineResult.getStations().subList(indexStart, indexEnd + 1);
         List<BusLineResult.BusStep> busSteps = getChosenSteps(busStations, busLineResult.getSteps().get(0));
         mBusLineResult.setStations(busStations);
         mBusLineResult.setSteps(busSteps);
@@ -780,34 +774,34 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         if (busStations == null) {
             return null;
         }
-        List<LatLng> wayPoints=busStep.getWayPoints();
+        List<LatLng> wayPoints = busStep.getWayPoints();
         LatLng start = busStations.get(0).getLocation();
         LatLng end = busStations.get(busStations.size() - 1).getLocation();
-        int indexS=0,indexE=wayPoints.size()-1;
-        double width=50;
-        for (int i=0;i<wayPoints.size();i++) {
+        int indexS = 0, indexE = wayPoints.size() - 1;
+        double width = 50;
+        for (int i = 0; i < wayPoints.size(); i++) {
             double dis = DistanceUtil.getDistance(start, wayPoints.get(i));
             if (dis < width) {
-                indexS=i;
+                indexS = i;
                 break;
             }
         }
-        for (int i=wayPoints.size()-1;i>=0;i--) {
+        for (int i = wayPoints.size() - 1; i >= 0; i--) {
             double dis = DistanceUtil.getDistance(end, wayPoints.get(i));
             if (dis < width) {
-                indexE=i;
+                indexE = i;
                 break;
             }
         }
-        List<BusLineResult.BusStep> busSteps=new ArrayList<>();
-        busStep.setWayPoints(wayPoints.subList(indexS,indexE+1));
+        List<BusLineResult.BusStep> busSteps = new ArrayList<>();
+        busStep.setWayPoints(wayPoints.subList(indexS, indexE + 1));
         busSteps.add(busStep);
         return busSteps;
 
     }
 
 
-    public void editMarker(){
+    public void editMarker() {
         Window dialogWindow = date_time_picker.getWindow();
         dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
         date_time_picker.show();
@@ -817,7 +811,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
 }
 
-class MyMarker{
+class MyMarker {
     int mid;
     Marker marker;
     Overlay textOverlay;
@@ -827,7 +821,15 @@ class MyMarker{
     LatLng location;
     String address;
     String district;
+    String city;
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
     public String getAddress() {
         return address;
@@ -900,7 +902,6 @@ class MyMarker{
     public void setTextOverlay(Overlay textOverlay) {
         this.textOverlay = textOverlay;
     }
-
 
 
 }
