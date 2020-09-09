@@ -52,8 +52,7 @@ public class HospitalListAdapter extends RecyclerView.Adapter<HospitalListAdapte
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO 跳转h_id错误
-                context.intoMainPage(holder.getAdapterPosition() + 1);
+                context.intoMainPage(Integer.parseInt(list.get(holder.getAdapterPosition()).getH_id()));
             }
         });
     }
