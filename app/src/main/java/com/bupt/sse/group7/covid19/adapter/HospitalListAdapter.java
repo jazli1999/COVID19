@@ -22,20 +22,11 @@ import java.util.List;
  */
 public class HospitalListAdapter extends RecyclerView.Adapter<HospitalListAdapter.Holder> {
     private List<HospitalBrief> list;
-    private AdapterView.OnItemClickListener onItemClickListener;
     private HospitalListActivity context;
 
     public HospitalListAdapter(List<HospitalBrief> list, HospitalListActivity context) {
         this.list = list;
         this.context = context;
-    }
-
-    public void setOnItemClickListener(AdapterView.OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
     }
 
     @NonNull
@@ -61,6 +52,7 @@ public class HospitalListAdapter extends RecyclerView.Adapter<HospitalListAdapte
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO 跳转h_id错误
                 context.intoMainPage(holder.getAdapterPosition() + 1);
             }
         });

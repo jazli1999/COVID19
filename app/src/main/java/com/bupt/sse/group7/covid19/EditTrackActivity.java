@@ -41,6 +41,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.Overlay;
+import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.map.TextOptions;
@@ -109,8 +110,9 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     private DatePicker datePickerStart;
     private TimePicker timePickerStart;
     private AlertDialog date_time_picker;
-    private CardView btn_confirmTime, btn_edit;
-  //  Map<Integer,String> datelist = new HashMap<>();
+    private AlertDialog bus_picker;
+    private CardView btn_confirmTime, btn_edit, btn_bus;
+    List<String> datelist = new ArrayList<>();
 
     //将坐标转换为地址
     private Handler mHandler;
@@ -186,16 +188,21 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
 
 
+        // 公交
+        AlertDialog.Builder busBuilder = new AlertDialog.Builder(this);
+        View busView = View.inflate(this, R.layout.dialog_bus, null);
+        busBuilder.setView(busView);
+        bus_picker = busBuilder.create();
 
         //时间选择
-        AlertDialog.Builder timebuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder timeBuilder = new AlertDialog.Builder(this);
         View timeView = View.inflate(this, R.layout.dialog_date_time, null);
         datePickerStart = timeView.findViewById(R.id.date_picker);
         timePickerStart = timeView.findViewById(R.id.time_picker);
-        timebuilder.setView(timeView);
+        timeBuilder.setView(timeView);
         timePickerStart.setIs24HourView(true);
         hideYear(datePickerStart);
-        date_time_picker = timebuilder.setCancelable(false).create();
+        date_time_picker = timeBuilder.setCancelable(false).create();
 
 
         //description输入框
@@ -209,7 +216,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
                         new DialogInterface.OnClickListener() {
                             @RequiresApi(api = Build.VERSION_CODES.M)
                             @Override
-                            public void onClick(DialogInterface dialogtInterface, int i) {
+                            public void onClick(DialogInterface dialogInterface, int i) {
 
                                 MyMarker myMarker=new MyMarker();
 
@@ -264,10 +271,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
                 Log.i("hcccccc", "选择的时间是：" + (datePickerStart.getMonth() + 1) + "-" + datePickerStart.getDayOfMonth()
                         + " " + timePickerStart.getHour() + ":" + timePickerStart.getMinute());
                 date_time_picker.dismiss();
-
                 desDialog.show();
-
-
             }
         });
 
@@ -363,8 +367,17 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 editMarker();
+            }
+        });
+
+        btn_bus = findViewById(R.id.bus_button);
+        btn_bus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Window dialogWindow = bus_picker.getWindow();
+                dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
+                bus_picker.show();
             }
         });
 
@@ -422,30 +435,29 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             }
         });
 
-
     }
 
     private void initLocation() {
         //定位参数
         locationClient = new LocationClient(getApplicationContext());
-//声明LocationClient类实例并配置定位参数
+        //声明LocationClient类实例并配置定位参数
         LocationClientOption locationOption = new LocationClientOption();
         myLocationListener = new MyLocationListener();
-//注册监听函数
+        //注册监听函数
         locationClient.registerLocationListener(myLocationListener);
-//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        //可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         locationOption.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-//可选，默认gcj02，设置返回的定位结果坐标系，如果配合百度地图使用，建议设置为bd09ll;
+        //可选，默认gcj02，设置返回的定位结果坐标系，如果配合百度地图使用，建议设置为bd09ll;
         locationOption.setCoorType("bd09ll");
-//可选，默认0，即仅定位一次，设置发起连续定位请求的间隔需要大于等于1000ms才是有效的
+        //可选，默认0，即仅定位一次，设置发起连续定位请求的间隔需要大于等于1000ms才是有效的
         locationOption.setScanSpan(1000);
-//可选，设置是否需要设备方向结果
+        //可选，设置是否需要设备方向结果
         locationOption.setNeedDeviceDirect(false);
-//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        //可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
         locationOption.setIgnoreKillProcess(true);
-//可选，默认false，设置是否开启Gps定位
+        //可选，默认false，设置是否开启Gps定位
         locationOption.setOpenGps(true);
-//需将配置好的LocationClientOption对象，通过setLocOption方法传递给LocationClient对象使用
+        //需将配置好的LocationClientOption对象，通过setLocOption方法传递给LocationClient对象使用
         locationClient.setLocOption(locationOption);
         //开始定位
         locationClient.start();
@@ -511,10 +523,11 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             jsonArray.add(info);
         }
         args.add("rows", jsonArray);
-
         addData(args);
+    }
 
-
+    public void closeBusDialog() {
+        bus_picker.dismiss();
     }
 
     private void addData(final JsonObject args) {

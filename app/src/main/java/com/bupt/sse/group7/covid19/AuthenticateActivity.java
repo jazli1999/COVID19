@@ -30,10 +30,6 @@ import java.util.Map;
  */
 public class AuthenticateActivity extends AppCompatActivity {
 
-    private List<String> tabIndicators;
-    private List<Fragment> tabFragments;
-//    private ContentPagerAdapter contentAdapter;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
