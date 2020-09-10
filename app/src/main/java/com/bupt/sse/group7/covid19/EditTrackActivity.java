@@ -171,8 +171,6 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         initMap();
 
 
-        //确认单个marker
-        btn_edit = findViewById(R.id.btn_confirm);
 
         //取消打点
         btn_cancel = findViewById(R.id.btn_cancel);
@@ -249,6 +247,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
                                 myMarker.setRecord(true);
                                 myMarker.setMarker(currMarker);
                                 myMarker.setLocation(currLatLng);
+                                btn_edit.setCardBackgroundColor(getResources().getColor(R.color.darkGrey));
 
                                 OverlayOptions textOptions = new TextOptions()
                                         //                    .bgColor(0xAAFFFF00)
@@ -264,7 +263,9 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
                                 allMarkers.add(myMarker);
 
-                                drawLines();
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    drawLines();
+                                }
                             }
                         }).create();
 
@@ -308,6 +309,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
                     }
                 });
                 dele.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onClick(View view) {
                         baiduMap.hideInfoWindow();
@@ -356,8 +358,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
                 currMarker.setToTop();
                 curMyMarker.setMarker(currMarker);
                 curMyMarker.setRecord(false);
-
-
+                btn_edit.setCardBackgroundColor(getResources().getColor(R.color.cardLightBlue));
             }
 
             @Override
@@ -370,6 +371,9 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(curMyMarker==null||currMarker==null||curMyMarker.isRecord()){
+                    return;
+                }
                 editMarker();
             }
         });
@@ -423,7 +427,9 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
     private void initView() {
         locationIv = findViewById(R.id.locationIv);
-
+        //确认单个marker
+        btn_edit = findViewById(R.id.btn_confirm);
+        btn_edit.setCardBackgroundColor(getResources().getColor(R.color.darkGrey));
         btn_bus = findViewById(R.id.bus_button);
         btn_bus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -611,6 +617,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         district = district.substring(0, district.length() - 1);
         TrackAreaPresenter areaPresenter = TrackAreaPresenter.getInstance();
         if (areaPresenter.getPList(getResources().getXml(R.xml.cities)) != null) {
+            Log.i(TAG,"district"+district);
             district = areaPresenter.dMap.get(district).getId();
             city = areaPresenter.cMap.get(city).getId();
         }
