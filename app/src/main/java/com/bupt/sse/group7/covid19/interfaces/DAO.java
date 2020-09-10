@@ -1,7 +1,6 @@
 package com.bupt.sse.group7.covid19.interfaces;
 
 import java.util.Map;
-import java.util.Observable;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -12,11 +11,11 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
-import retrofit2.http.Url;
 
 public interface DAO {
     @GET("{php}")
-    Call<ResponseBody> executeGet(@Path("php") String php, @QueryMap Map<String,String> queryMap);
+    Call<ResponseBody> executeGet(@Path("php") String php, @QueryMap Map<String, String> queryMap);
+
     @GET("{php}")
     Call<ResponseBody> executeGet(@Path("php") String php);
 

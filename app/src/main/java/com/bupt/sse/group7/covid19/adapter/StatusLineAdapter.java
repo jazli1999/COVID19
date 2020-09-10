@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bupt.sse.group7.covid19.PatientMainPageActivity;
 import com.bupt.sse.group7.covid19.R;
 import com.bupt.sse.group7.covid19.model.Status;
 import com.bupt.sse.group7.covid19.utils.Constants;
@@ -48,7 +47,7 @@ public class StatusLineAdapter extends RecyclerView.Adapter<StatusLineAdapter.St
 
         holder.dateView.setText(day);
         holder.infoView.setText(Constants.statuses.get(status));
-        switch(Integer.parseInt(status)) {
+        switch (Integer.parseInt(status)) {
             case Constants.HEALTHY:
                 drawable.setColor(context.getResources().getColor(R.color.healthy));
                 break;

@@ -17,7 +17,7 @@ import com.bupt.sse.group7.covid19.adapter.TrackLineAdapter;
 import com.google.gson.JsonArray;
 
 /**
- *  病人主页 -> 轨迹卡片 -> 文字轴
+ * 病人主页 -> 轨迹卡片 -> 文字轴
  */
 public class TrackLineFragment extends Fragment {
     private JsonArray tracks;

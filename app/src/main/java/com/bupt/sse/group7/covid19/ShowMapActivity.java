@@ -3,10 +3,6 @@ package com.bupt.sse.group7.covid19;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
@@ -17,11 +13,13 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -125,11 +123,10 @@ public class ShowMapActivity extends AppCompatActivity implements IAreaSelection
     private void updateView() {
         drawMarker = new DrawMarker(baiduMap, this);
 
-        if(baiduMap.getMapStatus().zoom>mZoom){
+        if (baiduMap.getMapStatus().zoom > mZoom) {
             drawMarker.drawAllDetailWithoutDes(trackList);
 
-        }
-        else {
+        } else {
 
             drawMarker.drawAllRoughWithoutDes(trackList);
 
@@ -138,9 +135,9 @@ public class ShowMapActivity extends AppCompatActivity implements IAreaSelection
 
     private void initView() {
         tv_start = findViewById(R.id.tv_start);
-        tv_start.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
+        tv_start.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         tv_end = findViewById(R.id.tv_end);
-        tv_end.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
+        tv_end.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 
         eYear = calendar.get(Calendar.YEAR);
         eMonth = calendar.get(Calendar.MONTH);

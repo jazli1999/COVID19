@@ -31,20 +31,20 @@ import static com.bupt.sse.group7.covid19.utils.JsonUtils.safeGet;
 
 public class HospitalPresenter implements IDataBackCallBack, IDataUpdateCalBack {
 
-    private final String TAG="HospitalPresenter";
+    private final String TAG = "HospitalPresenter";
     private Hospital mHospital;
 
     private JsonObject hospitalResult;
     private JsonObject statisticsResult;
     private JsonObject suppliesResult;
     //总获取data个数
-    private final int getDataSize =3;
+    private final int getDataSize = 3;
     //当前获取的data个数
-    private int getDataCount =0;
+    private int getDataCount = 0;
     //总更新data个数
-    private final int updateDataSize =2;
+    private final int updateDataSize = 2;
     //当前更新的data个数
-    private int updateDataCount =0;
+    private int updateDataCount = 0;
 
     private List<IHospitalViewCallBack> callBacks = new ArrayList<>();
 
@@ -59,15 +59,15 @@ public class HospitalPresenter implements IDataBackCallBack, IDataUpdateCalBack 
     }
 
 
-    private void getHospitalResult(){
+    private void getHospitalResult() {
         Map<String, String> args = new HashMap<>();
         args.put("h_id", String.valueOf(mHospital.getId()));
-        Call<ResponseBody> data = DBConnector.dao.executeGet("getHospitalById.php",args);
+        Call<ResponseBody> data = DBConnector.dao.executeGet("getHospitalById.php", args);
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    hospitalResult= JsonUtils.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
+                    hospitalResult = JsonUtils.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
                     onAllDataBack();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -82,15 +82,16 @@ public class HospitalPresenter implements IDataBackCallBack, IDataUpdateCalBack 
         });
 
     }
-    private void getStatisticsResult(){
+
+    private void getStatisticsResult() {
         Map<String, String> args = new HashMap<>();
         args.put("h_id", String.valueOf(mHospital.getId()));
-        Call<ResponseBody> data = DBConnector.dao.executeGet("getStatusNumberById.php",args);
+        Call<ResponseBody> data = DBConnector.dao.executeGet("getStatusNumberById.php", args);
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    statisticsResult=JsonUtils.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
+                    statisticsResult = JsonUtils.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
                     onAllDataBack();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -104,15 +105,16 @@ public class HospitalPresenter implements IDataBackCallBack, IDataUpdateCalBack 
             }
         });
     }
-    private void getSuppliesResult(){
+
+    private void getSuppliesResult() {
         Map<String, String> args = new HashMap<>();
         args.put("h_id", String.valueOf(mHospital.getId()));
-        Call<ResponseBody> data = DBConnector.dao.executeGet("getSuppliesById.php",args);
+        Call<ResponseBody> data = DBConnector.dao.executeGet("getSuppliesById.php", args);
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    JsonArray temp=JsonUtils.parseInfo(response.body().byteStream());
+                    JsonArray temp = JsonUtils.parseInfo(response.body().byteStream());
                     if (temp != null && temp.size() > 0) {
                         //如果该医院有物资信息，如果没有的话supplies始终为空
                         suppliesResult = temp.get(0).getAsJsonObject();
@@ -134,15 +136,16 @@ public class HospitalPresenter implements IDataBackCallBack, IDataUpdateCalBack 
         });
 
     }
+
     public void getHospitalDetails() {
-        getDataCount =0;
+        getDataCount = 0;
         getHospitalResult();
         getStatisticsResult();
         getSuppliesResult();
     }
 
     private void handleHospitalInfoResults() {
-        for (IHospitalViewCallBack callBack: callBacks) {
+        for (IHospitalViewCallBack callBack : callBacks) {
             callBack.onHospitalInfoReturned(mHospital);
         }
     }
@@ -181,14 +184,14 @@ public class HospitalPresenter implements IDataBackCallBack, IDataUpdateCalBack 
     }
 
 
-    private void updateSupplies(JsonObject supplies){
+    private void updateSupplies(JsonObject supplies) {
         //更新Supplies
-        RequestBody body= RequestBody.create(MediaType.parse("application/json; charset=utf-8"), String.valueOf(supplies));
-        Call<String> call=DBConnector.dao.executePost("editSuppliesById.php",body);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), String.valueOf(supplies));
+        Call<String> call = DBConnector.dao.executePost("editSuppliesById.php", body);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                Log.i(TAG,"医院物资更新成功");
+                Log.i(TAG, "医院物资更新成功");
                 onAllDataUpdated();
             }
 
@@ -198,13 +201,14 @@ public class HospitalPresenter implements IDataBackCallBack, IDataUpdateCalBack 
             }
         });
     }
+
     private void updateHospital(JsonObject hospital) {
-        RequestBody body= RequestBody.create(MediaType.parse("application/json; charset=utf-8"), String.valueOf(hospital));
-        Call<String> call=DBConnector.dao.executePost("editHospitalById.php",body);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), String.valueOf(hospital));
+        Call<String> call = DBConnector.dao.executePost("editHospitalById.php", body);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                Log.i(TAG,"医院信息更新成功");
+                Log.i(TAG, "医院信息更新成功");
                 onAllDataUpdated();
             }
 
@@ -214,20 +218,21 @@ public class HospitalPresenter implements IDataBackCallBack, IDataUpdateCalBack 
             }
         });
     }
+
     //第二个参数中包含supplies的所有信息
     public void updateData(Hospital hospital) {
-        this.mHospital =hospital;
-        updateDataCount=0;
-        JsonObject suppliesJO=new JsonObject();
-        JsonObject contactJO=new JsonObject();
-        Supplies supplies=hospital.getSupplies();
-        suppliesJO.add("n95",new JsonPrimitive(supplies.getN95()));
-        suppliesJO.add("surgeon",new JsonPrimitive(supplies.getSurgeon()));
-        suppliesJO.add("ventilator",new JsonPrimitive(supplies.getVentilator()));
-        suppliesJO.add("clothe",new JsonPrimitive(supplies.getClothe()));
-        suppliesJO.add("glasses",new JsonPrimitive(supplies.getGlasses()));
-        suppliesJO.add("alcohol",new JsonPrimitive(supplies.getAlcohol()));
-        suppliesJO.add("pants",new JsonPrimitive(supplies.getPants()));
+        this.mHospital = hospital;
+        updateDataCount = 0;
+        JsonObject suppliesJO = new JsonObject();
+        JsonObject contactJO = new JsonObject();
+        Supplies supplies = hospital.getSupplies();
+        suppliesJO.add("n95", new JsonPrimitive(supplies.getN95()));
+        suppliesJO.add("surgeon", new JsonPrimitive(supplies.getSurgeon()));
+        suppliesJO.add("ventilator", new JsonPrimitive(supplies.getVentilator()));
+        suppliesJO.add("clothe", new JsonPrimitive(supplies.getClothe()));
+        suppliesJO.add("glasses", new JsonPrimitive(supplies.getGlasses()));
+        suppliesJO.add("alcohol", new JsonPrimitive(supplies.getAlcohol()));
+        suppliesJO.add("pants", new JsonPrimitive(supplies.getPants()));
 
         JsonObject args1 = new JsonObject();
         args1.add("id", new JsonPrimitive(hospital.getId()));
@@ -235,11 +240,11 @@ public class HospitalPresenter implements IDataBackCallBack, IDataUpdateCalBack 
 
         updateSupplies(args1);
 
-        contactJO.add("address",new JsonPrimitive(hospital.getAddress()));
-        contactJO.add("tel",new JsonPrimitive(hospital.getTel()));
-        contactJO.add("contact",new JsonPrimitive(hospital.getPeople()));
-        contactJO.add("mild_left",new JsonPrimitive(hospital.getMildLeft()));
-        contactJO.add("severe_left",new JsonPrimitive(hospital.getSevereLeft()));
+        contactJO.add("address", new JsonPrimitive(hospital.getAddress()));
+        contactJO.add("tel", new JsonPrimitive(hospital.getTel()));
+        contactJO.add("contact", new JsonPrimitive(hospital.getPeople()));
+        contactJO.add("mild_left", new JsonPrimitive(hospital.getMildLeft()));
+        contactJO.add("severe_left", new JsonPrimitive(hospital.getSevereLeft()));
 
         JsonObject args2 = new JsonObject();
         args2.add("id", new JsonPrimitive(hospital.getId()));
@@ -248,16 +253,13 @@ public class HospitalPresenter implements IDataBackCallBack, IDataUpdateCalBack 
         updateHospital(args2);
 
 
-
-
     }
-
 
 
     @Override
     public void onAllDataBack() {
         getDataCount++;
-        if(getDataSize == getDataCount){
+        if (getDataSize == getDataCount) {
             processResults();
             handleHospitalInfoResults();
 
@@ -267,7 +269,7 @@ public class HospitalPresenter implements IDataBackCallBack, IDataUpdateCalBack 
     @Override
     public void onAllDataUpdated() {
         updateDataCount++;
-        if(updateDataSize == updateDataCount){
+        if (updateDataSize == updateDataCount) {
             handleHospitalInfoResults();
         }
     }

@@ -67,7 +67,7 @@ public class TrackLineAdapter extends RecyclerView.Adapter<TrackLineAdapter.Trac
             dateView = itemView.findViewById(R.id.track_date);
             timeView = itemView.findViewById(R.id.track_time);
             locationView = itemView.findViewById(R.id.track_location);
-            desView=itemView.findViewById(R.id.track_des);
+            desView = itemView.findViewById(R.id.track_des);
             numberView = itemView.findViewById(R.id.track_number);
         }
     }

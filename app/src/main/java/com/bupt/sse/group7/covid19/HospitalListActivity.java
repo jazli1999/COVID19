@@ -83,7 +83,7 @@ public class HospitalListActivity extends AppCompatActivity implements IHospital
         listView.setAdapter(adapter);
     }
 
-    private void initView(){
+    private void initView() {
         listView = findViewById(R.id.hosp_list);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
     }

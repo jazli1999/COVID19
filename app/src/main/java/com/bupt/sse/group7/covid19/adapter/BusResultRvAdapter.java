@@ -29,7 +29,7 @@ public abstract class BusResultRvAdapter extends RecyclerView.Adapter<BusResultR
         this.map = list;
         this.context = context;
         this.nameList = new ArrayList<>();
-        for(String name: map.keySet()) {
+        for (String name : map.keySet()) {
             nameList.add(name);
         }
     }

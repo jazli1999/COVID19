@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,22 +16,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.search.core.SearchResult;
-import com.baidu.mapapi.search.geocode.GeoCodeOption;
-import com.baidu.mapapi.search.geocode.GeoCodeResult;
-import com.baidu.mapapi.search.geocode.GeoCoder;
-import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.bupt.sse.group7.covid19.fragment.NotAvailable;
 import com.bupt.sse.group7.covid19.fragment.PatientTrackBlockFragment;
 import com.bupt.sse.group7.covid19.fragment.StatusLineFragment;
 import com.bupt.sse.group7.covid19.interfaces.IPatientViewCallBack;
 import com.bupt.sse.group7.covid19.model.CurrentUser;
 import com.bupt.sse.group7.covid19.model.Patient;
-import com.bupt.sse.group7.covid19.model.TrackPoint;
 import com.bupt.sse.group7.covid19.presenter.PatientPresenter;
 import com.bupt.sse.group7.covid19.utils.Constants;
 
@@ -68,7 +57,7 @@ public class PatientMainPageActivity extends AppCompatActivity implements IPatie
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_update_track:
-                if(CurrentUser.getLabel().equals("patient") && CurrentUser.getId() == this.id) {
+                if (CurrentUser.getLabel().equals("patient") && CurrentUser.getId() == this.id) {
                     Intent intent = new Intent(PatientMainPageActivity.this, EditTrackActivity.class);
                     startActivity(intent);
                     finish();
@@ -100,14 +89,11 @@ public class PatientMainPageActivity extends AppCompatActivity implements IPatie
 
         if (patient.getTrackPoints().size() > 0) {
             patientTrackBlockFragment = new PatientTrackBlockFragment();
-            // TODO 这里改成把patient的track传进去不用再查询了，一层一层的改！
             patientTrackBlockFragment.setId(patient.getId());
             FragmentTransaction trackTran = fragmentManager.beginTransaction();
             trackTran.add(R.id.patient_content, patientTrackBlockFragment);
             trackTran.commitAllowingStateLoss();
-
-        }
-        else {
+        } else {
             notAvailable = new NotAvailable();
             notAvailable.setTitle("ta的轨迹");
             FragmentTransaction notTran = fragmentManager.beginTransaction();
@@ -119,7 +105,7 @@ public class PatientMainPageActivity extends AppCompatActivity implements IPatie
                 Constants.statuses.get(patient.getStatus()),
                 patient.getH_name());
 
-        ((TextView)this.findViewById(R.id.patient_name)).setText(patient.getUsername());
-        ((TextView)this.findViewById(R.id.patient_desc)).setText(desc);
+        ((TextView) this.findViewById(R.id.patient_name)).setText(patient.getUsername());
+        ((TextView) this.findViewById(R.id.patient_desc)).setText(desc);
     }
 }

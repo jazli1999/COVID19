@@ -18,7 +18,6 @@ import com.bupt.sse.group7.covid19.model.Area;
 import com.bupt.sse.group7.covid19.model.City;
 import com.bupt.sse.group7.covid19.model.District;
 import com.bupt.sse.group7.covid19.model.Province;
-import com.bupt.sse.group7.covid19.presenter.AreaSelectionPresenter;
 import com.bupt.sse.group7.covid19.presenter.TrackAreaPresenter;
 
 import java.util.ArrayList;
@@ -77,7 +76,7 @@ public class TrackAreaFragment extends Fragment {
         city = province.getCities().get(0);
         district = city.getDistricts().get(0);
 
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             Spinner spinner = spinners.get(i);
             spinner.setAdapter(adapters.get(i));
             spinner.setSelection(0, true);

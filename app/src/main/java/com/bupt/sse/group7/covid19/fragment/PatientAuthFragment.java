@@ -14,10 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import com.bupt.sse.group7.covid19.R;
 import com.bupt.sse.group7.covid19.SetUsernameActivity;
@@ -30,8 +26,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
- *  认证页面，个人用户认证
+ * 认证页面，个人用户认证
  */
 public class PatientAuthFragment extends Fragment {
     private static final String TAG = "PatientAuthFragment";
@@ -82,12 +83,12 @@ public class PatientAuthFragment extends Fragment {
     }
 
     private void getAuthInfo(Map<String, String> args) {
-        Call<ResponseBody> data = DBConnector.dao.executeGet("getPatientAuthInfo.php",args);
+        Call<ResponseBody> data = DBConnector.dao.executeGet("getPatientAuthInfo.php", args);
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    returnedInfo= JsonUtils.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
+                    returnedInfo = JsonUtils.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
                     String tel = patientTelView.getText().toString();
                     checkAuth(tel);
                 } catch (IOException e) {

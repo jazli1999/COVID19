@@ -6,14 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bupt.sse.group7.covid19.R;
-import com.bupt.sse.group7.covid19.model.Supplies;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import org.w3c.dom.Text;
+import com.bupt.sse.group7.covid19.R;
+import com.bupt.sse.group7.covid19.model.Supplies;
 
 /**
  * 医院主页，物资情况卡片部分

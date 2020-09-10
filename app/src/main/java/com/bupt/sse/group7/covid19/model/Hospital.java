@@ -14,6 +14,7 @@ public class Hospital {
 
     private String mildLeft;
     private String severeLeft;
+
     public Hospital(int id, String name, String people, String address, String tel, Statistics statistics, Supplies supplies, String mildLeft, String severeLeft) {
         this.id = id;
         this.name = name;
@@ -26,7 +27,9 @@ public class Hospital {
         this.severeLeft = severeLeft;
     }
 
-    public Hospital(){}
+    public Hospital() {
+    }
+
     public String getTel() {
         return tel;
     }

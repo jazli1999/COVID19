@@ -3,7 +3,6 @@ package com.bupt.sse.group7.covid19.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bupt.sse.group7.covid19.HospitalListActivity;
 import com.bupt.sse.group7.covid19.R;
 import com.bupt.sse.group7.covid19.model.HospitalBrief;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 
 import java.util.List;
 
@@ -43,11 +40,10 @@ public class HospitalListAdapter extends RecyclerView.Adapter<HospitalListAdapte
         String addrElement = list.get(position).getAddress();
         if (addrElement != null) {
             holder.addressView.setText(addrElement);
-        }
-        else {
+        } else {
             holder.addressView.setText("暂无地址");
         }
-        holder.noView.setText((position+1) + "");
+        holder.noView.setText((position + 1) + "");
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
