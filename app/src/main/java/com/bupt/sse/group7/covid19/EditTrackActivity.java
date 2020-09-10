@@ -108,7 +108,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     private Button btn_cancel;
     //所有记录了的Marker
     private List<MyMarker> allMarkers = new ArrayList<>();
-    private MyMarker curMyMarker;
+    private MyMarker curMyMarker=new MyMarker();
     //时间选择
     private DatePicker datePickerStart;
     private TimePicker timePickerStart;
@@ -146,7 +146,9 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     private BusLineSearch mBusLineSearch;
     //获取到的所有的公交站
     private List<String> allBusStations = new ArrayList<>();
-    private ImageView bus_btn;
+    private String curCity;
+    private boolean isFirstCityLoc=true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -593,7 +595,11 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             return;
         }
         ReverseGeoCodeResult.AddressComponent component = reverseGeoCodeResult.getAddressDetail();
-
+        if(isFirstCityLoc){
+            curCity=component.city;
+            Log.i(TAG,"curCity"+curCity);
+            isFirstCityLoc=false;
+        }
         String city=component.city;
         city=city.substring(0, city.length() - 1);
         String address = component.street + component.streetNumber;
@@ -654,9 +660,9 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
     public void searchBusOrSubway(String busLineId) {
 
-        // TODO 改city
+        Log.i(TAG,"city"+curCity);
         mBusLineSearch.searchBusLine(new BusLineSearchOption()
-                .city("北京")
+                .city(curCity)
                 .uid(busLineId));
     }
 
@@ -730,6 +736,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
                 builder.target(latLng).zoom(mZoom);
                 baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
                 isFirstLoc = false;
+                geoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
             }
             mCurrentLoc = location;
             locationClient.stop();
@@ -752,14 +759,13 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         }
     }
 
-    //TODO 改城市
     public void busService(String keyword) {
         mBusLineSearch = BusLineSearch.newInstance();
         mBusLineSearch.setOnGetBusLineSearchResultListener(this);
         PoiSearch mPoiSearch = PoiSearch.newInstance();
         mPoiSearch.setOnGetPoiSearchResultListener(this);
         mPoiSearch.searchInCity(new PoiCitySearchOption()
-                .city("北京")
+                .city(curCity)
                 .keyword(keyword)
                 .scope(2));
 

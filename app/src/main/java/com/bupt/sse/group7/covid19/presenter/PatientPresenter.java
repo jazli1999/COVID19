@@ -26,7 +26,6 @@ import retrofit2.Response;
 
 public class PatientPresenter implements IDataBackCallBack {
     private static final String TAG = "PatientPresenter";
-    // TODO 添加数据获取失败时的处理
 
     private static PatientPresenter instance = new PatientPresenter();
     private List<IPatientViewCallBack> patientViewCallBacks = new ArrayList<>();

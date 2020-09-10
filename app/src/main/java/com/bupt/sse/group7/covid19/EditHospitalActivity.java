@@ -88,7 +88,6 @@ public class EditHospitalActivity extends AppCompatActivity implements IHospital
     }
 
     public void submit() {
-        //TODO 封装hospital
 
         Supplies supplies=new Supplies(n95Tv.getText().toString(),
                 surgeonTv.getText().toString(),
@@ -111,13 +110,6 @@ public class EditHospitalActivity extends AppCompatActivity implements IHospital
         finish();
     }
 
-    //TODO
-    private void addValueFromInput(JsonObject obj, String arg, int id) {
-        String text = ((EditText)findViewById(id)).getText().toString();
-        if (!text.equals("-")) {
-            obj.add(arg, new JsonPrimitive(text));
-        }
-    }
 
     @Override
     public void onHospitalInfoReturned(Hospital hospital) {
