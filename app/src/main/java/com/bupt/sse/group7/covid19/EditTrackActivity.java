@@ -76,11 +76,13 @@ import com.bupt.sse.group7.covid19.model.CurrentUser;
 import com.bupt.sse.group7.covid19.presenter.TrackAreaPresenter;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.bupt.sse.group7.covid19.utils.overlayutil.BusLineOverlay;
+import com.bupt.sse.group7.covid19.utils.overlayutil.BusLineOverlay;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -390,6 +392,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     }
 
     //画线和描述
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void drawLines() {
         if (LineOption != null) {
             LineOption.remove();
@@ -397,7 +400,8 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         }
 
         List<LatLng> points = new ArrayList<>();
-        //TODO 这里添加排序/分时段
+        getSortedLocation(allMarkers);
+
         for (int i = 0; i < allMarkers.size(); i++) {
             points.add(allMarkers.get(i).getLocation());
         }
@@ -516,6 +520,16 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         }
         args.add("rows", jsonArray);
         addData(args);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private List<LatLng> getSortedLocation(List<MyMarker> markers) {
+        markers.sort(Comparator.comparing(MyMarker::getDate));
+        List<LatLng> result = new ArrayList<>();
+        for (MyMarker marker : markers) {
+            result.add(marker.getLocation());
+        }
+        return result;
     }
 
     public void closeBusDialog() {
@@ -647,11 +661,10 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     }
 
 
-
     //根据uid搜索线路的具体信息
     public void searchBusOrSubway(String busLineId) {
-        busLineSelected=busLineId;
-        Log.i(TAG,"city"+curCity);
+        busLineSelected = busLineId;
+        Log.i(TAG, "city" + curCity);
         mBusLineSearch.searchBusLine(new BusLineSearchOption()
                 .city(curCity)
                 .uid(busLineId));
@@ -674,11 +687,12 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
     /**
      * 搜索具体的busline返回的结果
+     *
      * @param busLineResult
      */
     @Override
     public void onGetBusLineResult(BusLineResult busLineResult) {
-        mBusLineResult=busLineResult;
+        mBusLineResult = busLineResult;
         if (busLineResult == null || busLineResult.error != SearchResult.ERRORNO.NO_ERROR) {
             Log.i(TAG, "onGetBusLineResult : error");
             return;
@@ -695,9 +709,9 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     }
 
     //TODO 保存
-    public void updateBusView(String startStation,String endStation){
+    public void updateBusView(String startStation, String endStation) {
         BusLineOverlay overlay = new BusLineOverlay(baiduMap);
-        overlay.setData(getChosenStations(startStation, endStation,mBusLineResult));
+        overlay.setData(getChosenStations(startStation, endStation, mBusLineResult));
         overlay.addToMap();
         overlay.zoomToSpan();
         saveBusLine(startStation,endStation);
@@ -794,7 +808,6 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
 
     }
-
 
 
     public BusLineResult getChosenStations(String start, String end, BusLineResult busLineResult) {
