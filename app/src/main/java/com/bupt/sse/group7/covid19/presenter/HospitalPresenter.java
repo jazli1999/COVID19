@@ -77,10 +77,16 @@ public class HospitalPresenter implements IDataBackCallBack, IDataUpdateCalBack 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.i(TAG, "getHospitalResultOnFailure");
-
+                handleGetDataFailed();
             }
         });
 
+    }
+
+    private void handleGetDataFailed() {
+        for (IHospitalViewCallBack callBack : callBacks) {
+            callBack.onGetDataFailed();
+        }
     }
 
     private void getStatisticsResult() {
@@ -101,7 +107,7 @@ public class HospitalPresenter implements IDataBackCallBack, IDataUpdateCalBack 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.i(TAG, "getStatisticsResultOnFailure");
-
+                handleGetDataFailed();
             }
         });
     }
@@ -131,7 +137,7 @@ public class HospitalPresenter implements IDataBackCallBack, IDataUpdateCalBack 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.i(TAG, "getSuppliesResultOnFailure");
-
+                handleGetDataFailed();
             }
         });
 
@@ -197,7 +203,7 @@ public class HospitalPresenter implements IDataBackCallBack, IDataUpdateCalBack 
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-
+                handleGetDataFailed();
             }
         });
     }
@@ -214,7 +220,7 @@ public class HospitalPresenter implements IDataBackCallBack, IDataUpdateCalBack 
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-
+                handleGetDataFailed();
             }
         });
     }

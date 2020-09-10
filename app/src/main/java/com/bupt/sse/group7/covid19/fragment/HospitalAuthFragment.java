@@ -1,5 +1,6 @@
 package com.bupt.sse.group7.covid19.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ public class HospitalAuthFragment extends Fragment {
     private EditText passView;
     private JsonObject returnedInfo;
     private View view;
+    private Context mContext=getActivity();
 
     @Nullable
     @Override
@@ -109,6 +111,7 @@ public class HospitalAuthFragment extends Fragment {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.i(TAG, "getAuthInfoOnFailure");
+                Toast.makeText(getActivity(), "当前网络不可用，请检查你的网络", Toast.LENGTH_SHORT).show();
 
             }
         });

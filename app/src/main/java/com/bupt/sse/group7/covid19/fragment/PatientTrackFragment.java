@@ -1,5 +1,6 @@
 package com.bupt.sse.group7.covid19.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -80,6 +82,7 @@ public class PatientTrackFragment extends Fragment  {
     private BusLineResult mBusLineResult;
     private String city;
 
+    private Context context=getActivity();
 
     @Nullable
     @Override
@@ -210,6 +213,7 @@ public class PatientTrackFragment extends Fragment  {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.i(TAG,"获取busline失败");
+                Toast.makeText(getActivity(), "当前网络不可用，请检查你的网络", Toast.LENGTH_SHORT).show();
 
             }
         });

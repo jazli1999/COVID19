@@ -21,6 +21,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -761,6 +762,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.i(TAG, "公交更新失败");
+                Toast.makeText(mContext, "当前网络不可用，请检查你的网络", Toast.LENGTH_SHORT).show();
 
             }
         });

@@ -1,6 +1,7 @@
 package com.bupt.sse.group7.covid19.fragment;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.bupt.sse.group7.covid19.AuthenticateActivity;
 import com.bupt.sse.group7.covid19.R;
 import com.bupt.sse.group7.covid19.SetUsernameActivity;
 import com.bupt.sse.group7.covid19.model.CurrentUser;
@@ -99,6 +101,8 @@ public class PatientAuthFragment extends Fragment {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.i(TAG, "getAuthInfoOnFailure");
+                Toast.makeText(getActivity(), "当前网络不可用，请检查你的网络", Toast.LENGTH_SHORT).show();
+
             }
         });
     }

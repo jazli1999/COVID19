@@ -1,6 +1,8 @@
 package com.bupt.sse.group7.covid19.presenter;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.bupt.sse.group7.covid19.interfaces.IDataBackCallBack;
 import com.bupt.sse.group7.covid19.interfaces.IPatientViewCallBack;
@@ -73,10 +75,16 @@ public class PatientPresenter implements IDataBackCallBack {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.i(TAG, "getHospitalResultOnFailure");
-
+                handleGetDataFailed();
             }
         });
 
+    }
+
+    private void handleGetDataFailed() {
+        for (IPatientViewCallBack callBack : patientViewCallBacks) {
+            callBack.onGetDataFailed();
+        }
     }
 
     private void getStatusResult() {
@@ -100,6 +108,7 @@ public class PatientPresenter implements IDataBackCallBack {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                handleGetDataFailed();
 
             }
         });
@@ -126,7 +135,7 @@ public class PatientPresenter implements IDataBackCallBack {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                handleGetDataFailed();
             }
         });
 

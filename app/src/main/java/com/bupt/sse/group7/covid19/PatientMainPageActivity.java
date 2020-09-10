@@ -113,4 +113,10 @@ public class PatientMainPageActivity extends AppCompatActivity implements IPatie
         ((TextView) this.findViewById(R.id.patient_name)).setText(patient.getUsername());
         ((TextView) this.findViewById(R.id.patient_desc)).setText(desc);
     }
+
+    @Override
+    public void onGetDataFailed() {
+        Toast.makeText(this, "当前网络不可用，请检查你的网络", Toast.LENGTH_SHORT).show();
+
+    }
 }

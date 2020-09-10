@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface IHospitalListCallBack {
     void onHospitalListChanged(List<HospitalBrief> hospitalList);
+    void onGetDataFailed();
 }

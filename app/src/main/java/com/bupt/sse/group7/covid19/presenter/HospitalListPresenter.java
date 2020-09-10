@@ -79,8 +79,15 @@ public class HospitalListPresenter {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.i(TAG, "HospitalListActivityOnFailure");
+                handleOnGetDataFailed();
             }
         });
+    }
+
+    private void handleOnGetDataFailed() {
+        for (IHospitalListCallBack callBack : callBacks) {
+            callBack.onGetDataFailed();
+        }
     }
 
     private List<HospitalBrief> processResult(JsonArray hospJson) {

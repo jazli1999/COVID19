@@ -107,6 +107,12 @@ public class HospitalMainPageActivity extends AppCompatActivity implements IHosp
     }
 
     @Override
+    public void onGetDataFailed() {
+        Toast.makeText(this, "当前网络不可用，请检查你的网络", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_edit:

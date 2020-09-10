@@ -1,6 +1,7 @@
 package com.bupt.sse.group7.covid19;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -49,6 +50,7 @@ public class HomeActivity extends AppCompatActivity {
     private CardView diaryCard;
     private TextView mildTv, severeTv, curedTv, deadTv;
 
+    private Context context=this;
     private JsonObject statistics;
 
     @Override
@@ -87,6 +89,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.i("hcccc", "HomeActivityOnFailure");
+                Toast.makeText(context, "当前网络不可用，请检查你的网络", Toast.LENGTH_SHORT).show();
+
             }
         });
     }

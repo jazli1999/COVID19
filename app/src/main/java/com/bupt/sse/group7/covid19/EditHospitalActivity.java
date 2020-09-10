@@ -124,4 +124,10 @@ public class EditHospitalActivity extends AppCompatActivity implements IHospital
         glassesTv.setText(hospital.getSupplies().getGlasses());
         pantsTv.setText(hospital.getSupplies().getPants());
     }
+
+    @Override
+    public void onGetDataFailed() {
+        Toast.makeText(this, "当前网络不可用，请检查你的网络", Toast.LENGTH_SHORT).show();
+
+    }
 }

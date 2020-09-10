@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -74,6 +75,11 @@ public class HospitalListActivity extends AppCompatActivity implements IHospital
     @Override
     public void onHospitalListChanged(List<HospitalBrief> hospitalList) {
         updateView(hospitalList);
+    }
+
+    @Override
+    public void onGetDataFailed() {
+        Toast.makeText(this, "当前网络不可用，请检查你的网络", Toast.LENGTH_SHORT).show();
     }
 
     private void updateView(List<HospitalBrief> hospitals) {
