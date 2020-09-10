@@ -100,15 +100,12 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     private BaiduMap baiduMap;
     LatLng currLatLng;
     Marker currMarker;
-    //Map<Integer,OverlayOptions> optionsList = new HashMap();
-    //Map<Integer,LatLng> pointsList = new HashMap<>();
-    //OverlayOptions currOptions;
-    //Map<Integer,Marker> markerList = new HashMap<>();
+
 
     private Button btn_cancel;
     //所有记录了的Marker
     private List<MyMarker> allMarkers = new ArrayList<>();
-    private MyMarker curMyMarker=new MyMarker();
+    private MyMarker curMyMarker=null;
     //时间选择
     private DatePicker datePickerStart;
     private TimePicker timePickerStart;
@@ -119,16 +116,13 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     private BusBaseFragment fragment;
 
     //将坐标转换为地址
-    private Handler mHandler;
     private GeoCoder geoCoder;
-    //private Map<Integer,String> addressList = new HashMap<>();
-    //private Map<Integer,String> districtList = new HashMap<>();
+
 
     //输入描述
     private String description;
     private EditText et_des;
     private AlertDialog desDialog;
-    //private HashMap<Integer,String> descriptionList = new HashMap<>();
     //线条
     private Overlay LineOption;
 
@@ -148,6 +142,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     private List<String> allBusStations = new ArrayList<>();
     private String curCity;
     private boolean isFirstCityLoc=true;
+    private BusLineResult mBusLineResult;
 
 
     @Override
@@ -421,13 +416,6 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
     private void initView() {
         locationIv = findViewById(R.id.locationIv);
-//        bus_btn = findViewById(R.id.bus_button);
-//        bus_btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                busService();
-//            }
-//        });
 
         btn_bus = findViewById(R.id.bus_button);
         btn_bus.setOnClickListener(new View.OnClickListener() {
@@ -502,7 +490,6 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     }
 
 
-    //定位
 
 
     //提交到数据库
@@ -583,6 +570,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
     }
 
+    //通过坐标转换成地理名字
     @Override
     public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
         if (reverseGeoCodeResult == null) {
@@ -599,6 +587,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             curCity=component.city;
             Log.i(TAG,"curCity"+curCity);
             isFirstCityLoc=false;
+            return;
         }
         String city=component.city;
         city=city.substring(0, city.length() - 1);
@@ -620,6 +609,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
     }
 
+    //搜索keyword的所有结果
     @Override
     public void onGetPoiResult(PoiResult poiResult) {
         if (poiResult == null || poiResult.error != SearchResult.ERRORNO.NO_ERROR) {
@@ -658,6 +648,8 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     }
 
 
+
+    //根据uid搜索线路的具体信息
     public void searchBusOrSubway(String busLineId) {
 
         Log.i(TAG,"city"+curCity);
@@ -681,8 +673,13 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
     }
 
+    /**
+     * 搜索具体的busline返回的结果
+     * @param busLineResult
+     */
     @Override
     public void onGetBusLineResult(BusLineResult busLineResult) {
+        mBusLineResult=busLineResult;
         if (busLineResult == null || busLineResult.error != SearchResult.ERRORNO.NO_ERROR) {
             Log.i(TAG, "onGetBusLineResult : error");
             return;
@@ -694,29 +691,22 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             allBusStations.add(busStation.getTitle());
         }
 
+
         fragment.updateStations(allBusStations, fragment);
     }
 
     //TODO 保存
-//    public void updateBusView(){
-//        BusLineOverlay overlay = new BusLineOverlay(baiduMap);
-//        overlay.setData(getChosenStations(getStartStation(), getEndStation(), busLineResult));
-//        overlay.addToMap();
-//        overlay.zoomToSpan();
-//    }
-    //TODO 改终点名字
-    private String getEndStation() {
-        return "成府路口南";
+    public void updateBusView(String startStation,String endStation){
+        BusLineOverlay overlay = new BusLineOverlay(baiduMap);
+        overlay.setData(getChosenStations(startStation, endStation,mBusLineResult));
+        overlay.addToMap();
+        overlay.zoomToSpan();
     }
 
     public void setBusFragment(BusBaseFragment fragment) {
         this.fragment = fragment;
     }
 
-    //TODO 改起点名字
-    private String getStartStation() {
-        return "明光桥南";
-    }
 
     public class MyLocationListener extends BDAbstractLocationListener {
         @Override
@@ -772,10 +762,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
     }
 
-    //TODO 改公交的线路
-    private String getBusNumber() {
-        return "632";
-    }
+
 
     public BusLineResult getChosenStations(String start, String end, BusLineResult busLineResult) {
         BusLineResult mBusLineResult = busLineResult;
