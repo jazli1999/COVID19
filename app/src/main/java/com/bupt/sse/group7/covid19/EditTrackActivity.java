@@ -1,5 +1,6 @@
 package com.bupt.sse.group7.covid19;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -107,6 +109,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     //时间选择
     private DatePicker datePickerStart;
     private TimePicker timePickerStart;
+    private View busView;
     private AlertDialog date_time_picker;
     private AlertDialog bus_picker;
     private CardView btn_confirmTime, btn_edit, btn_bus;
@@ -187,7 +190,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
         // 公交
         AlertDialog.Builder busBuilder = new AlertDialog.Builder(this);
-        View busView = View.inflate(this, R.layout.dialog_bus, null);
+        busView = View.inflate(this, R.layout.dialog_bus, null);
         busBuilder.setView(busView);
         bus_picker = busBuilder.create();
 
@@ -384,7 +387,6 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     }
 
     //画线和描述
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void drawLines() {
         if (LineOption != null) {
             LineOption.remove();
@@ -392,8 +394,10 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         }
 
         List<LatLng> points = new ArrayList<>();
-        //TODO 这里添加排序/分时段
-        getSortedLocation(allMarkers);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            getSortedLocation(allMarkers);
+        }
 
         for (int i = 0; i < allMarkers.size(); i++) {
             points.add(allMarkers.get(i).getLocation());
@@ -418,12 +422,15 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         locationIv = findViewById(R.id.locationIv);
 
         btn_bus = findViewById(R.id.bus_button);
+        Context context = this;
         btn_bus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Window dialogWindow = bus_picker.getWindow();
                 dialogWindow.setBackgroundDrawableResource(android.R.color.transparent);
                 bus_picker.show();
+                bus_picker.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+                bus_picker.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             }
         });
     }
