@@ -721,7 +721,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         fragment.updateStations(allBusStations, fragment);
     }
 
-    //TODO 保存
+
     public void updateBusView(String startStation, String endStation) {
         BusLineOverlay overlay = new BusLineOverlay(baiduMap);
         overlay.setData(getChosenStations(startStation, endStation, mBusLineResult));
