@@ -26,6 +26,11 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
@@ -73,6 +78,7 @@ import com.bupt.sse.group7.covid19.model.CurrentUser;
 import com.bupt.sse.group7.covid19.presenter.TrackAreaPresenter;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.bupt.sse.group7.covid19.utils.overlayutil.BusLineOverlay;
+import com.bupt.sse.group7.covid19.utils.overlayutil.BusLineOverlay;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -109,7 +115,6 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     //时间选择
     private DatePicker datePickerStart;
     private TimePicker timePickerStart;
-    private View busView;
     private AlertDialog date_time_picker;
     private AlertDialog bus_picker;
     private CardView btn_confirmTime, btn_edit, btn_bus;
@@ -144,6 +149,8 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     private String curCity;
     private boolean isFirstCityLoc = true;
     private BusLineResult mBusLineResult;
+    private String busLineSelected;
+    private String busKeyword;
 
 
     @Override
@@ -190,7 +197,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
         // 公交
         AlertDialog.Builder busBuilder = new AlertDialog.Builder(this);
-        busView = View.inflate(this, R.layout.dialog_bus, null);
+        View busView = View.inflate(this, R.layout.dialog_bus, null);
         busBuilder.setView(busView);
         bus_picker = busBuilder.create();
 
@@ -422,7 +429,6 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         locationIv = findViewById(R.id.locationIv);
 
         btn_bus = findViewById(R.id.bus_button);
-        Context context = this;
         btn_bus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -663,7 +669,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
     //根据uid搜索线路的具体信息
     public void searchBusOrSubway(String busLineId) {
-
+        busLineSelected = busLineId;
         Log.i(TAG, "city" + curCity);
         mBusLineSearch.searchBusLine(new BusLineSearchOption()
                 .city(curCity)
@@ -714,6 +720,39 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         overlay.setData(getChosenStations(startStation, endStation, mBusLineResult));
         overlay.addToMap();
         overlay.zoomToSpan();
+        saveBusLine(startStation,endStation);
+    }
+
+    public void saveBusLine(String startStation,String endStation){
+        JsonObject busLineJO=new JsonObject();
+        busLineJO.add("uid",new JsonPrimitive(busLineSelected));
+        busLineJO.add("name",new JsonPrimitive(busKeyword));
+        busLineJO.add("p_id",new JsonPrimitive(p_id));
+        busLineJO.add("start",new JsonPrimitive(startStation));
+        busLineJO.add("end",new JsonPrimitive(endStation));
+        //TODO 改时间
+        busLineJO.add("date_time",new JsonPrimitive("2020-06-09 13:13:13"));
+
+        JsonArray jsonArray=new JsonArray();
+        jsonArray.add(busLineJO);
+        JsonObject jsonObject=new JsonObject();
+        jsonObject.add("rows",jsonArray);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), String.valueOf(jsonObject));
+        Log.i(TAG,"update bus data :"+String.valueOf(jsonObject));
+        Call<String> call = DBConnector.dao.executePost("addBusTrack.php", body);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.i(TAG, "公交更新成功");
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.i(TAG,"公交更新失败");
+
+            }
+        });
+
     }
 
     public void setBusFragment(BusBaseFragment fragment) {
@@ -763,6 +802,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     }
 
     public void busService(String keyword) {
+        busKeyword=keyword;
         mBusLineSearch = BusLineSearch.newInstance();
         mBusLineSearch.setOnGetBusLineSearchResultListener(this);
         PoiSearch mPoiSearch = PoiSearch.newInstance();
