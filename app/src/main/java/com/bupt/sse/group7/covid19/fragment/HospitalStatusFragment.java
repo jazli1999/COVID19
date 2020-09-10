@@ -6,23 +6,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bupt.sse.group7.covid19.R;
-import com.bupt.sse.group7.covid19.model.Statistics;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import org.w3c.dom.Text;
+import com.bupt.sse.group7.covid19.R;
+import com.bupt.sse.group7.covid19.model.Statistics;
 
 /**
- *  医院主页，确诊情况卡片部分
+ * 医院主页，确诊情况卡片部分
  */
 public class HospitalStatusFragment extends Fragment {
     private View view;
 
 
-    TextView mild_view,severe_view,cured_view,dead_view;
+    TextView mild_view, severe_view, cured_view, dead_view;
 
     @Nullable
     @Override
@@ -44,12 +42,13 @@ public class HospitalStatusFragment extends Fragment {
     }
 
     private void initView() {
-        mild_view=view.findViewById(R.id.mild_view);
-        severe_view=view.findViewById(R.id.severe_view);
-        cured_view= view.findViewById(R.id.cured_view);
-        dead_view=view.findViewById(R.id.dead_view);
+        mild_view = view.findViewById(R.id.mild_view);
+        severe_view = view.findViewById(R.id.severe_view);
+        cured_view = view.findViewById(R.id.cured_view);
+        dead_view = view.findViewById(R.id.dead_view);
     }
-    public void updateView(Statistics statistics){
+
+    public void updateView(Statistics statistics) {
         mild_view.setText(statistics.getMild());
         severe_view.setText(statistics.getSevere());
         cured_view.setText(statistics.getCured());

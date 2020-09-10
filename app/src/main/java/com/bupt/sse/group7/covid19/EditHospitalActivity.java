@@ -15,11 +15,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.bupt.sse.group7.covid19.interfaces.IHospitalViewCallBack;
 import com.bupt.sse.group7.covid19.model.Hospital;
-import com.bupt.sse.group7.covid19.model.Statistics;
 import com.bupt.sse.group7.covid19.model.Supplies;
 import com.bupt.sse.group7.covid19.presenter.HospitalPresenter;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 /**
  * 编辑医院信息页面
@@ -88,8 +85,7 @@ public class EditHospitalActivity extends AppCompatActivity implements IHospital
     }
 
     public void submit() {
-
-        Supplies supplies=new Supplies(n95Tv.getText().toString(),
+        Supplies supplies = new Supplies(n95Tv.getText().toString(),
                 surgeonTv.getText().toString(),
                 ventTv.getText().toString(),
                 clotheTv.getText().toString(),
@@ -106,14 +102,13 @@ public class EditHospitalActivity extends AppCompatActivity implements IHospital
 
         hospitalPresenter.updateData(mHospital);
 
-        Toast.makeText(this, "已提交",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "已提交", Toast.LENGTH_SHORT).show();
         finish();
     }
 
-
     @Override
     public void onHospitalInfoReturned(Hospital hospital) {
-        this.mHospital=hospital;
+        this.mHospital = hospital;
         id = hospital.getId();
         nameTv.setText(hospital.getName());
         mildTv.setText(hospital.getMildLeft());

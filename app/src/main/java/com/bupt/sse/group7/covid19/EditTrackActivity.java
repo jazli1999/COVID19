@@ -1,10 +1,5 @@
 package com.bupt.sse.group7.covid19;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,6 +20,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TimePicker;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
@@ -40,7 +40,6 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.PolylineOptions;
@@ -69,10 +68,8 @@ import com.bupt.sse.group7.covid19.fragment.BusBaseFragment;
 import com.bupt.sse.group7.covid19.fragment.BusFragment;
 import com.bupt.sse.group7.covid19.fragment.SubwayFragment;
 import com.bupt.sse.group7.covid19.model.CurrentUser;
-import com.bupt.sse.group7.covid19.presenter.AreaSelectionPresenter;
 import com.bupt.sse.group7.covid19.presenter.TrackAreaPresenter;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
-import com.bupt.sse.group7.covid19.utils.overlayutil.BusLineOverlay;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -87,7 +84,6 @@ import static com.baidu.mapapi.map.PolylineDottedLineType.DOTTED_LINE_SQUARE;
 /**
  * 病人打点页面
  * TODO 重复添加信息bug
- * TODO Marker使用最新Layout
  */
 public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCoderResultListener, OnGetPoiSearchResultListener, OnGetBusLineSearchResultListener {
     //marker图标
@@ -105,7 +101,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     private Button btn_cancel;
     //所有记录了的Marker
     private List<MyMarker> allMarkers = new ArrayList<>();
-    private MyMarker curMyMarker=null;
+    private MyMarker curMyMarker = null;
     //时间选择
     private DatePicker datePickerStart;
     private TimePicker timePickerStart;
@@ -141,7 +137,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     //获取到的所有的公交站
     private List<String> allBusStations = new ArrayList<>();
     private String curCity;
-    private boolean isFirstCityLoc=true;
+    private boolean isFirstCityLoc = true;
     private BusLineResult mBusLineResult;
 
 
@@ -369,7 +365,6 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         });
 
 
-
         geoCoder = GeoCoder.newInstance();
         geoCoder.setOnGetGeoCodeResultListener(this);
 //        mHandler = new Handler(new Handler.Callback() {
@@ -490,8 +485,6 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     }
 
 
-
-
     //提交到数据库
     private void submit() {
         JsonObject args = new JsonObject();
@@ -510,7 +503,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             info.add("district", new JsonPrimitive(myMarker.getDistrict()));
             info.add("p_id", new JsonPrimitive(p_id + ""));
             info.add("description", new JsonPrimitive(myMarker.getDescription()));
-            info.add("city",new JsonPrimitive(myMarker.getCity()));
+            info.add("city", new JsonPrimitive(myMarker.getCity()));
             jsonArray.add(info);
         }
         args.add("rows", jsonArray);
@@ -583,14 +576,14 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             return;
         }
         ReverseGeoCodeResult.AddressComponent component = reverseGeoCodeResult.getAddressDetail();
-        if(isFirstCityLoc){
-            curCity=component.city;
-            Log.i(TAG,"curCity"+curCity);
-            isFirstCityLoc=false;
+        if (isFirstCityLoc) {
+            curCity = component.city;
+            Log.i(TAG, "curCity" + curCity);
+            isFirstCityLoc = false;
             return;
         }
-        String city=component.city;
-        city=city.substring(0, city.length() - 1);
+        String city = component.city;
+        city = city.substring(0, city.length() - 1);
         String address = component.street + component.streetNumber;
         String district = component.district;
         district = district.substring(0, district.length() - 1);
@@ -626,23 +619,21 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
                 busLines.put(poi.name, poi.uid);
                 //searchBusOrSubway(poi.uid);
 
-                // TODO 更改下拉框adpater
             } else if (poi.getPoiDetailInfo().getTag().equals("地铁线路")) {
                 subwayLines.put(poi.name, poi.uid);
             }
 
         }
-        Log.i(TAG,"buslines"+busLines.keySet().toString());
+        Log.i(TAG, "buslines" + busLines.keySet().toString());
 
-        if(fragment instanceof BusFragment) {
-            Log.i(TAG,"busfrag");
+        if (fragment instanceof BusFragment) {
+            Log.i(TAG, "busfrag");
             fragment.updateBusLineView(busLines, fragment);
-        } else if(fragment instanceof SubwayFragment){
-            Log.i(TAG,"subwayF");
+        } else if (fragment instanceof SubwayFragment) {
+            Log.i(TAG, "subwayF");
             fragment.updateBusLineView(subwayLines, fragment);
-        }
-        else{
-            Log.i(TAG,"else");
+        } else {
+            Log.i(TAG, "else");
         }
 
     }

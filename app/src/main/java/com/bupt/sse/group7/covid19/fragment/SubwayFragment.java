@@ -5,10 +5,6 @@ import android.view.View;
 
 import com.bupt.sse.group7.covid19.EditTrackActivity;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class SubwayFragment extends BusBaseFragment {
     @Override
     void bindEvents() {

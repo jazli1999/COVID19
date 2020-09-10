@@ -20,7 +20,6 @@ public class BusSubwayAdapter extends FragmentStateAdapter {
         if (position == 0) {
             fragment = new BusFragment();
         } else {
-            // TODO 更换为地铁fragment
             fragment = new SubwayFragment();
         }
         return fragment;

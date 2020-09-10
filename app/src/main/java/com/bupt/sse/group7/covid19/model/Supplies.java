@@ -1,7 +1,5 @@
 package com.bupt.sse.group7.covid19.model;
 
-import androidx.annotation.Nullable;
-
 public class Supplies {
     private String n95;
     private String surgeon;

@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 
 import com.bupt.sse.group7.covid19.R;
 import com.bupt.sse.group7.covid19.fragment.BusBaseFragment;
-import com.bupt.sse.group7.covid19.fragment.BusFragment;
 
 import java.util.List;
 

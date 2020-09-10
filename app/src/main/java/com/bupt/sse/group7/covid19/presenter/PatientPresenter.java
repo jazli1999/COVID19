@@ -35,8 +35,8 @@ public class PatientPresenter implements IDataBackCallBack {
     private JsonArray pStatusResult;
     private JsonArray tracksResult;
 
-    private final int dataCount=3;
-    private int dataSize=0;
+    private final int dataCount = 3;
+    private int dataSize = 0;
 
 
     PatientPresenter() {
@@ -44,24 +44,24 @@ public class PatientPresenter implements IDataBackCallBack {
     }
 
     public void getPatientInfo() {
-        dataSize=0;
+        dataSize = 0;
         getPatientResult();
         getTrackResult();
         getStatusResult();
 
     }
 
-    private void getPatientResult(){
+    private void getPatientResult() {
         Map<String, String> args = new HashMap<>();
         args.put("p_id", String.valueOf(patient.getId()));
-        Call<ResponseBody> data=DBConnector.dao.executeGet("getPatientById.php",args);
+        Call<ResponseBody> data = DBConnector.dao.executeGet("getPatientById.php", args);
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    patientResult= JsonUtils.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
+                    patientResult = JsonUtils.parseInfo(response.body().byteStream()).get(0).getAsJsonObject();
                     processPatientResult();
-                    Log.i("hcccc","processPatientResultDOwn");
+                    Log.i("hcccc", "processPatientResultDOwn");
 
                     onAllDataBack();
 
@@ -78,17 +78,18 @@ public class PatientPresenter implements IDataBackCallBack {
         });
 
     }
-    private void getStatusResult(){
+
+    private void getStatusResult() {
         Map<String, String> args = new HashMap<>();
         args.put("p_id", String.valueOf(patient.getId()));
-        Call<ResponseBody> data=DBConnector.dao.executeGet("getPStatusById.php",args);
+        Call<ResponseBody> data = DBConnector.dao.executeGet("getPStatusById.php", args);
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    pStatusResult=JsonUtils.parseInfo(response.body().byteStream());
+                    pStatusResult = JsonUtils.parseInfo(response.body().byteStream());
                     processStatusResult();
-                    Log.i("hcccc","processStatusResultDown");
+                    Log.i("hcccc", "processStatusResultDown");
 
                     onAllDataBack();
 
@@ -104,17 +105,18 @@ public class PatientPresenter implements IDataBackCallBack {
         });
 
     }
-    private void getTrackResult(){
+
+    private void getTrackResult() {
         Map<String, String> args = new HashMap<>();
         args.put("p_id", String.valueOf(patient.getId()));
-        Call<ResponseBody> data=DBConnector.dao.executeGet("getPatientTrackById.php",args);
+        Call<ResponseBody> data = DBConnector.dao.executeGet("getPatientTrackById.php", args);
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    tracksResult=JsonUtils.parseInfo(response.body().byteStream());
+                    tracksResult = JsonUtils.parseInfo(response.body().byteStream());
                     processTrackResults();
-                    Log.i("hcccc","processTrackResultsDown");
+                    Log.i("hcccc", "processTrackResultsDown");
 
                     onAllDataBack();
                 } catch (IOException e) {
@@ -129,8 +131,9 @@ public class PatientPresenter implements IDataBackCallBack {
         });
 
     }
+
     private void handlePatientInfoResult() {
-        Log.i("hcccc","handlePatientInfoResult");
+        Log.i("hcccc", "handlePatientInfoResult");
         for (IPatientViewCallBack callBack : patientViewCallBacks) {
             callBack.onPatientInfoReturned(this.patient);
         }
@@ -149,25 +152,27 @@ public class PatientPresenter implements IDataBackCallBack {
     }
 
 
-    private void processPatientResult(){
+    private void processPatientResult() {
         this.patient.setH_name(patientResult.get("h_name").getAsString());
         this.patient.setUsername(patientResult.get("username").getAsString());
         this.patient.setStatus(patientResult.get("status").getAsString());
 
     }
-    private void processStatusResult(){
+
+    private void processStatusResult() {
         this.patient.setStatuses(new ArrayList<>());
-        for (JsonElement je: pStatusResult) {
+        for (JsonElement je : pStatusResult) {
             this.patient.getStatuses().add(
                     new Status(je.getAsJsonObject().get("day").getAsString(),
                             je.getAsJsonObject().get("status").getAsString()));
         }
 
     }
+
     private void processTrackResults() {
         // parse data and assign
         this.patient.setTrackPoints(new ArrayList<>());
-        for(JsonElement je: tracksResult) {
+        for (JsonElement je : tracksResult) {
             this.patient.getTrackPoints().add(
                     new TrackPoint(je.getAsJsonObject().get("date_time").getAsString(),
                             je.getAsJsonObject().get("location").getAsString(),
@@ -187,7 +192,7 @@ public class PatientPresenter implements IDataBackCallBack {
     @Override
     public void onAllDataBack() {
         dataSize++;
-        if(dataSize==dataCount){
+        if (dataSize == dataCount) {
             handlePatientInfoResult();
 
         }

@@ -14,16 +14,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import com.bupt.sse.group7.covid19.model.CurrentUser;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 用户首次登录设置用户名页面
@@ -39,7 +40,7 @@ public class SetUsernameActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.set_patient_name);
-        mContext=this;
+        mContext = this;
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
@@ -73,24 +74,22 @@ public class SetUsernameActivity extends AppCompatActivity {
         JsonObject param = new JsonObject();
         param.add("id", new JsonPrimitive(this.id));
         param.add("username", new JsonPrimitive(username));
-        RequestBody body= RequestBody.create(MediaType.parse("application/json; charset=utf-8"), String.valueOf(param));
-        Call<String> call=DBConnector.dao.executePost("setPatientUsername.php",body);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), String.valueOf(param));
+        Call<String> call = DBConnector.dao.executePost("setPatientUsername.php", body);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                Log.i(TAG,"用户名更新成功");
+                Log.i(TAG, "用户名更新成功");
                 CurrentUser.setId(id);
                 CurrentUser.setLabel("patient");
                 finish();
                 Toast.makeText(mContext, "设置成功", Toast.LENGTH_SHORT).show();
-
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                Log.i(TAG,"用户名更新失败");
-
+                Log.i(TAG, "用户名更新失败");
             }
         });
-      }
+    }
 }

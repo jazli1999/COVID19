@@ -19,21 +19,22 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.bupt.sse.group7.covid19.model.CurrentUser;
 import com.bupt.sse.group7.covid19.presenter.HospitalPresenter;
 import com.bupt.sse.group7.covid19.presenter.PatientPresenter;
+import com.bupt.sse.group7.covid19.utils.Constants;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.bupt.sse.group7.covid19.utils.JsonUtils;
 import com.google.gson.JsonObject;
-import com.bupt.sse.group7.covid19.utils.Constants;
 
 import java.io.IOException;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**

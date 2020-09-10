@@ -6,11 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bupt.sse.group7.covid19.R;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.bupt.sse.group7.covid19.R;
 
 /**
  * 个人用户尚未完善信息时显示的"暂未上传”

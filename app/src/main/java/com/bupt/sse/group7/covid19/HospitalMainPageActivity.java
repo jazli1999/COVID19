@@ -100,7 +100,7 @@ public class HospitalMainPageActivity extends AppCompatActivity implements IHosp
         descTv.setText(MessageFormat.format("剩余床位  轻症 {0} | 重症 {1}",
                 hospital.getMildLeft(), hospital.getSevereLeft()));
 
-        contactFragment.updateView(hospital.getTel(),hospital.getAddress(),hospital.getPeople());
+        contactFragment.updateView(hospital.getTel(), hospital.getAddress(), hospital.getPeople());
 
         statusFragment.updateView(hospital.getStatistics());
         suppliesFragment.updateView(hospital.getSupplies());
@@ -110,7 +110,7 @@ public class HospitalMainPageActivity extends AppCompatActivity implements IHosp
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_edit:
-                if(CurrentUser.getLabel().equals("hospital") && CurrentUser.getId() == hospital.getId()) {
+                if (CurrentUser.getLabel().equals("hospital") && CurrentUser.getId() == hospital.getId()) {
                     Intent intent = new Intent(this, EditHospitalActivity.class);
                     startActivity(intent);
                 } else {

@@ -28,7 +28,7 @@ public class AreaSelectionPresenter {
     }
 
     private void handleAreaChange() {
-        for (IAreaSelectionCallBack callBack: callBacks) {
+        for (IAreaSelectionCallBack callBack : callBacks) {
             callBack.onAreaSelected(area);
         }
     }
@@ -62,7 +62,7 @@ public class AreaSelectionPresenter {
 
         try {
             int type = parser.getEventType();
-            while(type != 1) {
+            while (type != 1) {
                 String tag = parser.getName();
                 switch (type) {
                     case XmlResourceParser.START_DOCUMENT:
@@ -132,7 +132,7 @@ public class AreaSelectionPresenter {
                 }
                 type = parser.next();
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

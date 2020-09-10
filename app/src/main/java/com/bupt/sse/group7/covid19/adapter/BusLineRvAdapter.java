@@ -1,6 +1,5 @@
 package com.bupt.sse.group7.covid19.adapter;
 
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -8,10 +7,7 @@ import androidx.annotation.NonNull;
 import com.bupt.sse.group7.covid19.EditTrackActivity;
 import com.bupt.sse.group7.covid19.R;
 import com.bupt.sse.group7.covid19.fragment.BusBaseFragment;
-import com.bupt.sse.group7.covid19.fragment.BusFragment;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class BusLineRvAdapter extends BusResultRvAdapter {

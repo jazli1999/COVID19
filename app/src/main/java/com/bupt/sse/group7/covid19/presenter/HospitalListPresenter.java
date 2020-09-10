@@ -1,14 +1,9 @@
 package com.bupt.sse.group7.covid19.presenter;
 
-import android.content.res.XmlResourceParser;
 import android.util.Log;
 
 import com.bupt.sse.group7.covid19.interfaces.IHospitalListCallBack;
-import com.bupt.sse.group7.covid19.model.City;
-import com.bupt.sse.group7.covid19.model.District;
-
 import com.bupt.sse.group7.covid19.model.HospitalBrief;
-import com.bupt.sse.group7.covid19.model.Province;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.bupt.sse.group7.covid19.utils.JsonUtils;
 import com.google.gson.JsonArray;
@@ -49,7 +44,7 @@ public class HospitalListPresenter {
     }
 
     public void updateData(List<HospitalBrief> hospitals) {
-        for(IHospitalListCallBack callBack: callBacks) {
+        for (IHospitalListCallBack callBack : callBacks) {
             callBack.onHospitalListChanged(hospitals);
         }
     }
@@ -90,11 +85,11 @@ public class HospitalListPresenter {
 
     private List<HospitalBrief> processResult(JsonArray hospJson) {
         List<HospitalBrief> hospitals = new ArrayList<>();
-        for (JsonElement hospital: hospJson) {
+        for (JsonElement hospital : hospJson) {
             JsonObject hospitalJson = hospital.getAsJsonObject();
             HospitalBrief hospitalBrief = new HospitalBrief(hospitalJson.get("h_id").getAsString(),
                     hospitalJson.get("name").getAsString());
-            if(!hospitalJson.get("address").isJsonNull()) {
+            if (!hospitalJson.get("address").isJsonNull()) {
                 hospitalBrief.setAddress(hospitalJson.get("address").getAsString());
             }
             hospitals.add(hospitalBrief);

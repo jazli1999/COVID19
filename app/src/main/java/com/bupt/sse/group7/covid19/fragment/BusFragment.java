@@ -4,13 +4,6 @@ import android.util.Log;
 import android.view.View;
 
 import com.bupt.sse.group7.covid19.EditTrackActivity;
-import com.bupt.sse.group7.covid19.adapter.BusLineRvAdapter;
-import com.bupt.sse.group7.covid19.adapter.BusStationsRvAdapter;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class BusFragment extends BusBaseFragment {
     @Override

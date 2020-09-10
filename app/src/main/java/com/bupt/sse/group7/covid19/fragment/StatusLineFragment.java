@@ -1,7 +1,6 @@
 package com.bupt.sse.group7.covid19.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.sse.group7.covid19.R;
 import com.bupt.sse.group7.covid19.adapter.StatusLineAdapter;
-import com.bupt.sse.group7.covid19.interfaces.IPatientViewCallBack;
-import com.bupt.sse.group7.covid19.model.Patient;
 import com.bupt.sse.group7.covid19.model.Status;
-import com.bupt.sse.group7.covid19.presenter.PatientPresenter;
-import com.google.gson.JsonArray;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

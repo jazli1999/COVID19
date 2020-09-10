@@ -74,7 +74,7 @@ public abstract class BusBaseFragment extends Fragment {
     }
 
     public void updateBusLineView(Map<String, String> busLineList, BusBaseFragment context) {
-        Log.i(TAG,busLineList.keySet().toString());
+        Log.i(TAG, busLineList.keySet().toString());
         busLineAdapter = new BusLineRvAdapter(busLineList, context);
         busLineView.setAdapter(busLineAdapter);
         busLineView.setLayoutManager(busLineManager);

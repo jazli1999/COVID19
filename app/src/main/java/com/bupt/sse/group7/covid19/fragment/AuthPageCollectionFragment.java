@@ -10,8 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.bupt.sse.group7.covid19.adapter.AuthPagerAdapter;
 import com.bupt.sse.group7.covid19.R;
+import com.bupt.sse.group7.covid19.adapter.AuthPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
