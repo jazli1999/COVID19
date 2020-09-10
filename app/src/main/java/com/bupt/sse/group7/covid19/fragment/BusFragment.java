@@ -23,7 +23,6 @@ public class BusFragment extends BusBaseFragment {
                 String keyword = searchField.getText().toString();
                 ((EditTrackActivity) getActivity()).setBusFragment(_this);
                 ((EditTrackActivity) getActivity()).busService(keyword);
-                // TODO 获取公交线路的map，替换fakeData
             }
         });
 

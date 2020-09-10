@@ -67,6 +67,7 @@ import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.bupt.sse.group7.covid19.fragment.BusBaseFragment;
 import com.bupt.sse.group7.covid19.fragment.BusFragment;
+import com.bupt.sse.group7.covid19.fragment.SubwayFragment;
 import com.bupt.sse.group7.covid19.model.CurrentUser;
 import com.bupt.sse.group7.covid19.presenter.AreaSelectionPresenter;
 import com.bupt.sse.group7.covid19.presenter.TrackAreaPresenter;
@@ -146,7 +147,6 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     //获取到的所有的公交站
     private List<String> allBusStations = new ArrayList<>();
     private ImageView bus_btn;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -637,12 +637,22 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
         }
         Log.i(TAG,"buslines"+busLines.keySet().toString());
-        fragment.updateBusLineView(busLines, fragment);
+
+        if(fragment instanceof BusFragment) {
+            Log.i(TAG,"busfrag");
+            fragment.updateBusLineView(busLines, fragment);
+        } else if(fragment instanceof SubwayFragment){
+            Log.i(TAG,"subwayF");
+            fragment.updateBusLineView(subwayLines, fragment);
+        }
+        else{
+            Log.i(TAG,"else");
+        }
 
     }
 
 
-    private void searchBusOrSubway(String busLineId) {
+    public void searchBusOrSubway(String busLineId) {
 
         // TODO 改city
         mBusLineSearch.searchBusLine(new BusLineSearchOption()
@@ -672,19 +682,22 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
             return;
         }
         Log.i(TAG, "onGetBusLineResult");
-        BusLineOverlay overlay = new BusLineOverlay(baiduMap);
         allBusStations.clear();
 
         for (BusLineResult.BusStation busStation : busLineResult.getStations()) {
             allBusStations.add(busStation.getTitle());
         }
 
-        overlay.setData(getChosenStations(getStartStation(), getEndStation(), busLineResult));
-        overlay.addToMap();
-        overlay.zoomToSpan();
-
+        fragment.updateStations(allBusStations, fragment);
     }
 
+    //TODO 保存
+//    public void updateBusView(){
+//        BusLineOverlay overlay = new BusLineOverlay(baiduMap);
+//        overlay.setData(getChosenStations(getStartStation(), getEndStation(), busLineResult));
+//        overlay.addToMap();
+//        overlay.zoomToSpan();
+//    }
     //TODO 改终点名字
     private String getEndStation() {
         return "成府路口南";

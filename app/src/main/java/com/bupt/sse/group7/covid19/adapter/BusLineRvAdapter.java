@@ -5,6 +5,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.bupt.sse.group7.covid19.EditTrackActivity;
 import com.bupt.sse.group7.covid19.R;
 import com.bupt.sse.group7.covid19.fragment.BusBaseFragment;
 import com.bupt.sse.group7.covid19.fragment.BusFragment;
@@ -33,13 +34,8 @@ public class BusLineRvAdapter extends BusResultRvAdapter {
                 holder.backgroundView.setBackgroundColor(v.getResources().getColor(R.color.chosen));
                 lastChosen = holder;
 
-                // TODO 调用搜索公交，将获取的公交站List赋值给nameList，替换下面的fakeData
-                List<String> fakeData = new ArrayList();
-                fakeData.add("第一个公交站");
-                fakeData.add("第二个公交站");
-                fakeData.add("第三个公交站");
-
-                context.updateStations(fakeData, context);
+                ((EditTrackActivity) context.getActivity()).setBusFragment(context);
+                ((EditTrackActivity) context.getActivity()).searchBusOrSubway(uid);
             }
         });
     }

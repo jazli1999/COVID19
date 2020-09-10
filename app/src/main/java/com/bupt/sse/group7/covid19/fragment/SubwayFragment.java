@@ -17,12 +17,8 @@ public class SubwayFragment extends BusBaseFragment {
             @Override
             public void onClick(View v) {
                 String keyword = searchField.getText().toString();
-
-                // TODO 获取 地铁 线路的map，替换fakeData
-                Map<String, String> fakeData = new HashMap<>();
-                fakeData.put("3号线", "1");
-                fakeData.put("13号线", "2");
-                updateBusLineView(fakeData, _this);
+                ((EditTrackActivity) getActivity()).setBusFragment(_this);
+                ((EditTrackActivity) getActivity()).busService(keyword);
             }
         });
 
