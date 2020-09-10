@@ -46,8 +46,8 @@ public class HomeActivity extends AppCompatActivity {
     private CardView authCard;
     private CardView trackCard;
     private CardView pageCard;
+    private CardView diaryCard;
     private TextView mildTv, severeTv, curedTv, deadTv;
-    private Button btn_diary;
 
     private JsonObject statistics;
 
@@ -105,6 +105,7 @@ public class HomeActivity extends AppCompatActivity {
         hospitalCard = findViewById(R.id.hospital_card);
         trackCard = findViewById(R.id.track_card);
         authCard = findViewById(R.id.auth_card);
+        diaryCard=findViewById(R.id.diary_card);
         curedTv = findViewById(R.id.cured_statistic);
         deadTv = findViewById(R.id.dead_statistic);
         severeTv = findViewById(R.id.severe_statistic);
@@ -160,8 +161,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        btn_diary=findViewById(R.id.btn_diary);
-        btn_diary.setOnClickListener(new View.OnClickListener() {
+        diaryCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = getPackageManager().getLaunchIntentForPackage("com.sunshine.diary");
