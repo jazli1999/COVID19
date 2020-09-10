@@ -164,7 +164,8 @@ public class HomeActivity extends AppCompatActivity {
         btn_diary.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO 在这里添加跳转到日记app
+                Intent intent = getPackageManager().getLaunchIntentForPackage("com.sunshine.diary");
+                startActivity(intent);
             }
         });
 
