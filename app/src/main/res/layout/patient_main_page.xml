@@ -81,6 +81,8 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/busTrackLayout"
+            android:visibility="gone"
             style="@style/detail_card"
             android:orientation="vertical"
             android:background="@drawable/border"
@@ -91,9 +93,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:id="@+id/busTrackTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="x\nx\nx\nx\nx\nx\nx\nx\nx\nx\nx\nxxxx\nxxxx"
+
                    />
             </ScrollView>
 

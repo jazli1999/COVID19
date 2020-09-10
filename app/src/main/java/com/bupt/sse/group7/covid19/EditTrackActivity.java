@@ -709,6 +709,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
      */
     @Override
     public void onGetBusLineResult(BusLineResult busLineResult) {
+        busKeyword=busLineResult.getBusLineName();
         mBusLineResult = busLineResult;
         if (busLineResult == null || busLineResult.error != SearchResult.ERRORNO.NO_ERROR) {
             Log.i(TAG, "onGetBusLineResult : error");
@@ -813,7 +814,6 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     }
 
     public void busService(String keyword) {
-        busKeyword = keyword;
         mBusLineSearch = BusLineSearch.newInstance();
         mBusLineSearch.setOnGetBusLineSearchResultListener(this);
         PoiSearch mPoiSearch = PoiSearch.newInstance();

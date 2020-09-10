@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +36,8 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.poi.PoiCitySearchOption;
 import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.utils.DistanceUtil;
+import com.bupt.sse.group7.covid19.EditTrackActivity;
+import com.bupt.sse.group7.covid19.PatientMainPageActivity;
 import com.bupt.sse.group7.covid19.R;
 import com.bupt.sse.group7.covid19.model.BusTrack;
 import com.bupt.sse.group7.covid19.presenter.TrackAreaPresenter;
@@ -170,9 +173,16 @@ public class PatientTrackFragment extends Fragment  {
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.i(TAG,"成功获取busline");
+                Log.i(TAG,"成功获取busline:"+response.body());
+
                 try {
                     JsonArray busTracks=JsonUtils.parseInfo(response.body().byteStream());
+                    if(busTracks.size()==0){
+                        return;
+                    }
+                    ((PatientMainPageActivity)getActivity()).busTrackLayout.setVisibility(View.VISIBLE);
+                    TextView busTrackTv= ((PatientMainPageActivity)getActivity()).busTrackTv;
+                    String busTrackText="该患者于：\n";
                     for(JsonElement je:busTracks){
                         BusTrack busTrack=new BusTrack(
                                 je.getAsJsonObject().get("uid").getAsString(),
@@ -184,8 +194,11 @@ public class PatientTrackFragment extends Fragment  {
 
                         );
                         searchBusOrSubway(busTrack);
+                        busTrackText+=busTrack.getDate_time().substring(0,busTrack.getDate_time().length()-3)+"在"+busTrack.getStart()+"乘坐"+busTrack.getName()
+                                +"至"+busTrack.getEnd()+"\n";
 
                     }
+                    busTrackTv.setText(busTrackText);
 
                 } catch (IOException e) {
                     e.printStackTrace();

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,8 @@ public class PatientMainPageActivity extends AppCompatActivity implements IPatie
     private PatientTrackBlockFragment patientTrackBlockFragment;
     private NotAvailable notAvailable;
     private int id;
+    public TextView busTrackTv;
+    public LinearLayout busTrackLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +54,8 @@ public class PatientMainPageActivity extends AppCompatActivity implements IPatie
         patientPresenter = PatientPresenter.getInstance();
         patientPresenter.registerCallBack(this);
         patientPresenter.getPatientInfo();
+        busTrackLayout =findViewById(R.id.busTrackLayout);
+        busTrackTv=findViewById(R.id.busTrackTv);
     }
 
     @Override
