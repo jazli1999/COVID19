@@ -18,6 +18,7 @@ import com.bupt.sse.group7.covid19.R;
 import com.bupt.sse.group7.covid19.adapter.BusLineRvAdapter;
 import com.bupt.sse.group7.covid19.adapter.BusStationsRvAdapter;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,7 +76,16 @@ public abstract class BusBaseFragment extends Fragment {
 
     public void updateBusLineView(Map<String, String> busLineList, BusBaseFragment context) {
         Log.i(TAG, busLineList.keySet().toString());
-        busLineAdapter = new BusLineRvAdapter(busLineList, context);
+
+        Map<String, String> busLines = new HashMap<>();
+        for(String name : busLineList.keySet()) {
+            String simpleName = name.split("\\(")[0];
+            if (!busLines.containsKey(name)) {
+                busLines.put(simpleName, busLineList.get(name));
+            }
+        }
+
+        busLineAdapter = new BusLineRvAdapter(busLines, context);
         busLineView.setAdapter(busLineAdapter);
         busLineView.setLayoutManager(busLineManager);
     }

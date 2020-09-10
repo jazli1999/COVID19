@@ -26,6 +26,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -642,6 +643,9 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         //遍历所有POI，找到类型为公交线路的POI
         for (PoiInfo poi : poiResult.getAllPoi()) {
             Log.i(TAG, "poi:" + poi.toString());
+            if (poi.getPoiDetailInfo() == null) {
+                return;
+            }
             if (poi.getPoiDetailInfo().getTag().equals("公交线路")) {
                 //获取该条公交路线POI的UID
                 busLines.put(poi.name, poi.uid);
@@ -720,25 +724,25 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
         overlay.setData(getChosenStations(startStation, endStation, mBusLineResult));
         overlay.addToMap();
         overlay.zoomToSpan();
-        saveBusLine(startStation,endStation);
+        saveBusLine(startStation, endStation);
     }
 
-    public void saveBusLine(String startStation,String endStation){
-        JsonObject busLineJO=new JsonObject();
-        busLineJO.add("uid",new JsonPrimitive(busLineSelected));
-        busLineJO.add("name",new JsonPrimitive(busKeyword));
-        busLineJO.add("p_id",new JsonPrimitive(p_id));
-        busLineJO.add("start",new JsonPrimitive(startStation));
-        busLineJO.add("end",new JsonPrimitive(endStation));
+    public void saveBusLine(String startStation, String endStation) {
+        JsonObject busLineJO = new JsonObject();
+        busLineJO.add("uid", new JsonPrimitive(busLineSelected));
+        busLineJO.add("name", new JsonPrimitive(busKeyword));
+        busLineJO.add("p_id", new JsonPrimitive(p_id));
+        busLineJO.add("start", new JsonPrimitive(startStation));
+        busLineJO.add("end", new JsonPrimitive(endStation));
         //TODO 改时间
-        busLineJO.add("date_time",new JsonPrimitive("2020-06-09 13:13:13"));
+        busLineJO.add("date_time", new JsonPrimitive("2020-06-09 13:13:13"));
 
-        JsonArray jsonArray=new JsonArray();
+        JsonArray jsonArray = new JsonArray();
         jsonArray.add(busLineJO);
-        JsonObject jsonObject=new JsonObject();
-        jsonObject.add("rows",jsonArray);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("rows", jsonArray);
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), String.valueOf(jsonObject));
-        Log.i(TAG,"update bus data :"+String.valueOf(jsonObject));
+        Log.i(TAG, "update bus data :" + String.valueOf(jsonObject));
         Call<String> call = DBConnector.dao.executePost("addBusTrack.php", body);
         call.enqueue(new Callback<String>() {
             @Override
@@ -748,7 +752,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                Log.i(TAG,"公交更新失败");
+                Log.i(TAG, "公交更新失败");
 
             }
         });
@@ -802,7 +806,7 @@ public class EditTrackActivity extends AppCompatActivity implements OnGetGeoCode
     }
 
     public void busService(String keyword) {
-        busKeyword=keyword;
+        busKeyword = keyword;
         mBusLineSearch = BusLineSearch.newInstance();
         mBusLineSearch.setOnGetBusLineSearchResultListener(this);
         PoiSearch mPoiSearch = PoiSearch.newInstance();
