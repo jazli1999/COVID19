@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ public class HomeActivity extends AppCompatActivity {
     private CardView trackCard;
     private CardView pageCard;
     private TextView mildTv, severeTv, curedTv, deadTv;
+    private Button btn_diary;
 
     private JsonObject statistics;
 
@@ -155,6 +157,14 @@ public class HomeActivity extends AppCompatActivity {
                     }
                     startActivity(intent);
                 }
+            }
+        });
+
+        btn_diary=findViewById(R.id.btn_diary);
+        btn_diary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO 在这里添加跳转到日记app
             }
         });
 
