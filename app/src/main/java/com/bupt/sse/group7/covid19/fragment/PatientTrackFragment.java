@@ -10,6 +10,10 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
@@ -18,19 +22,31 @@ import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.busline.BusLineResult;
+import com.baidu.mapapi.search.busline.BusLineSearch;
+import com.baidu.mapapi.search.busline.BusLineSearchOption;
+import com.baidu.mapapi.search.busline.OnGetBusLineSearchResultListener;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeOption;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.search.poi.PoiCitySearchOption;
+import com.baidu.mapapi.search.poi.PoiSearch;
+import com.baidu.mapapi.utils.DistanceUtil;
 import com.bupt.sse.group7.covid19.R;
+import com.bupt.sse.group7.covid19.model.BusTrack;
 import com.bupt.sse.group7.covid19.presenter.TrackAreaPresenter;
 import com.bupt.sse.group7.covid19.utils.DBConnector;
 import com.bupt.sse.group7.covid19.utils.DrawMarker;
+import com.bupt.sse.group7.covid19.utils.JsonUtils;
+import com.bupt.sse.group7.covid19.utils.overlayutil.BusLineOverlay;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +55,7 @@ import java.util.Map;
 /**
  * 病人主页 -> 轨迹卡片部分 -> 地图显示
  */
-public class PatientTrackFragment extends Fragment {
+public class PatientTrackFragment extends Fragment  {
     private static final String TAG = "PatientTrackFragment";
     private View view;
 
@@ -54,6 +70,12 @@ public class PatientTrackFragment extends Fragment {
     private final float mZoom = 15.0f;
     private ImageView locationIv;
     private LatLng initialLoc;
+
+    //公交
+    private List<String> allBusStations = new ArrayList<>();
+    private BusLineSearch mBusLineSearch;
+    private BusLineResult mBusLineResult;
+    private String city;
 
 
     @Nullable
@@ -113,7 +135,7 @@ public class PatientTrackFragment extends Fragment {
             return;
         }
         JsonObject object = track.get(0).getAsJsonObject();
-        String city = object.get("city").getAsString();
+        city = object.get("city").getAsString();
         String district = object.get("district").getAsString();
         String address = "";
         TrackAreaPresenter areaPresenter = TrackAreaPresenter.getInstance();
@@ -131,6 +153,8 @@ public class PatientTrackFragment extends Fragment {
     }
 
     private void initData(int p_id) {
+        
+        initBusTrack();
         Thread thread = getTrackInfo(p_id);
         try {
             thread.join();
@@ -138,6 +162,135 @@ public class PatientTrackFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+    private void initBusTrack() {
+        Map<String,String> args=new HashMap<>();
+        args.put("p_id",mp_id+"");
+        Call<ResponseBody> data=DBConnector.dao.executeGet("getBusTrackById.php",args);
+        data.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.i(TAG,"成功获取busline");
+                try {
+                    JsonArray busTracks=JsonUtils.parseInfo(response.body().byteStream());
+                    for(JsonElement je:busTracks){
+                        BusTrack busTrack=new BusTrack(
+                                je.getAsJsonObject().get("uid").getAsString(),
+                                je.getAsJsonObject().get("p_id").getAsInt(),
+                                je.getAsJsonObject().get("name").getAsString(),
+                                je.getAsJsonObject().get("start").getAsString(),
+                                je.getAsJsonObject().get("end").getAsString(),
+                                je.getAsJsonObject().get("date_time").getAsString()
+
+                        );
+                        searchBusOrSubway(busTrack);
+
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.i(TAG,"获取busline失败");
+
+            }
+        });
+    }
+
+    private void drawBusTrack(BusTrack busTrack) {
+        BusLineOverlay overlay = new BusLineOverlay(baiduMap);
+        overlay.setData(getChosenStations(busTrack.getStart(), busTrack.getEnd(), mBusLineResult));
+        overlay.addToMap();
+        overlay.zoomToSpan();
+
+    }
+    public void searchBusOrSubway( BusTrack busTrack) {
+        mBusLineSearch = BusLineSearch.newInstance();
+        //获取的是具体的公交线
+        mBusLineSearch.setOnGetBusLineSearchResultListener(new OnGetBusLineSearchResultListener() {
+            @Override
+            public void onGetBusLineResult(BusLineResult busLineResult) {
+                mBusLineResult = busLineResult;
+                if (busLineResult == null || busLineResult.error != SearchResult.ERRORNO.NO_ERROR) {
+                    Log.i(TAG, "onGetBusLineResult : error");
+                    return;
+                }
+                Log.i(TAG, "onGetBusLineResult");
+                allBusStations.clear();
+
+                for (BusLineResult.BusStation busStation : busLineResult.getStations()) {
+                    allBusStations.add(busStation.getTitle());
+                }
+                drawBusTrack(busTrack);
+
+            }
+        });
+        mBusLineSearch.searchBusLine(new BusLineSearchOption()
+                .city(city)
+                .uid(busTrack.getUid()));
+
+
+    }
+    public BusLineResult getChosenStations(String start, String end, BusLineResult busLineResult) {
+        BusLineResult mBusLineResult = busLineResult;
+        int indexStart = 0;
+        int indexEnd = allBusStations.size();
+        for (int i = 0; i < allBusStations.size(); i++) {
+            if (start.equals(allBusStations.get(i))) {
+                indexStart = i;
+            }
+            if (end.equals(allBusStations.get(i))) {
+                indexEnd = i;
+            }
+        }
+        if (indexStart > indexEnd) {
+            int temp = indexStart;
+            indexStart = indexEnd;
+            indexEnd = temp;
+        }
+
+        List<BusLineResult.BusStation> busStations = busLineResult.getStations().subList(indexStart, indexEnd + 1);
+        List<BusLineResult.BusStep> busSteps = getChosenSteps(busStations, busLineResult.getSteps().get(0));
+        mBusLineResult.setStations(busStations);
+        mBusLineResult.setSteps(busSteps);
+
+        return mBusLineResult;
+    }
+    private List<BusLineResult.BusStep> getChosenSteps(List<BusLineResult.BusStation> busStations, BusLineResult.BusStep busStep) {
+        if (busStations == null) {
+            return null;
+        }
+        List<LatLng> wayPoints = busStep.getWayPoints();
+        LatLng start = busStations.get(0).getLocation();
+        LatLng end = busStations.get(busStations.size() - 1).getLocation();
+        int indexS = 0, indexE = wayPoints.size() - 1;
+        double width = 50;
+        for (int i = 0; i < wayPoints.size(); i++) {
+            double dis = DistanceUtil.getDistance(start, wayPoints.get(i));
+            if (dis < width) {
+                indexS = i;
+                break;
+            }
+        }
+        for (int i = wayPoints.size() - 1; i >= 0; i--) {
+            double dis = DistanceUtil.getDistance(end, wayPoints.get(i));
+            if (dis < width) {
+                indexE = i;
+                break;
+            }
+        }
+        List<BusLineResult.BusStep> busSteps = new ArrayList<>();
+        busStep.setWayPoints(wayPoints.subList(indexS, indexE + 1));
+        busSteps.add(busStep);
+        return busSteps;
+
+    }
+
 
     //初始化定位
     private void initLocation() {
