@@ -17,6 +17,8 @@ import com.bupt.sse.group7.covid19.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.baidu.mapapi.map.PolylineDottedLineType.DOTTED_LINE_SQUARE;
+
 /**
  * 用于显示一条公交详情结果的Overlay
  */
@@ -60,14 +62,14 @@ public class BusLineOverlay extends OverlayManager {
                 .zIndex(10)
                 .anchor(0.5f, 0.5f)
                 .icon(BitmapDescriptorFactory
-                        .fromResource(R.drawable.icon_geo)));
+                        .fromResource(R.drawable.station)).scaleX(0.3f).scaleY(0.3f));
         //TODO 换图标
         overlayOptionses.add(new MarkerOptions()
                 .position(busStationEnd.getLocation())
                 .zIndex(10)
                 .anchor(0.5f, 0.5f)
                 .icon(BitmapDescriptorFactory
-                        .fromResource(R.drawable.icon_geo)));
+                        .fromResource(R.drawable.station)).scaleX(0.3f).scaleY(0.3f));
 
         Log.i(TAG, "station.size" + mBusLineResult.getStations().size());
 
@@ -83,8 +85,8 @@ public class BusLineOverlay extends OverlayManager {
         }
         if (points.size() > 0) {
             overlayOptionses
-                    .add(new PolylineOptions().width(10)
-                            .color(Color.argb(178, 0, 78, 255)).zIndex(0)
+                    .add(new PolylineOptions()
+                            .color(0xff92729e).zIndex(0).width(8).dottedLine(true).dottedLineType(DOTTED_LINE_SQUARE)
                             .points(points));
         }
         return overlayOptionses;
